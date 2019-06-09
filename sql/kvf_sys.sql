@@ -5,7 +5,7 @@
  Source Server Type    : MySQL
  Source Server Version : 80012
  Source Host           : localhost:3306
- Source Schema         : activiti_k
+ Source Schema         : kvf_admin
 
  Target Server Type    : MySQL
  Target Server Version : 80012
