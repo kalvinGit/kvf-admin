@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>LayOA管理系统</title>
+    <link th:replace="comm/base::static"/>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="row">
+        <div class="layui-col-md12 layui-col-xs12" style="overflow-x:auto;">
+            <!--<fieldset class="layui-elem-field layui-field-title">
+                <legend style="font-size: 0.8em;"><span style="color:#FF5722;">*</span>权限分配</legend>
+            </fieldset>-->
+            <div class="layui-field-box" id="treeDiv">
+                <ul id="kLeftTree" class="ztree"></ul>
+            </div>
+        </div>
+        <div class="">
+            <div class="layui-field-box">
+                <div class="layui-form" style="padding: 20px 30px 0 0;">
+                    <div class="layui-form-item layui-hide">
+                        <input type="button" lay-submit="" lay-filter="kFormSubmit" id="kFormSubmit" value="确认添加">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script th:replace="comm/base::context"></script>
+<script th:replace="comm/base::mainjs"></script>
+<script>
+    layui.use(['form'], function () {
+        var $ = layui.$, form = layui.form;
+        var treeObj;
+
+        var id = kvfKit.getUrlParam('id');
+
+        //监听提交
+        form.on('submit(kFormSubmit)', function(data){
+            var field = data.field; //获取提交的字段
+            field.id = id;  // 角色ID
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+
+            var nodes = treeObj.getCheckedNodes(true);
+            var menuIds = [];
+            $.each(nodes, function(i, n){
+                menuIds.push(n.id);
+            });
+
+            field.menuIds = menuIds.toString();
+
+            log('field=', field);
+
+            //提交 Ajax 成功后，关闭当前弹层并重载表格
+            $.ajax({
+                type: req.type.post,
+                url: api.sys.roleSetPermission,
+                data: field,
+                async: false,
+                success: function (r) {
+                    if (r.code === req.status.ok) {
+                        parent.layer.close(index); //再执行关闭
+                    } else {
+                        kvfKit.errorMsg(r.msg);
+                    }
+                }
+            });
+
+        });
+
+        kvfKit.aGet(api.sys.menuRoleTree, {roleId: id || null}, function (r) {
+            var nodes = r.data;
+            log('nodes=', nodes);
+            /* 菜单树 */
+            treeObj = $.fn.zTree.init($("#kLeftTree"), {
+                check: {enable: true, chkStyle: "checkbox", chkboxType:{ "Y" : "ps", "N" : "s" }},
+                callback: {
+                    beforeClick: function (treeId, treeNode, clickFlag) {
+                        return false;
+                    }
+                },
+                view: {showTitle: false},
+                data : {simpleData: {enable: true,idKey: "id",pIdKey: "parentId",rootPId: 0}, key: {url:"noUrl", checked:"checked"}}
+            }, nodes);
+            treeObj.expandAll(true);
+        });
+
+    })
+</script>
+</body>
+</html>

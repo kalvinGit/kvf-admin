@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>LayOA管理系统</title>
+    <link th:replace="comm/base::static"/>
+    <style>
+    </style>
+</head>
+<body style="background-color: #f2f2f2;">
+
+<div id="kPage" class="layui-fluid" style="padding: 0">
+    <div class="layui-fluid kvf-fluid-padding15">
+        <div class="layui-card">
+            <div class="layui-form layui-card-header kvf-card-header-auto">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">用户账号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="username" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
+                            <i class="layui-icon layui-icon-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-card-body">
+                <table id="kContentTable" lay-filter="kContentTable"></table>
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-hide">
+            <input type="button" lay-submit="" lay-filter="kFormSubmit" id="kFormSubmit" value="确认添加">
+            <input type="text" name="id"  placeholder="保存ID" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+</div>
+
+<script th:replace="comm/base::context"></script>
+<script th:replace="comm/base::mainjs"></script>
+
+<script type="text/html" id="sexTpl">
+    {{#  if(d.sex == 1){ }}
+    <span class="layui-badge layui-bg-blue">男</span>
+    {{#  } else if(d.sex == 2) { }}
+    <span class="layui-badge">女</span>
+    {{#  } else { }}
+    <span class="layui-badge layui-bg-gray">未知</span>
+    {{# } }}
+</script>
+
+<script type="text/html" id="statusTpl">
+    {{#  if(d.status == 0){ }}
+    <span class="layui-badge layui-bg-green">在职</span>
+    {{#  } else if(d.status == 1) { }}
+    <span class="layui-badge layui-bg-orange">离职</span>
+    {{#  } else { }}
+    <span class="layui-badge layui-bg-gray">退休</span>
+    {{# } }}
+</script>
+
+<script type="text/html" id="rowToolbarTpl">
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+</script>
+
+<script type="text/javascript" th:inline="javascript">
+    layui.use(['element', 'form', 'layer', 'table'], function () {
+        var elemet = layui.element, form = layui.form, layer = layui.layer, table = layui.table;
+
+        var roleId = kvfKit.getUrlParam('roleId');
+
+        // 实例化table
+        kvfKit.initTableSet(table);
+        var tableIns = table.render({
+            elem: '#kContentTable'
+            ,url: api.sys.userListData //数据接口
+            ,cols: [[ //表头
+                {type:'checkbox', fixed: 'left'}
+                ,{field: 'id', title: 'ID', width:60, sort: true}
+                ,{field: 'realname', title: '姓名'}
+                ,{field: 'username', title: '用户名', width:80}
+                ,{field: 'deptId', title: '所属部门', sort: true}
+                ,{field: 'jobTitle', title: '职务名称'}
+            ]]
+        });
+
+        //监听提交
+        form.on('submit(kFormSubmit)', function(data){
+            /*var field = data.field; //获取提交的字段
+            field.parentId = parentId;  // 父级菜单ID
+            field.type = type;  // 菜单类型*/
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+
+            var field = {roleId: roleId};
+            var checkStatus = table.checkStatus('kContentTable')
+                ,checkData = checkStatus.data; //得到选中的数据
+
+            if(checkData.length === 0){
+                return kvfKit.warningMsg('请选择数据');
+            }
+
+            var ids = [];
+            $.each(checkData, function(i, n){
+                ids[i] = n.id;
+            });
+            field.userIds = ids.toString();
+            log('field=', field);
+
+            //提交 Ajax 成功后，关闭当前弹层并重载表格
+            $.ajax({
+                type: req.type.post,
+                url: api.sys.userRoleSave,
+                data: field,
+                async: false,
+                success: function (r) {
+                    if (r.code === req.status.ok) {
+                        $(parent.$('iframe').contents()[0]).find('#LOA-table-reload').click();  // 刷新成员列表
+                        parent.layui.table.reload('kContentTable'); // 刷新角色列表
+                        parent.layer.close(index); //再执行关闭
+                    } else {
+                        kvfKit.errorMsg(r.msg);
+                    }
+                }
+            });
+
+        });
+
+        // 监听查询
+        form.on('submit(kTableSearchFilter)', function (obj) {
+            var params = obj.field;
+            tableIns.reload({
+                where: params,
+                page: {current: 1}
+            });
+            return false;
+        });
+
+    });
+</script>
+
+</body>
+</html>

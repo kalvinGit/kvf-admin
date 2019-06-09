@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>LayOA管理系统</title>
+    <link th:replace="comm/base::static"/>
+</head>
+<body style="background-color: #f2f2f2;">
+
+<div id="kPage" class="layui-fluid" style="padding: 0">
+    <div class="layui-row">
+        <!-- 主要内容块 -->
+        <div class="layui-col-md12" id="kMainContentCol">
+            <div class="layui-fluid kvf-fluid-padding15">
+                <div class="layui-card">
+                    <div class="layui-form layui-card-header kvf-card-header-auto">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">用户账号</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="username" placeholder="请输入" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">用户姓名</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="realname" placeholder="请输入" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">用户状态</label>
+                                <div class="layui-input-inline">
+                                    <select class="layui-select" name="status">
+                                        <option value="">请选择</option>
+                                        <option value="0">正常</option>
+                                        <option value="1">禁用</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
+                                    <i class="layui-icon layui-icon-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-card-body">
+                        <table id="kContentTable" lay-filter="kContentTable"></table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script th:replace="comm/base::context"></script>
+<script th:replace="comm/base::mainjs"></script>
+
+<script type="text/html" id="sexTpl">
+    {{#  if(d.sex == 1){ }}
+    <span class="layui-badge layui-bg-blue">男</span>
+    {{#  } else if(d.sex == 2) { }}
+    <span class="layui-badge">女</span>
+    {{#  } else { }}
+    <span class="layui-badge layui-bg-gray">未知</span>
+    {{# } }}
+</script>
+
+<script type="text/html" id="statusTpl">
+    {{#  if(d.status == 0){ }}
+    <span class="layui-badge layui-bg-green">正常</span>
+    {{#  } else { }}
+    <span class="layui-badge">禁用</span>
+    {{# } }}
+</script>
+
+<!--主要为了解决当值为0时，不显示的问题（估计是layui的bug）-->
+<script type="text/html" id="sortTpl">
+    {{# if(d.sort == 0){ }}
+    <span>0</span>
+    {{#  } else { }}
+    <span>1</span>
+    {{# } }}
+</script>
+
+<script type="text/html" id="deptTpl">
+    {{# var data = kvfKit.get(api.sys.getDept + d.deptId).data; }}
+    {{# return data ? data.name : '<span class="layui-badge-rim">未分配</span>'; }}
+</script>
+
+<script type="text/html" id="roleNamesTpl">
+    {{# var data = kvfKit.get(api.sys.getUserRoleNames + d.id).data; }}
+    {{# return data ? data : '<span class="layui-badge-rim">未分配</span>'; }}
+</script>
+
+<!--头部工具栏模板-->
+<script type="text/html" id="headToolbarTpl">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+        <button class="layui-btn layui-btn-sm" lay-event="batchdel">删除</button>
+    </div>
+</script>
+
+<!--表格行工具栏模板-->
+<script type="text/html" id="rowToolbarTpl">
+    <a class="layui-btn layui-bg-orange layui-btn-xs" lay-event="reset"><i class="layui-icon layui-icon-password"></i>重置密码</a>
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+</script>
+
+<script type="text/javascript" th:inline="javascript">
+    layui.use(['element', 'form', 'layer', 'table'], function () {
+        var elemet = layui.element, form = layui.form, layer = layui.layer, table = layui.table;
+        var tableId = 'kContentTable';
+
+        // 实例化table
+        var tableIns = table.render($.extend(config.layui.table, {
+            elem: '#' + tableId
+            ,url: api.sys.userListData //数据接口
+            ,toolbar: '#headToolbarTpl'
+            ,cols: [[ //表头
+                {type:'checkbox', fixed: 'left'}
+                ,{field: 'realname', title: '姓名', width:100}
+                ,{field: 'username', title: '用户名', width:100}
+                ,{field: 'deptId', title: '所属部门', sort: true, templet: '#deptTpl'}
+                ,{field: 'roleNames', title: '角色', width:120, templet: '#roleNamesTpl'}
+                ,{field: 'sex', title: '性别', width:80, sort: true, templet: '#sexTpl'}
+                ,{field: 'phone', title: '手机号码', sort: true, width:150}
+                // ,{field: 'jobTitle', title: '职务名称', width:120}
+                ,{field: 'status', title: '用户状态', align: 'center', sort: true, templet: '#statusTpl', width: 100}
+                ,{field: 'sort', title: '排序号', align: 'center', sort: true, width:80, templet: '#sortTpl'}
+                ,{field: '', title: '操作', width: 235, fixed: 'right', templet: '#rowToolbarTpl'}
+            ]]
+        }));
+
+        var area = ['449px', '730px'];
+
+        // 监听表格头部事件
+        table.on('toolbar(' + tableId + ')', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id);
+            var checkData = checkStatus.data; // 得到选中的数据
+            switch(obj.event) {
+                case 'add':
+                    layer.open({
+                        type: 2
+                        ,title: '添加用户'
+                        ,content: api.sys.userEditView
+                        ,maxmin: true
+                        ,area: area   // 宽高
+                        ,btn: ['确定', '取消']
+                        ,yes: function(index, layero){
+                            //点击确认触发 iframe 内容中的按钮提交
+                            var submit = layero.find('iframe').contents().find("#kFormSubmit");
+                            submit.click();
+                        }
+                    });
+                    break;
+                case 'batchdel':
+                    if(checkData.length === 0){
+                        return kvfKit.warningMsg('请选择数据');
+                    }
+                    layer.confirm('确定删除吗？', function(index) {
+
+                        var ids = [];
+                        $.each(checkData, function(i, n){
+                            ids[i] = n.id;
+                        });
+
+                        //执行 Ajax 后重载
+                        $.ajax({
+                            type: req.type.post,
+                            url: api.sys.userRmBatch,
+                            data: {ids: ids.toString()},
+                            success: function (r) {
+                                if (r.code === req.status.ok) {
+                                    table.reload(tableId);
+                                    kvfKit.sucessMsg('已删除');
+                                } else {
+                                    kvfKit.errorMsg(r.msg);
+                                }
+                            }
+                        });
+
+                    });
+                    break;
+            }
+        });
+
+        // 表格行按钮 监听事件
+        table.on('tool(' + tableId + ')', function (obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if (layEvent === 'del') {
+                layer.confirm('确定删除吗？', function(index) {
+
+                    //执行 Ajax 后重载
+                    $.ajax({
+                        type: req.type.post,
+                        url: api.sys.userRm + data.id,
+                        async: false,
+                        success: function (r) {
+                            if (r.code === req.status.ok) {
+                                table.reload(tableId);
+                                kvfKit.sucessMsg('已删除');
+                            } else {
+                                kvfKit.errorMsg(r.msg);
+                            }
+                        }
+                    });
+                });
+            }
+            if (layEvent === 'edit') {
+                layer.open({
+                    type: 2
+                    ,title: '编辑用户'
+                    ,content:  api.sys.userEditView + '?id=' + data.id
+                    ,maxmin: true
+                    ,area: area   // 宽高
+                    ,btn: ['确定', '取消']
+                    ,yes: function(index, layero){
+                        //点击确认触发 iframe 内容中的按钮提交
+                        var submit = layero.find('iframe').contents().find("#kFormSubmit");
+                        submit.click();
+                    }
+                });
+            }
+            if (layEvent === 'reset') {
+                layer.confirm('确定重置密码吗？', function (index) {
+                    kvfKit.aPost(api.sys.userResetPwd, {}, function (r) {
+                        if (r.code === req.status.ok) {
+                            kvfKit.sucessMsg('重置成功');
+                        } else {
+                            kvfKit.errorMsg(r.msg);
+                        }
+                    });
+                });
+            }
+
+        });
+
+        // 监听查询
+        form.on('submit(kTableSearchFilter)', function (obj) {
+            var params = obj.field;
+            log('seach=', params);//
+            tableIns.reload({
+                where: params,
+                page: {current: 1}
+            });
+            return false;
+        });
+
+        // 绑定监听回车事件
+        kvfKit.bindEnterEventForLayuiForm();
+
+    });
+</script>
+
+</body>
+</html>

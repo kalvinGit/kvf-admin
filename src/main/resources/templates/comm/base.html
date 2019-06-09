@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <!-- loa上下文路径  -->
+    <script th:fragment="context" th:inline="javascript">
+        var loaCtx = [[${#httpServletRequest.getContextPath()}]] + '/';
+    </script>
+
+    <!--系统图标-->
+    <link th:fragment="icon" rel="shortcut icon" th:href="@{/static/favicon.ico}" type="image/x-icon"/>
+
+    <!-- 共用css/js静态资源 -->
+    <div th:fragment="static">
+        <link rel="stylesheet" th:href="@{/static/plugins/layui/css/layui.css}">
+        <link rel="stylesheet" th:href="@{/static/css/kvf.css}">
+        <link rel="stylesheet" th:href="@{/static/plugins/font-awesome/css/font-awesome.min.css}">
+        <link rel="stylesheet" th:href="@{/static/plugins/ztree/css/metroStyle/metroStyle.css}">
+    </div>
+
+    <div th:fragment="iconpkcss">
+        <link rel="stylesheet" th:href="@{/static/plugins/fonticon-picker/css/jquery.fonticonpicker.min.css}">
+        <link rel="stylesheet" th:href="@{/static/plugins/fonticon-picker/css/jquery.fonticonpicker.grey.min.css}">
+    </div>
+
+    <div th:fragment="mainjs">
+        <script th:src="@{/static/js/jquery.min.js}"></script>
+        <script th:src="@{/static/plugins/layui/layui.js}"></script>
+        <script th:src="@{/static/js/kconfig.js}"></script>
+        <script th:src="@{/static/js/kcommon.js}"></script>
+        <script th:src="@{/static/js/kpopup.js}"></script>
+        <script th:src="@{/static/plugins/ztree/js/jquery.ztree.all.min.js}"></script>
+    </div>
+
+    <div th:fragment="iconpkjs">
+        <script th:src="@{/static/plugins/fonticon-picker/js/jquery.fonticonpicker.min.js}"></script>
+        <script th:src="@{/static/plugins/fonticon-picker/js/fa-icon-source.js}"></script>
+    </div>
+
+    <div th:fragment="echartjs">
+        <script th:src="@{/static/plugins/echarts/echarts.min.js}"></script>
+    </div>
+
+    <div th:fragment="extendjs">
+    </div>
+
+</body>
+</html>

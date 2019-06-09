@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>LayOA管理系统</title>
+    <link th:replace="comm/base::static"/>
+    <link rel="stylesheet" th:href="@{/static/plugins/easyui/themes/material/easyui.css}">
+    <link rel="stylesheet" th:href="@{/static/plugins/easyui/themes/icon.css}">
+</head>
+<style>
+    /*解决easyui某样式和layui样式冲突问题*/
+    * {
+        -webkit-box-sizing: unset;
+        box-sizing: unset;
+    }
+    /*修改treegrid行选中样式*/
+    .datagrid-row-selected {
+        background: #f2f2f2;
+        color: #66667d;
+    }
+    .panel.datagrid.panel-htop {
+        margin-top: 10px;
+    }
+    /*treegrid实现冻结右侧列效果样式 start*/
+    .datagrid-header-row, .datagrid-row {
+        height: 39px;
+    }
+    .datagrid-view1 {
+        right: 0!important;
+        left: auto;
+        box-shadow: rgba(0, 0, 0, 0.08) -8px -8px 8px;
+    }
+    .datagrid-view2 {
+        left: 0;
+    }
+    .datagrid-view1 .datagrid-body {
+        overflow-y: auto;
+    }
+    .datagrid-view2 .datagrid-body {
+        overflow-y: auto;
+    }
+    .datagrid-view .datagrid-empty {
+        line-height: 26px;
+        padding: 15px;
+        text-align: center;
+        color: #999;
+    }
+    /*treegrid实现冻结右侧列效果样式 end*/
+</style>
+<body style="background-color: #f2f2f2;">
+
+<div id="kPage" class="layui-fluid" style="padding: 0">
+    <div class="layui-row">
+        <!-- 主要内容块 -->
+        <div class="layui-col-md12" id="kMainContentCol">
+            <div class="layui-fluid kvf-fluid-padding15">
+                <div class="layui-card">
+                    <div class="layui-form layui-card-header kvf-card-header-auto">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">名称</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="name" placeholder="请输入名称" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
+                                    <i class="layui-icon layui-icon-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-card-body">
+                        <table id="kTreeGrid" style="height: 499px"></table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script th:replace="comm/base::context"></script>
+<script th:replace="comm/base::mainjs"></script>
+<script th:src="@{/static/plugins/easyui/easyloader.js}"></script>
+
+<script type="text/html" id="typeTpl">
+    {{#  if(d.type == 0){ }}
+    <span class="layui-badge layui-bg-green">分类</span>
+    {{#  } else if(d.type == 1) { }}
+    <span class="layui-badge layui-bg-orange">角色</span>
+    {{# } }}
+</script>
+
+<!--头部工具栏模板-->
+<div id="headToolbarTpl" class="layui-btn-container" style="padding: 6px 0 0 6px">
+    <button class="layui-btn layui-btn-sm" data-event="add">添加</button>
+    <button class="layui-btn layui-btn-sm" data-event="batchdel">删除</button>
+</div>
+
+<!--表格行工具栏模板-->
+<script type="text/html" id="rowToolbarTpl">
+    {{# if(d.type === 0) { }}
+    <a class="layui-btn layui-btn-xs" data-event="add" onclick="active.add(this)" data-id="{{d.id}}" data-type="{{d.type}}"><i class="layui-icon layui-icon-add-1"></i>添加</a>
+    {{# } else { }}
+    <a class="layui-btn layui-btn-warm layui-btn-xs" data-event="add" onclick="active.setPermission(this)" data-id="{{d.id}}" data-type="{{d.type}}"><i class="layui-icon layui-icon-add-1"></i>权限</a>
+    {{# } }}
+    <a class="layui-btn layui-btn-normal layui-btn-xs" data-event="edit" onclick="active.edit(this)" data-id="{{d.id}}" data-type="{{d.type}}"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" data-event="del" onclick="active.del(this)" data-id="{{d.id}}" data-type="{{d.type}}"><i class="layui-icon layui-icon-delete"></i>删除</a>
+</script>
+
+<script type="text/javascript" th:inline="none">
+    var active;
+    layui.use(['element', 'form', 'layer', 'table', 'laytpl'], function () {
+        var elemet = layui.element, form = layui.form, layer = layui.layer;
+        var treeGridId = 'kTreeGrid';
+        var area = ['450px', '366px'];
+
+        var treeGridInst;
+        easyloader.load('treegrid', function () {
+
+            treeGridInst = $('#' + treeGridId).treegrid($.extend(config.easyui.treegrid, {
+                url: api.sys.roleListData,
+                method: 'get',
+                idField: 'id',
+                treeField: 'name',
+                toolbar: '#headToolbarTpl',
+                onExpand: function (row) {
+                    treeGridKit.fitRightFrozenCol(treeGridInst);
+                },
+                onCollapse: function (row) {
+                    treeGridKit.fitRightFrozenCol(treeGridInst);
+                },
+                loadFilter: function (r) {
+                    var rows = r.data;
+                    r.rows = rows;
+                    for (var i = 0; i < rows.length; i++) {
+                        if (r.type !== 'q' && rows[i].parentId !== 0) {
+                            rows[i]._parentId = rows[i].parentId;
+                        }
+
+                        if (rows[i].type !== 0) {
+                            rows[i].state = "open";
+                        } else {
+                            rows[i].state = "closed";
+                        }
+                    }
+                    return r;
+                },
+                onLoadSuccess: function (row, data) {
+                    treeGridKit.fitRightFrozenCol(treeGridInst);
+                },
+                frozenColumns: [[
+                    {field: 'toolbar', title: '操作', width: 200, align: 'center', fixed: true, formatter: formatter.rowToolbar}
+                ]],
+                columns: [[
+                    {field: 'name', title: '角色名称', width:220, fixed: true}
+                    ,{field: 'type', title: '类型', width:100, align: 'center', formatter: formatter.type, fixed: true}
+                    ,{field: 'remarks', title: '备注', width:200, fixed: false}
+                    ,{field: 'createTime', title: '创建时间', width:180, sortable: true, fixed: true}
+                ]]
+
+            }));
+
+            treeGridKit.setPager(treeGridInst);
+        });
+
+        // 监听事件
+        active = {
+            add: function (that) {
+                var id = $(that).data('id');
+                id = id || 0;
+                layer.open({
+                    type: 2
+                    ,title: '添加'
+                    ,content: api.sys.roleEditView + '?parentId=' + id
+                    ,maxmin: true
+                    ,area: area   // 宽高
+                    ,btn: ['确定', '取消']
+                    ,yes: function(index, layero){
+                        //点击确认触发 iframe 内容中的按钮提交
+                        var submit = layero.find('iframe').contents().find("#kFormSubmit");
+                        submit.click();
+                    }
+                });
+            },
+            batchdel: function () {
+                var checkData = treeGridInst.treegrid('getCheckedNodes');
+                if(checkData.length === 0){
+                    return kvfKit.warningMsg('请选择数据');
+                }
+
+                layer.confirm('确定删除吗？', function(index) {
+                    var ids = [];
+                    $.each(checkData, function(i, n){
+                        ids[i] = n.id;
+                    });
+
+                    //执行 Ajax 后重载
+                    $.ajax({
+                        type: req.type.post,
+                        url: api.sys.roleRmBatch,
+                        data: {ids: ids.toString()},
+                        success: function (r) {
+                            if (r.code === req.status.ok) {
+                                treeGridKit.reload(treeGridInst);
+                                kvfKit.sucessMsg('已删除');
+                            } else {
+                                kvfKit.errorMsg(r.msg);
+                            }
+                        }
+                    });
+                });
+            },
+            edit: function (that) {
+                var id = $(that).data('id');
+                id = id || 0;
+                layer.open({
+                    type: 2
+                    ,title: '编辑'
+                    ,content:  api.sys.roleEditView + '?id=' + id
+                    ,maxmin: true
+                    ,area: area   // 宽高
+                    ,btn: ['确定', '取消']
+                    ,yes: function(index, layero){
+                        //点击确认触发 iframe 内容中的按钮提交
+                        var submit = layero.find('iframe').contents().find("#kFormSubmit");
+                        submit.click();
+                    }
+                });
+
+            },
+            del: function (that) {
+                layer.confirm('确定删除吗？', function(index) {
+                    var id = $(that).data('id');
+                    //执行 Ajax 后重载
+                    $.ajax({
+                        type: req.type.post,
+                        url: api.sys.roleRm + id,
+                        async: false,
+                        success: function (r) {
+                            if (r.code === 200) {
+                                treeGridKit.reload(treeGridInst);
+                                kvfKit.sucessMsg('已删除');
+                            } else {
+                                kvfKit.errorMsg(r.msg);
+                            }
+                        }
+                    });
+                });
+            },
+            setPermission: function (that) {
+                var id = $(that).data('id');
+
+                layer.open({
+                    type: 2
+                    ,title: '设置权限'
+                    ,content: api.sys.rolePermissionView + '?id=' + id
+                    ,maxmin: true
+                    ,area: ['415', '708px']   // 宽高
+                    ,btn: ['确定', '取消']
+                    ,yes: function(index, layero){
+                        //点击确认触发 iframe 内容中的按钮提交
+                        var submit = layero.find('iframe').contents().find("#kFormSubmit");
+                        submit.click();
+                    }
+                });
+            }
+        };
+
+        kvfKit.activeInit(active);
+
+        $(window).resize(function () {
+            treeGridKit.fitRightFrozenCol(treeGridInst);
+        });
+
+        // 列格式化函数
+        var formatter = {
+            rowToolbar: function (value, row, index) {
+                return kvfKit.renderTpl('rowToolbarTpl', row);
+            },
+            type: function (value, row, index) {
+                return kvfKit.renderTpl('typeTpl', row);
+            }
+        };
+
+        // 监听查询
+        form.on('submit(kTableSearchFilter)', function (obj) {
+            var params = obj.field;
+            log('seach=', params); //
+
+            $.get(api.sys.roleListData, params, function(r) {
+                r.type = 'q';
+                treeGridInst.treegrid('loadData', r);
+            }, 'json');
+
+            return false;
+        });
+
+        // 绑定监听回车事件
+        kvfKit.bindEnterEventForLayuiForm();
+
+    });
+</script>
+
+</body>
+</html>

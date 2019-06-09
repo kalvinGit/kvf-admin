@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>LayOA管理系统</title>
+    <link th:replace="comm/base::static"/>
+</head>
+<body style="background-color: #f2f2f2;">
+
+<div id="kPage" class="layui-fluid" style="padding: 0">
+    <!-- 主要内容块 -->
+    <div class="layui-fluid kvf-fluid-padding15">
+        <div class="layui-card">
+            <div class="layui-form layui-card-header kvf-card-header-auto">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">登录名</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="username" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
+                            <i class="layui-icon layui-icon-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-card-body">
+                <table id="kContentTable" lay-filter="kContentTable"></table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script th:replace="comm/base::context"></script>
+<script th:replace="comm/base::mainjs"></script>
+
+<script type="text/javascript" th:inline="javascript">
+    layui.use(['element', 'form', 'layer', 'table'], function () {
+        var elemet = layui.element, form = layui.form, layer = layui.layer, table = layui.table;
+        var tableId = 'kContentTable';
+
+        // 实例化table
+        var tableIns = table.render($.extend(config.layui.table, {
+            elem: '#' + tableId
+            ,url: api.sys.logListData //数据接口
+            ,cols: [[ //表头
+                {type:'checkbox', fixed: 'left'}
+                ,{field: 'username', title: '登录名称', width: 120}
+                ,{field: 'operation', title: '操作功能'}
+                ,{field: 'forwardAction', title: '操作uri'}
+                ,{field: 'ip', title: 'IP', width: 180}
+                ,{field: 'browser', title: '浏览器', width: 180}
+                ,{field: 'os', title: '系统', width: 100}
+                ,{field: 'time', title: '执行时长(毫秒)', width: 150}
+                ,{field: 'createTime', title: '访问时间', width: 180, sort: true}
+            ]]
+        }));
+
+        // 监听查询
+        form.on('submit(kTableSearchFilter)', function (obj) {
+            var params = obj.field;
+            tableIns.reload({
+                where: params,
+                page: {current: 1}
+            });
+            return false;
+        });
+
+        // 绑定监听回车事件
+        kvfKit.bindEnterEventForLayuiForm();
+
+    });
+</script>
+
+</body>
+</html>

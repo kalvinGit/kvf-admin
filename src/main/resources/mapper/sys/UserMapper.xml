@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kalvin.kvf.mapper.sys.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kalvin.kvf.entity.sys.User">
+        <id column="id" property="id" />
+        <result column="dept_id" property="deptId" />
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+        <result column="realname" property="realname" />
+        <result column="sex" property="sex" />
+        <result column="phone" property="phone" />
+        <result column="tel" property="tel" />
+        <result column="email" property="email" />
+        <result column="avatar" property="avatar" />
+        <result column="job_title" property="jobTitle" />
+        <result column="status" property="status" />
+        <result column="sort" property="sort" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, dept_id, username, password, realname, sex, phone, tel, email, avatar, job_title, status, sort, del_flag, create_by, update_time, create_time
+    </sql>
+
+    <select id="selectUserList" resultType="com.kalvin.kvf.entity.sys.User">
+        select <include refid="Base_Column_List" /> from sys_user
+        <trim prefix="where" prefixOverrides="and">
+            <if test="queryVO.username != null and queryVO.username != ''">
+                AND username LIKE concat("%", #{queryVO.username, jdbcType=VARCHAR}, "%")
+            </if>
+            <if test="queryVO.realname != null and queryVO.realname != ''">
+                AND realname LIKE concat("%", #{queryVO.realname, jdbcType=VARCHAR}, "%")
+            </if>
+            <!--<if test="phone != null">
+                AND phone LIKE concat("%", #{phone, jdbcType=BIGINT}, "%")
+            </if>-->
+            <if test="queryVO.status != null">
+                AND status = #{queryVO.status, jdbcType=INTEGER}
+            </if>
+            <if test="queryVO.depts != null">
+                AND dept_id IN
+                <foreach collection="queryVO.depts" item="item" index="index" open="(" close=")" separator=",">
+                    #{item.id, jdbcType=BIGINT}
+                </foreach>
+            </if>
+        </trim>
+        order by sort asc
+    </select>
+
+</mapper>

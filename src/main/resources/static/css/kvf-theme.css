@@ -1,0 +1,290 @@
+
+/*bisque主题 start*/
+.kvf-l-bisque-theme {}
+/*横向导航鼠标经过下划线样式*/
+.kvf-l-bisque-theme .layui-header .layui-nav .layui-this::after, .kvf-l-bisque-theme .layui-header .layui-nav-bar, .kvf-l-bisque-theme .layui-header .layui-nav-tree .layui-nav-itemed::after {
+    background-color: #2E241B;
+}
+/*logo模块*/
+.kvf-l-bisque-theme .layui-side-scroll .layui-logo {
+    background-color: #2E241B !important
+}
+/*左侧导航背景色及左侧导航一级菜单背景色*/
+.kvf-l-bisque-theme .layui-side-scroll, .kvf-l-bisque-theme .layui-side-scroll ul li.layui-nav-item > a {
+    background-color: #2E241B !important
+}
+/*左侧导航二级菜单背景色*/
+.kvf-l-bisque-theme .layui-side-scroll ul li.layui-nav-item .layui-nav-child a {
+    background-color: #201913 !important;
+}
+/*左侧导航二级菜单选中背景色*/
+.kvf-l-bisque-theme .layui-side-scroll ul li.layui-nav-item .layui-nav-child dd.layui-this a {
+    background-color: #a48566 !important
+}
+
+
+/*blue主题 start*/
+.kvf-l-blue-theme {}
+/*横向导航鼠标经过下划线样式*/
+.kvf-l-blue-theme .layui-header .layui-nav .layui-this::after, .kvf-l-blue-theme .layui-header .layui-nav-bar, .kvf-l-blue-theme .layui-header .layui-nav-tree .layui-nav-itemed::after {
+    background-color: #1E9FFF;
+}
+/*logo模块*/
+.kvf-l-blue-theme .layui-side-scroll .layui-logo {
+    background-color: #1E9FFF !important
+}
+/*左侧导航背景色及左侧导航一级菜单背景色*/
+.kvf-l-blue-theme .layui-side-scroll, .kvf-l-blue-theme .layui-side-scroll ul li.layui-nav-item > a {
+    background-color: #344058 !important
+}
+/*左侧导航二级菜单背景色*/
+.kvf-l-blue-theme .layui-side-scroll ul li.layui-nav-item .layui-nav-child a {
+    background-color: #242d3d !important;
+}
+/*左侧导航二级菜单选中背景色*/
+.kvf-l-blue-theme .layui-side-scroll ul li.layui-nav-item .layui-nav-child dd.layui-this a {
+    background-color: #1E9FFF !important
+}
+
+/*red主题 start*/
+.kvf-l-red-theme {}
+/*横向导航鼠标经过下划线样式*/
+.kvf-l-red-theme .layui-header .layui-nav .layui-this::after, .kvf-l-red-theme .layui-header .layui-nav-bar, .kvf-l-red-theme .layui-header .layui-nav-tree .layui-nav-itemed::after {
+    background-color: #aa3130;
+}
+/*logo模块*/
+.kvf-l-red-theme .layui-side-scroll .layui-logo {
+    background-color: #aa3130 !important
+}
+/*左侧导航背景色及左侧导航一级菜单背景色*/
+.kvf-l-red-theme .layui-side-scroll, .kvf-l-red-theme .layui-side-scroll ul li.layui-nav-item > a {
+    background-color: #28333e !important
+}
+/*左侧导航二级菜单背景色*/
+.kvf-l-red-theme .layui-side-scroll ul li.layui-nav-item .layui-nav-child a {
+    background-color: #1c242b !important;
+}
+/*左侧导航二级菜单选中背景色*/
+.kvf-l-red-theme .layui-side-scroll ul li.layui-nav-item .layui-nav-child dd.layui-this a {
+    background-color: #aa3130 !important
+}
+
+
+/*orange主题 start*/
+.kvf-l-orange-theme {}
+/*横向导航鼠标经过下划线样式*/
+.kvf-l-orange-theme .layui-header .layui-nav .layui-this::after, .kvf-l-orange-theme .layui-header .layui-nav-bar, .kvf-l-orange-theme .layui-header .layui-nav-tree .layui-nav-itemed::after {
+    background-color: #F78400;
+}
+/*logo模块*/
+.kvf-l-orange-theme .layui-side-scroll .layui-logo {
+    background-color: #F78400 !important
+}
+/*左侧导航背景色及左侧导航一级菜单背景色*/
+.kvf-l-orange-theme .layui-side-scroll, .kvf-l-orange-theme .layui-side-scroll ul li.layui-nav-item > a {
+    background-color: #28333e !important
+}
+/*左侧导航二级菜单背景色*/
+.kvf-l-orange-theme .layui-side-scroll ul li.layui-nav-item .layui-nav-child a {
+    background-color: #1c242b !important;
+}
+/*左侧导航二级菜单选中背景色*/
+.kvf-l-orange-theme .layui-side-scroll ul li.layui-nav-item .layui-nav-child dd.layui-this a {
+    background-color: #F78400 !important
+}
+
+
+/*绿色主题 start*/
+.kvf-green-theme {}
+/*横向导航背景色*/
+.kvf-green-theme .layui-header {
+    background-color: #2F9688 !important;
+}
+/*横向导航字体颜色*/
+.kvf-green-theme .layui-header ul li > a {
+    color: #ffffff !important;
+}
+/*横向导航nav图标颜色*/
+.kvf-green-theme .layui-header .layui-nav-more {
+    border-top-color: #ffffff !important;
+}
+.kvf-green-theme .layui-header .layui-nav-mored {
+    border-color: transparent transparent #ffffff !important;
+}
+/*横向导航鼠标经过下划线样式*/
+.kvf-green-theme .layui-header .layui-nav .layui-this::after, .kvf-green-theme .layui-header .layui-nav-bar, .kvf-green-theme .layui-header .layui-nav-tree .layui-nav-itemed::after {
+    background-color: #949DAD;
+}
+/*logo模块*/
+.kvf-green-theme .layui-side-scroll .layui-logo {
+    background-color: #226A62 !important
+}
+/*左侧导航背景色及左侧导航一级菜单背景色*/
+.kvf-green-theme .layui-side-scroll, .kvf-green-theme .layui-side-scroll ul li.layui-nav-item > a {
+    background-color: #20222a !important
+}
+/*左侧导航二级菜单背景色*/
+.kvf-green-theme .layui-side-scroll ul li.layui-nav-item .layui-nav-child a {
+    background-color: #16181d !important;
+}
+/*左侧导航二级菜单选中背景色*/
+.kvf-green-theme .layui-side-scroll ul li.layui-nav-item .layui-nav-child dd.layui-this a {
+    background-color: #009688 !important
+}
+
+/*蓝色主题 start*/
+.kvf-blue-theme {}
+/*横向导航背景色*/
+.kvf-blue-theme .layui-header {
+    background-color: #1e9fff !important;
+}
+/*横向导航字体颜色*/
+.kvf-blue-theme .layui-header ul li > a {
+    color: #ffffff !important;
+}
+/*横向导航nav图标颜色*/
+.kvf-blue-theme .layui-header .layui-nav-more {
+    border-top-color: #ffffff !important;
+}
+.kvf-blue-theme .layui-header .layui-nav-mored {
+    border-color: transparent transparent #ffffff !important;
+}
+/*横向导航鼠标经过下划线样式*/
+.kvf-blue-theme .layui-header .layui-nav .layui-this::after, .kvf-blue-theme .layui-header .layui-nav-bar, .kvf-blue-theme .layui-header .layui-nav-tree .layui-nav-itemed::after {
+    background-color: #949DAD;
+}
+/*logo模块*/
+.kvf-blue-theme .layui-side-scroll .layui-logo {
+    background-color: #0085e8 !important
+}
+/*左侧导航背景色及左侧导航一级菜单背景色*/
+.kvf-blue-theme .layui-side-scroll, .kvf-blue-theme .layui-side-scroll ul li.layui-nav-item > a {
+    background-color: #344058 !important
+}
+/*左侧导航二级菜单背景色*/
+.kvf-blue-theme .layui-side-scroll ul li.layui-nav-item .layui-nav-child a {
+    background-color: #242d3d !important;
+}
+/*左侧导航二级菜单选中背景色*/
+.kvf-blue-theme .layui-side-scroll ul li.layui-nav-item .layui-nav-child dd.layui-this a {
+    background-color: #1e9fff !important
+}
+
+
+/*红色主题 start*/
+.kvf-red-theme {}
+/*横向导航背景色*/
+.kvf-red-theme .layui-header {
+    background-color: #aa3130 !important;
+}
+/*横向导航字体颜色*/
+.kvf-red-theme .layui-header ul li > a {
+    color: #ffffff !important;
+}
+/*横向导航nav图标颜色*/
+.kvf-red-theme .layui-header .layui-nav-more {
+    border-top-color: #ffffff !important;
+}
+.kvf-red-theme .layui-header .layui-nav-mored {
+    border-color: transparent transparent #ffffff !important;
+}
+/*横向导航鼠标经过下划线样式*/
+.kvf-red-theme .layui-header .layui-nav .layui-this::after, .kvf-red-theme .layui-header .layui-nav-bar, .kvf-red-theme .layui-header .layui-nav-tree .layui-nav-itemed::after {
+    background-color: #949DAD;
+}
+/*logo模块*/
+.kvf-red-theme .layui-side-scroll .layui-logo {
+    background-color: #28333e !important
+}
+/*左侧导航背景色及左侧导航一级菜单背景色*/
+.kvf-red-theme .layui-side-scroll, .kvf-red-theme .layui-side-scroll ul li.layui-nav-item > a {
+    background-color: #28333e !important
+}
+/*左侧导航二级菜单背景色*/
+.kvf-red-theme .layui-side-scroll ul li.layui-nav-item .layui-nav-child a {
+    background-color: #1c242b !important;
+}
+/*左侧导航二级菜单选中背景色*/
+.kvf-red-theme .layui-side-scroll ul li.layui-nav-item .layui-nav-child dd.layui-this a {
+    background-color: #aa3130 !important
+}
+
+
+/*黑色主题 start*/
+.kvf-black-theme {}
+/*横向导航背景色*/
+.kvf-black-theme .layui-header {
+    background-color: #393d49 !important;
+}
+/*横向导航字体颜色*/
+.kvf-black-theme .layui-header ul li > a {
+    color: #ffffff !important;
+}
+/*横向导航nav图标颜色*/
+.kvf-black-theme .layui-header .layui-nav-more {
+    border-top-color: #ffffff !important;
+}
+.kvf-black-theme .layui-header .layui-nav-mored {
+    border-color: transparent transparent #ffffff !important;
+}
+/*横向导航鼠标经过下划线样式*/
+.kvf-black-theme .layui-header .layui-nav .layui-this::after, .kvf-black-theme .layui-header .layui-nav-bar, .kvf-black-theme .layui-header .layui-nav-tree .layui-nav-itemed::after {
+    background-color: #949DAD;
+}
+/*logo模块*/
+.kvf-black-theme .layui-side-scroll .layui-logo {
+    background-color: #20222a !important
+}
+/*左侧导航背景色及左侧导航一级菜单背景色*/
+.kvf-black-theme .layui-side-scroll, .kvf-black-theme .layui-side-scroll ul li.layui-nav-item > a {
+    background-color: #20222a !important
+}
+/*左侧导航二级菜单背景色*/
+.kvf-black-theme .layui-side-scroll ul li.layui-nav-item .layui-nav-child a {
+    background-color: #16181d !important;
+}
+/*左侧导航二级菜单选中背景色*/
+.kvf-black-theme .layui-side-scroll ul li.layui-nav-item .layui-nav-child dd.layui-this a {
+    background-color: #009688 !important
+}
+
+/*紫色主题 start*/
+.kvf-pink-theme {}
+/*横向导航背景色*/
+.kvf-pink-theme .layui-header {
+    background-color: #50314F !important;
+}
+/*横向导航字体颜色*/
+.kvf-pink-theme .layui-header ul li > a {
+    color: #ffffff !important;
+}
+/*横向导航nav图标颜色*/
+.kvf-pink-theme .layui-header .layui-nav-more {
+    border-top-color: #ffffff !important;
+}
+.kvf-pink-theme .layui-header .layui-nav-mored {
+    border-color: transparent transparent #ffffff !important;
+}
+/*横向导航鼠标经过下划线样式*/
+.kvf-pink-theme .layui-header .layui-nav .layui-this::after, .kvf-pink-theme .layui-header .layui-nav-bar, .kvf-pink-theme .layui-header .layui-nav-tree .layui-nav-itemed::after {
+    background-color: #949DAD;
+}
+/*logo模块*/
+.kvf-pink-theme .layui-side-scroll .layui-logo {
+    background-color: #50314F !important
+}
+/*左侧导航背景色及左侧导航一级菜单背景色*/
+.kvf-pink-theme .layui-side-scroll, .kvf-pink-theme .layui-side-scroll ul li.layui-nav-item > a {
+    background-color: #50314F !important
+}
+/*左侧导航二级菜单背景色*/
+.kvf-pink-theme .layui-side-scroll ul li.layui-nav-item .layui-nav-child a {
+    background-color: #382237 !important;
+}
+/*左侧导航二级菜单选中背景色*/
+.kvf-pink-theme .layui-side-scroll ul li.layui-nav-item .layui-nav-child dd.layui-this a {
+    background-color: #7a4d7b !important
+}
+
+
+/*主题 end*/

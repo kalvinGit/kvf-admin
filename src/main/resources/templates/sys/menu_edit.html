@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>LayOA管理系统</title>
+    <link th:replace="comm/base::static"/>
+    <link th:replace="comm/base::iconpkcss"/>
+    <style>
+        .fip-icons-container .fip-box i {
+            font: normal normal normal 14px/1 FontAwesome;
+        }
+        .selector .selected-icon i.fa {
+            font: normal normal normal 18px/1 FontAwesome;
+            line-height: 40px;
+        }
+        .fip-icon-block:before {
+            content: ''!important;
+            color: #fed0d0;
+        }
+
+    </style>
+</head>
+<body>
+<div class="layui-form" style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">名称</label>
+        <div class="layui-input-inline">
+            <input type="text" name="name" th:value="${editInfo.name}" lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item" th:remove="${editInfo.type!=null&&(editInfo.type!=0&&editInfo.type!=3)?'all':'none'}">
+        <label class="layui-form-label">图标</label>
+        <div class="layui-input-inline">
+            <input type="text" name="icon" id="iconPicker" th:value="${editInfo.icon}" lay-verify="required" placeholder="请输入图标" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item" th:remove="${(editInfo.type==2)?'all':'none'}">
+        <label class="layui-form-label">链接</label>
+        <div class="layui-input-inline">
+            <input type="text" name="url" th:value="${editInfo.url}" placeholder="请输入链接" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item" th:remove="${editInfo.type==0||editInfo.type==3?'all':'none'}">
+        <label class="layui-form-label">权限标识</label>
+        <div class="layui-input-inline">
+            <input type="text" name="permission" th:value="${editInfo.permission}" lay-verify="required" placeholder="请输入权限标识" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序号</label>
+        <div class="layui-input-inline">
+            <input type="text" name="sort" th:value="${editInfo.sort==null?'0':editInfo.sort}" lay-verify="required" placeholder="请输入排序号" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-block" id="typeRadio">
+            <input type="radio" name="type" value="0" title="目录" autocomplete="off" class="layui-input" th:remove="${editInfo.type!=0?'all':'none'}" th:checked="${editInfo.type==0}">
+            <input type="radio" name="type" value="1" title="菜单" autocomplete="off" class="layui-input" th:remove="${editInfo.type!=1?'all':'none'}" th:checked="${editInfo.type==1}">
+            <input type="radio" name="type" value="2" title="按钮" autocomplete="off" class="layui-input" th:remove="${editInfo.type!=2?'all':'none'}" th:checked="${editInfo.type==2}">
+            <input type="radio" name="type" value="3" title="导航菜单" autocomplete="off" class="layui-input" th:remove="${editInfo.type!=3?'all':'none'}" th:checked="${editInfo.type==3}">
+        </div>
+    </div>
+    <!--<div class="layui-form-item">
+        <label class="layui-form-label">发布状态</label>
+        <div class="layui-input-inline">
+            <input type="checkbox" lay-verify="required" lay-filter="status" name="status" lay-skin="switch" lay-text="已发布|待修改"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>待修改</em><i></i></div>
+        </div>
+    </div>-->
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit="" lay-filter="kFormSubmit" id="kFormSubmit" value="确认添加">
+        <input type="text" name="id" th:value="${editInfo.id}" placeholder="保存ID" autocomplete="off" class="layui-input">
+        <input type="text" name="parentId" th:value="${editInfo.parentId}" placeholder="保存parentId" autocomplete="off" class="layui-input">
+    </div>
+</div>
+
+<script th:replace="comm/base::context"></script>
+<script th:replace="comm/base::mainjs"></script>
+<script th:replace="comm/base::iconpkjs"></script>
+<script>
+    layui.use(['form'], function () {
+        var $ = layui.$, form = layui.form;
+
+        var parentId = kvfKit.getUrlParam('parentId');
+        var type = kvfKit.getUrlParam('type');
+        var $typeRadioEl = $('#typeRadio');
+        if (type) {
+            if (Number(type) === 0) {
+                // $('input[name=url]').parents('.layui-form-item').remove();
+                $('input[name=permission]').parents('.layui-form-item').remove();
+                $typeRadioEl.append('<input type="radio" name="type" value="0" title="目录" autocomplete="off" class="layui-input" checked>');
+                $typeRadioEl.append('<input type="radio" name="type" value="3" title="导航菜单" autocomplete="off" class="layui-input">');
+            } else {
+                $('input[name=icon]').parents('.layui-form-item').remove();
+
+                if (Number(type) === 1) {
+                    $typeRadioEl.append('<input type="radio" name="type" value="1" title="菜单" autocomplete="off" class="layui-input" checked>');
+                }
+                if (Number(type) === 2) {
+                    $('input[name=url]').parents('.layui-form-item').remove();
+                    $typeRadioEl.append('<input type="radio" name="type" value="2" title="按钮" autocomplete="off" class="layui-input" checked>');
+                }
+            }
+        }
+
+        form.render('radio');
+
+        if (!parentId) {
+            parentId = $('input[name="parentId"]').val();
+        }
+
+        log('type=', type);
+
+        //监听提交
+        form.on('submit(kFormSubmit)', function(data){
+            var field = data.field; //获取提交的字段
+            field.parentId = parentId;  // 父级菜单ID
+            field.type = field.type || type;  // 菜单类型
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+
+            log('field=', field);
+
+            //提交 Ajax 成功后，关闭当前弹层并重载表格
+            $.ajax({
+                type: req.type.post,
+                url: field.id ? api.sys.menuEdit : api.sys.menuAdd,
+                data: field,
+                async: false,
+                success: function (r) {
+                    if (r.code === req.status.ok) {
+                        // 重载treegrid表格
+                        parent.$('#kTreeGrid').treegrid('reload', {id: Number(parentId)});
+                        parent.layer.close(index); //再执行关闭
+                    } else {
+                        kvfKit.errorMsg(r.msg);
+                    }
+                }
+            });
+
+        });
+
+        $('#iconPicker').fontIconPicker({
+            source: fa_icons,
+            searchSource: fa_icons,
+            emptyIconValue: '',
+            emptyIcon: true
+        });
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+package com.kalvin.kvf.controller.sys;
+
+
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.kalvin.kvf.comm.utils.CryptionUtil;
+import com.kalvin.kvf.comm.utils.ShiroUtils;
+import com.kalvin.kvf.controller.BaseController;
+import com.kalvin.kvf.dto.R;
+import com.kalvin.kvf.dto.sys.UserEditDTO;
+import com.kalvin.kvf.dto.sys.UserRoleGroupDTO;
+import com.kalvin.kvf.entity.sys.Dept;
+import com.kalvin.kvf.entity.sys.User;
+import com.kalvin.kvf.service.sys.IDeptService;
+import com.kalvin.kvf.service.sys.IUserRoleService;
+import com.kalvin.kvf.service.sys.IUserService;
+import com.kalvin.kvf.vo.sys.UserQueryVO;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
+
+/**
+ * <p>
+ * 用户表 前端控制器
+ * </p>
+ *
+ * @author Kalvin
+ * @since 2019-04-29
+ */
+@RestController
+@RequestMapping("sys/user")
+public class UserController extends BaseController {
+
+    @Autowired
+    private IUserService userService;
+
+    @Autowired
+    private IDeptService deptService;
+
+    @Autowired
+    private IUserRoleService userRoleService;
+
+    @RequiresPermissions("sys:user:index")
+    @GetMapping("index")
+    public ModelAndView index() {
+        return new ModelAndView("sys/user");
+    }
+
+    @GetMapping(value = "edit")
+    public ModelAndView edit(Long id) {
+        ModelAndView mv = new ModelAndView("sys/user_edit");
+        UserEditDTO userEditDTO = new UserEditDTO();
+        UserRoleGroupDTO userRoleGroupDTO = new UserRoleGroupDTO();
+        if (id != null) {
+            User user = userService.getById(id);
+            Dept dept = deptService.getById(user.getDeptId());
+            userRoleGroupDTO = userRoleService.getUserRoleGroupDTOByUserId(id);
+            BeanUtil.copyProperties(user, userEditDTO);
+            userEditDTO.setDeptName(dept == null ? "" : dept.getName());
+        }
+        userEditDTO.setUserRole(userRoleGroupDTO);
+        mv.addObject("editInfo", userEditDTO);
+        return mv;
+    }
+
+    @GetMapping(value = "info")
+    public ModelAndView info() {
+        ModelAndView mv = new ModelAndView("sys/user_info");
+        User user = userService.getById(ShiroUtils.getUserId());
+        mv.addObject("user", user);
+        return mv;
+    }
+
+    @GetMapping(value = "password")
+    public ModelAndView password() {
+        return new ModelAndView("sys/user_pwd");
+    }
+
+    @GetMapping(value = "list/data")
+    public R listData(UserQueryVO queryVO) {
+        Page<User> page = userService.listUserPage(queryVO);
+        return R.ok(page);
+    }
+
+    @RequiresPermissions("sys:user:add")
+    @Transactional
+    @PostMapping(value = "add")
+    public R add(User user, @RequestParam("roleIds") List<Long> roleIds) {
+        user.setDeptId(user.getDeptId() == null ? 0 : user.getDeptId());
+        // 生成用户初始密码并加密
+        user.setPassword(CryptionUtil.genUserPwd());
+        userService.saveOrUpdate(user);
+        userRoleService.saveOrUpdateBatchUserRole(roleIds, user.getId());
+        return R.ok();
+    }
+
+    @RequiresPermissions("sys:user:edit")
+    @Transactional
+    @PostMapping(value = "edit")
+    public R edit(User user, @RequestParam("roleIds") List<Long> roleIds) {
+        user.setDeptId(user.getDeptId() == null ? 0 : user.getDeptId());
+        userService.updateById(user);
+        userRoleService.saveOrUpdateBatchUserRole(roleIds, user.getId());
+        return R.ok();
+    }
+
+    @RequiresPermissions("sys:user:del")
+    @PostMapping(value = "remove/{id}")
+    public R remove(@PathVariable Long id) {
+        userService.removeById(id);
+        return R.ok();
+    }
+
+    @RequiresPermissions("sys:user:del")
+    @PostMapping(value = "removeBatch")
+    public R removeBatch(@RequestParam("ids") List<Long> ids) {
+        userService.removeByIds(ids);
+        return R.ok();
+    }
+
+    @RequiresPermissions("sys:user:reset")
+    @PostMapping(value = "resetPwd")
+    public R resetPwd() {
+        return this.changePwd(null, null);
+    }
+
+    @PostMapping(value = "changePwd")
+    public R changePwd(String oldPassword, String password) {
+        if (StrUtil.isBlank(oldPassword) && StrUtil.isBlank(password)) {
+            password = CryptionUtil.genUserPwd();
+        } else {
+            User user = userService.getById(ShiroUtils.getUserId());
+            oldPassword = CryptionUtil.genUserPwd(oldPassword);
+            if (user.getPassword().equals(oldPassword)) {
+                password = CryptionUtil.genUserPwd(password);
+                if (user.getPassword().equals(password)) {
+                    return R.fail("新密码不能与旧密码相同");
+                }
+            } else {
+                return R.fail("旧密码不正确");
+            }
+        }
+        userService.update(new LambdaUpdateWrapper<User>()
+                .set(User::getPassword, password)
+                .eq(User::getId, ShiroUtils.getUserId()));
+        return R.ok();
+    }
+
+}
+

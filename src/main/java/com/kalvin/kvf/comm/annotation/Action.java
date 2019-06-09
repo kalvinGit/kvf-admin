@@ -1,0 +1,17 @@
+package com.kalvin.kvf.comm.annotation;
+
+import java.lang.annotation.*;
+
+/** 
+ * 【作用】系统操作日志注解<br>
+ * 【说明】（无）
+ * @author Kalvin
+ */
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface Action {
+    
+    String value() default ""; // 操作说明
+}
+

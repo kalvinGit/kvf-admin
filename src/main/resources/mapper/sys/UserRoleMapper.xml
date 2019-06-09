@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kalvin.kvf.mapper.sys.UserRoleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kalvin.kvf.entity.sys.UserRole">
+        <id column="id" property="id" />
+        <result column="role_id" property="roleId" />
+        <result column="user_id" property="userId" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, role_id, user_id, create_time
+    </sql>
+
+    <select id="selectUserRoleList" resultType="com.kalvin.kvf.entity.sys.UserRole">
+        select <include refid="Base_Column_List" /> from sys_user_role
+        <trim prefix="where" prefixOverrides="and">
+            <if test="userRole.roleId != null">
+                AND role_id = #{userRole.roleId}
+            </if>
+            <if test="userRole.userId != null">
+                AND user_id = #{userRole.userId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="selectUserRoleGroupByUserId" resultType="com.kalvin.kvf.dto.sys.UserRoleGroupDTO">
+        select GROUP_CONCAT( r.id SEPARATOR ',' ) roleIds, GROUP_CONCAT(r.name SEPARATOR ',') roleNames
+        from sys_user_role ur
+        left join sys_role r on ur.role_id = r.id
+        where ur.user_id = #{userId}
+    </select>
+
+</mapper>

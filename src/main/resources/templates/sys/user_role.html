@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>LayOA管理系统</title>
+    <link th:replace="comm/base::static"/>
+    <style>
+
+
+    </style>
+</head>
+<body style="background-color: #f2f2f2;">
+
+<div id="kPage" class="layui-fluid" style="padding: 0">
+    <!-- 主要内容块 -->
+    <div class="layui-fluid kvf-fluid-padding15">
+        <div class="layui-card">
+            <!--<div class="layui-form layui-card-header kvf-card-header-auto">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">角色分类</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="name" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
+                            <i class="layui-icon layui-icon-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>-->
+
+            <div class="layui-card-body">
+                <div style="padding-bottom: 10px;">
+                    <button class="layui-btn loa-btn-list" data-type="batchdel">删除</button>
+                    <button class="layui-btn loa-btn-list" data-type="add">添加</button>
+                </div>
+                <table id="kContentTable" lay-filter="kContentTable"></table>
+            </div>
+            <div class="layui-form-item layui-hide">
+                <input type="button" lay-submit="" lay-filter="LOA-table-reload" id="LOA-table-reload" value="确认添加">
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script th:replace="comm/base::context"></script>
+<script th:replace="comm/base::mainjs"></script>
+
+<script type="text/javascript" th:inline="javascript">
+    layui.use(['element', 'form', 'layer', 'table'], function () {
+        var elemet = layui.element, form = layui.form, layer = layui.layer, table = layui.table;
+
+        var roleId = kvfKit.getUrlParam('id');
+
+        // 实例化table
+        kvfKit.initTableSet(table);
+        table.render({
+            elem: '#kContentTable'
+            ,url: api.sys.userRoleListData + '?roleId=' + roleId //数据接口
+            ,cols: [[ //表头
+                {type:'checkbox', fixed: 'left'}
+                ,{field: 'username', title: '用户名'}
+                ,{field: 'realname', title: '用户姓名'}
+            ]]
+        });
+
+        var area = ['667px', '730px'];
+
+        var $ = layui.$, active = {
+            batchdel: function(){
+                var checkStatus = table.checkStatus('kContentTable')
+                    ,checkData = checkStatus.data; //得到选中的数据
+
+                if(checkData.length === 0){
+                    return kvfKit.warningMsg('请选择数据');
+                }
+
+                layer.confirm('确定删除吗？', function(index) {
+
+                    var ids = [];
+                    $.each(checkData, function(i, n){
+                        ids[i] = n.id;
+                    });
+
+                    //执行 Ajax 后重载
+                    $.ajax({
+                        type: req.type.post,
+                        url: api.sys.userRoleRmBatch,
+                        data: {ids: ids.toString()},
+                        success: function (r) {
+                            if (r.code === req.status.ok) {
+                                table.reload('kContentTable');
+                                kvfKit.sucessMsg('已删除');
+                            } else {
+                                kvfKit.errorMsg(r.msg);
+                            }
+                        }
+                    });
+
+                });
+            },
+            add: function(){
+
+                parent.layer.open({
+                    type: 2
+                    ,title: '添加成员'
+                    ,content: api.comm.selUserView + '?roleId=' + roleId
+                    ,maxmin: true
+                    ,area: area   // 宽高
+                    ,btn: ['确定', '取消']
+                    ,yes: function(index, layero){
+                        //点击确认触发 iframe 内容中的按钮提交
+                        var submit = layero.find('iframe').contents().find("#kFormSubmit");
+                        submit.click();
+                    }
+                });
+            }
+        };
+
+        // 表格头部按钮 监听事件
+        $('.layui-btn.loa-btn-list').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        form.on('submit(LOA-table-reload)', function () {
+            table.reload('kContentTable');
+        });
+
+
+    });
+</script>
+
+</body>
+</html>

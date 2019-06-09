@@ -1,0 +1,141 @@
+body {
+    background-color: #f2f2f2;
+}
+
+/*登录页 start*/
+.kvf-user-login {
+    position: relative;
+    left: 0;
+    top: 0;
+    padding: 110px 0;
+    min-height: 100%;
+    box-sizing: border-box;
+}
+.kvf-user-login-main {
+    width: 375px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+.kvf-user-login-box {
+    padding: 20px;
+}
+.kvf-user-login-header {
+    text-align: center;
+}
+.kvf-user-login-icon {
+    position: absolute;
+    /*left: 1px;*/
+    /*top: 1px;*/
+    width: 38px;
+    line-height: 36px;
+    text-align: center;
+    color: #d2d2d2;
+}
+.kvf-user-login-codeimg {
+    max-height: 38px;
+    width: 100%;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+.kvf-user-login-footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    line-height: 30px;
+    padding: 20px;
+    text-align: center;
+    box-sizing: border-box;
+    color: rgba(0,0,0,.5);
+}
+.kvf-user-login .layui-form .layui-form-item input {
+    padding-left: 38px;
+}
+.kvf-user-jump-change {
+    float: right;
+    color: #029789!important;
+}
+/*登录页 end*/
+
+.kvf-user-head {
+    height: 30px;
+    width: 30px;
+    border-radius: 30px;
+}
+
+/*内容主体样式*/
+.kvf-card-header-auto {
+    padding-top: 24px;
+    padding-bottom: 15px;
+    height: auto;
+}
+
+.kvf-card-header-auto .layui-form-item:last-child {
+    margin-bottom: 0;
+}
+
+.kvf-fluid-padding15 {
+    padding: 15px;
+}
+
+.kvf-theme-ul {
+    display: block;
+    list-style-type: disc;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    /*padding-inline-start: 40px;*/
+}
+.kvf-theme-li {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    /*width: 80px;*/
+    /*height: 50px;*/
+    margin: 0 10px 10px 0;
+    /*background-color: #f2f2f2;*/
+    background-color: #e9e7f9;
+    cursor: pointer;
+    font-size: 12px;
+    color: #666;
+    padding: 5px;
+}
+.kvf-theme-li:hover, .kvf-theme-li.kvf-theme-this {
+    border: 1px solid green !important;
+}
+
+/*左侧树样式*/
+@media screen and (max-width: 992px) {
+    #kContentLeftTreeCol {
+        padding-right: 15px;
+    }
+    #kContentLeftTreeCol ul {
+        display: none;
+    }
+    #kContentLeftTreeCol i.fa:hover {
+        cursor: pointer;
+        background-color: #c8ecf7!important;
+    }
+    #kMainContentCol {
+        width: 100%!important;
+    }
+    #kMainContentCol .kvf-fluid-padding15 {
+        padding-top: 5px;
+    }
+
+    .kvf-flex .layui-card ul.ztree {
+        display: block!important;
+    }
+}
+
+/*select tree*/
+.tree-content {
+    border: 1px solid rgb(230, 230, 230);
+    position: fixed;
+    z-index: 2147483647;
+    background: rgb(248, 248, 248);
+    overflow-y: scroll;
+    height: 250px;
+    display: none;
+}

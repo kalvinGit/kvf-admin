@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>LayOA管理系统</title>
+    <link th:replace="comm/base::static"/>
+    <link rel="stylesheet" th:href="@{/static/css/kvf-theme.css}">
+    <style>
+        /*由于项目中并未引用layui admin.css这个样式，所以把主页需要用到的一部分样式复制到这里使用*/
+        .layui-side-menu .layui-nav .layui-nav-item>a {
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+        .layui-side-menu .layui-nav .layui-nav-item a {
+            height: 40px;
+            line-height: 40px;
+            padding-left: 45px;
+            padding-right: 30px;
+        }
+        .layui-side-menu .layui-nav .layui-nav-item .layui-icon {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            margin-top: -20px;
+        }
+        .layui-side-menu .layui-nav .layui-nav-item .fa {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            margin-top: -8px;
+        }
+        .layadmin-side-shrink .layui-side-menu .layui-nav-item cite {
+            display: none;
+            padding: 8px 0;
+            width: 200px;
+        }
+        .layui-layout-admin .layui-side {
+            width: 220px;
+            top: 0;
+            z-index: 1001;
+        }
+        .layui-layout-admin .layui-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+        }
+        .layui-layout-admin .layui-logo {
+            background-color: #20222A !important;
+        }
+        .layui-layout-admin .layui-logo {
+            background-color: #20222A;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,.15);
+        }
+        .layui-layout-admin .layui-logo {
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1002;
+            width: 220px;
+            height: 49px;
+            padding: 0 15px;
+            box-sizing: border-box;
+            overflow: hidden;
+            font-weight: 300;
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+        .layui-layout-admin .layui-logo {
+            height: 50px;
+            line-height: 50px;
+        }
+        .layui-side-menu .layui-nav {
+            width: 220px;
+            margin-top: 50px;
+            background: 0 0;
+        }
+        .layui-layout-admin .layui-body {
+            position: fixed;
+            top: 90px;
+            bottom: 0;
+        }
+        .layui-layout-admin .layadmin-pagetabs, .layui-layout-admin .layui-body, .layui-layout-admin .layui-layout-left {
+            left: 220px;
+        }
+        .layui-layout-admin .layui-layout-left {
+            padding: 0 10px;
+        }
+        .layadmin-side-shrink .layui-layout-admin .layui-logo {
+            width: 60px;
+            background-image: url(/static/plugins/layui/css/modules/res/logo.png);
+        }
+        .layadmin-side-shrink .layui-layout-admin .layui-logo span {
+            display: none;
+        }
+        .layadmin-side-shrink .layadmin-pagetabs, .layadmin-side-shrink .layui-layout-admin .layui-body, .layadmin-side-shrink .layui-layout-admin .layui-footer, .layadmin-side-shrink .layui-layout-admin .layui-layout-left {
+            left: 60px;
+        }
+
+        .layadmin-pagetabs {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 80px 0 40px;
+            background-color: #fff;
+            box-sizing: border-box;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+        }
+
+        .layadmin-pagetabs {
+            position: fixed;
+            top: 50px;
+            right: 0;
+            z-index: 999;
+        }
+        .layadmin-pagetabs .layui-icon-prev {
+            left: 0;
+            border-left: none;
+            border-right: 1px solid #f6f6f6;
+        }
+        .layadmin-pagetabs .layadmin-tabs-control {
+            position: absolute;
+            top: 0;
+            width: 40px;
+            height: 100%;
+            text-align: center;
+            cursor: pointer;
+            transition: all .3s;
+            -webkit-transition: all .3s;
+            box-sizing: border-box;
+            border-left: 1px solid #f6f6f6;
+        }
+        .layadmin-pagetabs .layui-icon-next {
+            right: 5px;
+        }
+        .layadmin-pagetabs .layui-tab {
+            margin: 0;
+            overflow: hidden;
+        }
+        .layadmin-pagetabs .layui-tab-title {
+            height: 40px;
+            border: none;
+        }
+        .layadmin-pagetabs .layui-tab-title li:first-child {
+            padding-right: 15px;
+        }
+        .layadmin-pagetabs .layui-tab-title li {
+            min-width: 0;
+            line-height: 40px;
+            max-width: 160px;
+            text-overflow: ellipsis;
+            padding-right: 40px;
+            overflow: hidden;
+            border-right: 1px solid #f6f6f6;
+            vertical-align: top;
+        }
+        .layadmin-pagetabs .layui-tab-title li:first-child .layui-tab-close, .layadmin-tabs-select.layui-nav .layui-nav-bar, .layadmin-side-shrink .layui-layout-admin .layui-side > .layui-nav-more {
+            display: none;
+        }
+        .layadmin-pagetabs .layui-tab-title li .layui-tab-close {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            margin: -7px 0 0;
+            width: 16px;
+            height: 16px;
+            line-height: 16px;
+            border-radius: 50%;
+            font-size: 12px;
+        }
+
+        .layadmin-tabsbody-item, [template] {
+            display: none;
+        }
+        .layui-layout-admin .layui-body .layadmin-tabsbody-item {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            overflow: hidden;
+        }
+        .layadmin-iframe {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .layui-nav .layui-nav-item {
+            line-height: 48px;
+        }
+        .layui-tab-title .layui-this {
+            color: #000;
+            background: #f6f6f6;
+        }
+        .layui-side-menu .layui-side-scroll, .layui-nav-tree .layui-nav-item > a {
+            background: #20222a;
+        }
+        .layui-nav-tree .layui-nav-item .layui-nav-child > dd {
+            background: #16181d;
+        }
+
+        .layui-layout-admin .layui-header {
+            border-bottom: 1px solid #f6f6f6;
+            box-sizing: border-box;
+            background-color: #fff;
+        }
+        .layui-layout-admin .layui-header .layui-nav-more {
+            border-top-color: #333;
+            /*border-color: #fff transparent transparent;*/
+        }
+        .layui-layout-admin .layui-header .layui-nav-mored {
+            /*margin-top: -9px;
+            border-style: dashed dashed solid;
+            border-color: #333 transparent transparent!important;*/
+            border-color: transparent transparent #666;
+        }
+        .layui-layout-admin .layui-header .layui-nav .layui-nav-item a {
+            color: #333;
+        }
+
+        @media screen and (max-width: 992px) {
+            .layui-layout-admin .layui-side {
+                transform: translate3d(-220px,0,0);
+                -webkit-transform: translate3d(-220px,0,0);
+                width: 220px;
+            }
+            .layui-body {
+                /*transform: translate3d(-60px,0,0);*/
+                -webkit-transform: translate3d(0,0,0);
+                left: 0!important;
+            }
+            .layui-layout-admin .layui-layout-left {
+                left: 0;
+            }
+            .layui-layout-admin .layadmin-pagetabs {
+                left: 0;
+            }
+        }
+
+        .layui-layout-left-mb .layui-layout-admin .layui-side {
+            transform: translate3d(0,0,0);
+            -webkit-transform: translate3d(0,0,0);
+            /*width: 220px;*/
+        }
+        .layui-layout-left-mb .layui-layout-admin .layui-body {
+            transform: translate3d(220px,0,0);
+            -webkit-transform: translate3d(220px,0,0);
+            /*left: 220px!important;*/
+        }
+        .layui-layout-left-mb .layui-layout-admin .layui-layout-left {
+            transform: translate3d(220px,0,0);
+            -webkit-transform: translate3d(220px,0,0);
+            /*left: 220px;*/
+        }
+        .layui-layout-left-mb .layui-layout-admin .layadmin-pagetabs {
+            transform: translate3d(220px,0,0);
+            -webkit-transform: translate3d(220px,0,0);
+            /*left: 220px;*/
+        }
+        .layui-layout-left-mb .layui-layout-admin .layui-layout-right {
+            transform: translate3d(220px,0,0);
+            -webkit-transform: translate3d(220px,0,0);
+            /*left: 220px;*/
+        }
+        .layui-layout-left-mb .layui-layout-admin .layadmin-pagetabs .layui-icon-next {
+            /*transform: translate3d(220px,0,0);*/
+            /*-webkit-transform: translate3d(220px,0,0);*/
+            /*left: 220px;*/
+        }
+
+    </style>
+</head>
+<body class="layui-layout-body">
+<div id="kAppPage" class="">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-left" lay-filter="kAppHeadNavFilter" id="headNav">
+                <li class="layui-nav-item">
+                    <a title="侧边伸缩" id="kAppFlexible" href="javascript:;">
+                        <i id="kAppLeftNavFlexible" class="layui-icon layui-icon-shrink-right" aria-hidden="true"></i>
+                    </a>
+                </li>
+<!--                <li class="layui-nav-item"><a href="javascript:;" data-menu-id="0">控制台</a></li>-->
+<!--                <li class="layui-nav-item"><a href="javascript:;" data-menu-id="10">商品管理</a></li>-->
+                <!--<li class="layui-nav-item layui-hide-xs" lay-unselect="">
+                    <a href="javascript:;" data-event="workbench" target="_blank" title="工作台">
+                        <i class="fa fa-cube"></i>
+                    </a>
+                </li>
+                <li class="layui-nav-item" lay-unselect="">
+                    <a href="javascript:;" data-event="backstage" title="后台管理">
+                        <i class="fa fa-puzzle-piece"></i>
+                    </a>
+                </li>-->
+                <!--<li class="layui-nav-item layui-hide-xs" lay-unselect="">
+                    <input type="text" placeholder="搜索..." autocomplete="off" class="layui-input layui-input-search" data-event="serach" lay-action="template/search.html?keywords=">
+                </li>-->
+            </ul>
+            <ul class="layui-nav layui-layout-right">
+                <!--<li class="layui-nav-item" lay-unselect="">
+                    <a lay-href="app/message/index.html" data-event="message" lay-text="消息中心">
+                        <i class="layui-icon layui-icon-notice"></i>
+
+                        &lt;!&ndash; 如果有新消息，则显示小圆点 &ndash;&gt;
+                        <span class="layui-badge-dot"></span>
+                    </a>
+                </li>-->
+                <li class="layui-nav-item layui-hide-xs" lay-unselect="">
+                    <a href="javascript:;" data-event="theme">
+                        <i class="layui-icon layui-icon-theme"></i>
+                    </a>
+                </li>
+                <li class="layui-nav-item layui-hide-xs" lay-unselect="">
+                    <a href="javascript:;" data-event="fullscreen">
+                        <i class="layui-icon layui-icon-screen-full"></i>
+                    </a>
+                </li>
+                <li class="layui-nav-item" lay-unselect="">
+                    <img th:src="@{/} + ${authUserInfo.avatar==null?'static/image/avatar/default.png':authUserInfo.avatar}" class="kvf-user-head">
+                </li>
+                <li class="layui-nav-item" lay-unselect="">
+                    <a href="javascript:;">
+                        <cite shiro:principal property="username"></cite>
+                        <span class="layui-nav-more"></span>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd lay-unselect=""><a data-event="userInfo" data-menu-id="userInfo" data-menu-url="sys/user/info" href="javascript:;"><cite>基本资料</cite></a></dd>
+                        <dd lay-unselect=""><a data-event="changePwd" data-menu-id="changePwd" data-menu-url="sys/user/password" href="javascript:;"><cite>修改密码</cite></a></dd>
+                    </dl>
+                </li>
+
+                <li class="layui-nav-item" lay-unselect="">
+                    <a href="javascript:;" th:href="@{/logout}" title="退出">
+                        <i class="fa fa-power-off"></i>
+                    </a>
+                </li>
+
+                <!--<li class="layui-nav-item layui-hide-xs" lay-unselect="">
+                    <a href="javascript:;" data-event="about"><i class="layui-icon layui-icon-more-vertical"></i></a>
+                </li>-->
+                <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-unselect="">
+                    <a href="javascript:;" data-event="more"><i class="layui-icon layui-icon-more-vertical"></i></a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="layui-side layui-side-menu layui-bg-black" id="kAppLeftNavBox">
+            <div class="layui-side-scroll">
+                <div class="layui-logo"><span style="color: #ffffff">LayOA管理系统</span></div>
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" id="leftNav" lay-filter="kAppLeftNavFilter"></ul>
+            </div>
+        </div>
+
+        <!-- 页面标签-->
+        <div class="layadmin-pagetabs">
+            <div class="layui-icon layadmin-tabs-control layui-icon-prev" data-event="prev"></div>
+            <div class="layui-icon layadmin-tabs-control layui-icon-next" data-event="next"></div>
+<!--            <div class="layui-icon layadmin-tabs-control layui-icon-down"></div>-->
+            <div class="layui-tab" lay-unauto="" lay-allowclose="true" lay-filter="kAppLayoutTabFilter">
+                <ul class="layui-tab-title" id="kAppTabTitle">
+                    <li lay-id="0" data-iframe-id="kAppIframe_0" class="layui-this layui-elip"><i class="layui-icon layui-icon-home"></i><i class="layui-icon layui-unselect layui-tab-close">ဆ</i></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-body layui-tab-content" id="kAppBody">
+            <!-- 内容主体区域 -->
+            <div class="layadmin-tabsbody-item layui-show">
+                <iframe id="kAppIframe_0" th:src="@{/home}" frameborder="0" class="layadmin-iframe"></iframe>
+            </div>
+        </div>
+
+        <!--theme滑出层-->
+        <div id="kAppThemePopup"></div>
+        <div id="kAppThemeContent" class="layui-fluid" style="display: none">
+            <div class="layui-card-header">主题配色</div>
+            <div class="layui-card-body">
+                <ul class="kvf-theme-ul" id="kAppThemeUl">
+                    <li class="kvf-theme-li" data-theme="kvf-default-theme">
+                        <span class="layui-badge-dot layui-bg-black"></span>
+                        <span class="layui-badge-dot" style="background: #ffffff"></span>
+                        <span class="layui-badge-dot layui-bg-green"></span>
+                    </li>
+                    <li class="kvf-theme-li" data-theme="kvf-l-bisque-theme">
+                        <span class="layui-badge-dot" style="background: #292018"></span>
+                        <span class="layui-badge-dot" style="background: #ffffff"></span>
+                        <span class="layui-badge-dot" style="background: #94785c"></span>
+                    </li>
+                    <li class="kvf-theme-li" data-theme="kvf-l-blue-theme">
+                        <span class="layui-badge-dot layui-bg-blue"></span>
+                        <span class="layui-badge-dot" style="background: #ffffff"></span>
+                        <span class="layui-badge-dot layui-bg-blue"></span>
+                    </li>
+                    <li class="kvf-theme-li" data-theme="kvf-l-red-theme">
+                        <span class="layui-badge-dot"></span>
+                        <span class="layui-badge-dot" style="background: #ffffff"></span>
+                        <span class="layui-badge-dot"></span>
+                    </li>
+                    <li class="kvf-theme-li" data-theme="kvf-l-orange-theme">
+                        <span class="layui-badge-dot layui-bg-orange"></span>
+                        <span class="layui-badge-dot" style="background: #ffffff"></span>
+                        <span class="layui-badge-dot layui-bg-orange"></span>
+                    </li>
+                    <li class="kvf-theme-li" data-theme="kvf-green-theme">
+                        <span class="layui-badge-dot" style="background: #226A62"></span>
+                        <span class="layui-badge-dot" style="background: #2a877b"></span>
+                        <span class="layui-badge-dot" style="background: #2a877b"></span>
+                    </li>
+                    <li class="kvf-theme-li" data-theme="kvf-blue-theme">
+                        <span class="layui-badge-dot" style="background: #0085e8"></span>
+                        <span class="layui-badge-dot" style="background: #1e9fff"></span>
+                        <span class="layui-badge-dot" style="background: #1e9fff"></span>
+                    </li>
+                    <li class="kvf-theme-li" data-theme="kvf-red-theme">
+                        <span class="layui-badge-dot layui-bg-black"></span>
+                        <span class="layui-badge-dot"></span>
+                        <span class="layui-badge-dot"></span>
+                    </li>
+                    <li class="kvf-theme-li" data-theme="kvf-black-theme">
+                        <span class="layui-badge-dot layui-bg-black"></span>
+                        <span class="layui-badge-dot" style="background: #393d49"></span>
+                        <span class="layui-badge-dot layui-bg-green"></span>
+                    </li>
+                    <li class="kvf-theme-li" data-theme="kvf-pink-theme">
+                        <span class="layui-badge-dot" style="background: #50314F"></span>
+                        <span class="layui-badge-dot" style="background: #50314F"></span>
+                        <span class="layui-badge-dot" style="background: #7a4d7b"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!--<div class="layui-footer">
+            &lt;!&ndash; 底部固定区域 &ndash;&gt;
+            © layui.com - 底部固定区域
+        </div>-->
+    </div>
+</div>
+
+
+<script th:replace="comm/base::context"></script>
+<script th:replace="comm/base::mainjs"></script>
+<script th:include="comm/sys_tpl::headNavTpl" type="text/html" id="headNavTpl"></script>
+<script th:include="comm/sys_tpl::leftNavTpl" type="text/html" id="leftNavTpl"></script>
+<script>
+    //JavaScript代码区域
+    layui.use(['element', 'layer', 'laytpl'], function(){
+        var element = layui.element, laytpl = layui.laytpl, layer = layui.layer;
+
+        var isShow = true;
+        var isShowInMobile = false;
+        var iframeIdx = $('#kAppTabTitle').find('li').length;
+
+        renderTheme();
+
+        // 渲染横向导航菜单栏
+        kvfKit.aGet(api.comm.userNavMenus, function (r) {
+            laytpl($('#headNavTpl').html()).render(r.data, function (html) {
+                var sb = new StringBuilder();
+                sb.append('<li class="layui-nav-item" lay-unselect="">');
+                sb.append('<a title="侧边伸缩" id="kAppFlexible" href="javascript:;">');
+                sb.append('<i id="kAppLeftNavFlexible" class="layui-icon layui-icon-shrink-right" aria-hidden="true"></i>');
+                sb.append('</a></li>');
+                $('#headNav').html(sb.toString() + html);
+                element.render('nav', 'kAppHeadNavFilter');
+            });
+        });
+
+        // 渲染左侧导航栏
+        kvfKit.aGet(api.comm.userMenus, function (r) {
+            laytpl($('#leftNavTpl').html()).render(r.data, function (html) {
+                $('#leftNav').html(html);
+                element.render('nav', 'kAppLeftNavFilter');
+            });
+        });
+
+        // 监听Tab切换
+        element.on('tab(kAppLayoutTabFilter)', function() {
+            var layid = this.getAttribute('data-iframe-id');
+            $('.layadmin-iframe').parent('.layui-show').removeClass('layui-show');
+            $('#' + layid).parent().addClass('layui-show');
+        });
+
+        // 监听左侧 导航菜单事件
+        element.on('nav(kAppLeftNavFilter)', function (el) {
+            addPage(el);
+        });
+
+        // 监听横向导航菜单事件
+        element.on('nav(kAppHeadNavFilter)', function (el) {
+            if (el.attr('id') === 'kAppFlexible') {
+                fixLeftNav();
+            } else {
+                addPage(el);
+            }
+        });
+
+        // 事件监听
+        var active = {
+            serach : function () {
+            },
+            message : function () {
+            },
+            userInfo : function () {
+                addPage($(this));
+            },
+            changePwd : function () {
+                addPage($(this));
+            },
+            fullscreen : function () {
+                var e = document.documentElement
+                    , a = e.requestFullScreen || e.webkitRequestFullScreen || e.mozRequestFullScreen || e.msRequestFullscreen;
+                "undefined" != typeof a && a && a.call(e);
+                $(this).find('i').removeClass('layui-icon-screen-full');
+                $(this).find('i').addClass('layui-icon-screen-restore');
+                $(this).removeAttr('data-event');
+                $(this).attr('data-event', 'exitScreen');
+            },
+            exitScreen: function() {
+                document.documentElement;
+                document.exitFullscreen ? document.exitFullscreen() : document.mozCancelFullScreen ? document.mozCancelFullScreen() : document.webkitCancelFullScreen ? document.webkitCancelFullScreen() : document.msExitFullscreen && document.msExitFullscreen();
+                $(this).find('i').removeClass('layui-icon-screen-restore');
+                $(this).find('i').addClass('layui-icon-screen-full');
+                $(this).removeAttr('data-event');
+                $(this).attr('data-event', 'fullscreen');
+            },
+            prev: function () {
+                rollPage('left');
+            },
+            next: function () {
+                rollPage();
+            },
+            about: function () {
+            },
+            more: function () {
+            }
+        };
+
+        kvfKit.activeInit(active);
+
+        // 滑出层
+        new popup('#kAppThemePopup', 'a[data-event="theme"]', {
+            width: '334px',
+            height: '170px',
+            content: $('#kAppThemeContent'),
+            duration: 500
+        }).setTop(50).setRight(0).popupTop();
+
+        var $kAppThemeUlEl = $('#kAppThemeUl');
+        $kAppThemeUlEl.find('li').on('click', function () {
+            var $kAppPageEl = $('#kAppPage');
+            var cl = $kAppPageEl.attr('class');
+            var theme = $(this).data('theme');
+            $kAppPageEl.removeClass(cl.replace('layadmin-side-shrink', ''));
+            $kAppPageEl.addClass(theme);
+            $kAppThemeUlEl.find('.kvf-theme-this').removeClass('kvf-theme-this');
+            $(this).addClass('kvf-theme-this');
+
+            // 主题存储在本地
+            localStorage.setItem('myTheme', theme);
+        });
+
+        function renderTheme() {
+            var localTheme = localStorage.getItem('myTheme');
+            $('#kAppPage').addClass(localTheme);
+            $('#kAppThemeUl').find('li[data-theme="' + localTheme + '"]').addClass('kvf-theme-this');
+        }
+
+        function pageAdd(menuId, iframeId, name, menuUrl){
+            element.tabAdd("kAppLayoutTabFilter", {
+                title : name + '<i class="layui-icon layui-unselect layui-tab-close"></i>',
+                content : '<div class="layadmin-tabsbody-item layui-show"><iframe id="' + iframeId + '" src="' + menuUrl + '" frameborder="0" class="layadmin-iframe"></iframe></div>',
+                id : menuId
+            });
+        }
+
+        /**
+         * 绑定左侧菜单鼠标经过show tips事件
+         */
+        function bindingHoverTips() {
+            var tipsIdx;
+            $('#leftNav').find('a').hover(function () {
+                var layTips = $(this).attr('lay-tips');
+                tipsIdx = layer.tips(layTips, $(this), {tips: 2});
+            }, function () {
+                layer.close(tipsIdx);
+            });
+        }
+
+        /**
+         * 取消左侧菜单鼠标经过show tips事件
+         */
+        function unbindHoverTips() {
+            $('#leftNav').find('a').unbind("mouseenter").unbind("mouseleave");
+        }
+
+        function addPage(el) {
+            var iframeId = 'kAppIframe_' + iframeIdx;
+            var url = loaCtx + el.attr('data-menu-url');
+            var menuId = el.attr('data-menu-id');
+            var name = el.find('cite').text();
+
+            if (!menuId) {
+                return;
+            }
+            var $kAppTabTitleEl = $('#kAppTabTitle');
+            var $kAppBodyEl = $('#kAppBody');
+
+            $kAppTabTitleEl.find('.layui-this').removeClass('layui-this');
+            $kAppBodyEl.find('.layui-show').removeClass('layui-show');
+
+            var $ltlEl = $kAppTabTitleEl.find('li[lay-id="' + menuId + '"]');
+            if ($ltlEl.length > 0) {
+                $ltlEl.addClass('layui-this');
+                var fId = $ltlEl.attr('data-iframe-id');
+                $('#' + fId).parent().addClass('layui-show');
+                return;
+            }
+
+            var tabTitle = new StringBuilder();
+            var content = new StringBuilder();
+            tabTitle.append('<li lay-id="' + menuId + '" data-iframe-id="' + iframeId + '" class="layui-this">' + name + '</li>');
+            content.append('<div class="layadmin-tabsbody-item layui-show">');
+            content.append('<iframe id="' + iframeId + '" src="' + url + '" frameborder="0" class="layadmin-iframe"></iframe>');
+            content.append('</div>');
+
+            $kAppTabTitleEl.append(tabTitle.toString());
+            $kAppBodyEl.append(content.toString());
+
+            // 重新渲染 tab
+            element.render('tab', 'kAppLayoutTabFilter');
+            iframeIdx++;
+        }
+
+        function fixLeftNav() {
+            var aEls = $('#leftNav').find('.layui-nav-child').find('a');
+            var $layNavTreeEl = $('.layui-nav-tree');
+            var $kAppPageEl = $('#kAppPage');
+            var $kAppLeftNavFlexEl = $('#kAppLeftNavFlexible');
+            var $kAppLeftNavBoxEl = $('#kAppLeftNavBox');
+            var $layBodyEl = $('.layui-body');
+
+            var windowWidth = $(window).width();    // 992
+            if (windowWidth > 992) {
+                if (isShow) {
+                    $kAppPageEl.addClass('layadmin-side-shrink');
+                    $kAppLeftNavFlexEl.attr('class', 'layui-icon layui-icon-spread-left');
+                    $kAppLeftNavBoxEl.animate({width: '60px'}, 'fast'); //设置宽度
+                    $layNavTreeEl.animate({width: '60px'}, 'fast');
+                    $layNavTreeEl.find('a').attr('style', 'padding-left: 30px;');
+                    $layBodyEl.animate({left: '60px'});
+                    $layNavTreeEl.find('.layui-nav-more').hide();
+
+                    // 左侧二级菜单新增图标
+                    for (var i = 0; i < aEls.length; i++) {
+                        $(aEls[i]).prepend('<i class="layui-icon layui-icon-link"></i>');
+                    }
+
+                    isShow = false;
+                    bindingHoverTips();
+                } else {
+                    $kAppPageEl.removeClass('layadmin-side-shrink');
+                    $kAppLeftNavFlexEl.attr('class', 'layui-icon layui-icon-shrink-right');
+                    $kAppLeftNavBoxEl.animate({width: '220px'}, 'fast');
+                    $layNavTreeEl.animate({width: '220px'}, 'fast');
+                    $layNavTreeEl.find('a').attr('style', '');
+                    $layBodyEl.animate({left: '220px'}, 'fast');
+                    $layNavTreeEl.find('.layui-nav-more').show();
+
+                    // 左侧二级菜单移除图标
+                    for (var i = 0; i < aEls.length; i++) {
+                        $(aEls[i]).find('i').remove();
+                    }
+
+                    isShow = true;
+                    unbindHoverTips();
+                }
+            } else {
+                if (isShowInMobile) {
+                    $kAppPageEl.removeClass('layui-layout-left-mb');
+                    isShowInMobile = false;
+                } else {
+                    $kAppPageEl.addClass('layui-layout-left-mb');
+                    isShowInMobile = true;
+                }
+            }
+        }
+
+        function rollPage(e, i) {
+            var t = $("#kAppTabTitle")
+                , n = t.children("li")
+                , l = (t.prop("scrollWidth"),
+                t.outerWidth())
+                , s = parseFloat(t.css("left"));
+            if ("left" === e) {
+                if (!s && s <= 0)
+                    return;
+                var r = -s - l;
+                n.each(function(e, i) {
+                    var n = $(i)
+                        , l = n.position().left;
+                    if (l >= r)
+                        return t.css("left", -l),
+                            !1
+                })
+            } else
+                "auto" === e ? !function() {
+                    var e, r = n.eq(i);
+                    if (r[0]) {
+                        if (e = r.position().left,
+                        e < -s)
+                            return t.css("left", -e);
+                        if (e + r.outerWidth() >= l - s) {
+                            var o = e + r.outerWidth() - (l - s);
+                            n.each(function(e, i) {
+                                var n = $(i)
+                                    , l = n.position().left;
+                                if (l + s > 0 && l - s > o)
+                                    return t.css("left", -l),
+                                        !1
+                            })
+                        }
+                    }
+                }() : n.each(function(e, i) {
+                    var n = $(i)
+                        , r = n.position().left;
+                    if (r + n.outerWidth() >= l - s)
+                        return t.css("left", -r),
+                            !1
+                })
+        }
+
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>LayOA管理系统</title>
+    <link th:replace="comm/base::static"/>
+    <style>
+
+
+    </style>
+</head>
+<body style="background-color: #f2f2f2;">
+
+<div id="kPage" class="layui-fluid" style="padding: 0">
+    <!-- 主要内容块 -->
+    <div class="layui-fluid kvf-fluid-padding15">
+        <div class="layui-card">
+            <div class="layui-form layui-card-header kvf-card-header-auto">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">角色分类</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="name" placeholder="请输入" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
+                            <i class="layui-icon layui-icon-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-card-body">
+                <div style="padding-bottom: 10px;">
+                    <button class="layui-btn " data-event="batchdel">删除</button>
+                    <button class="layui-btn " data-event="add">添加</button>
+                </div>
+                <table id="kContentTable" lay-filter="kContentTable"></table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script th:replace="comm/base::context"></script>
+<script th:replace="comm/base::mainjs"></script>
+
+<script type="text/html" id="sexTpl">
+    {{#  if(d.sex == 1){ }}
+    <span class="layui-badge layui-bg-blue">男</span>
+    {{#  } else if(d.sex == 2) { }}
+    <span class="layui-badge">女</span>
+    {{#  } else { }}
+    <span class="layui-badge layui-bg-gray">未知</span>
+    {{# } }}
+</script>
+
+<script type="text/html" id="iconTpl">
+    <i class="{{d.icon}}"></i>
+</script>
+
+<script type="text/html" id="typeTpl">
+    {{#  if(d.type == 0){ }}
+    <span class="layui-badge layui-bg-green">模块</span>
+    {{#  } else if(d.type == 1) { }}
+    <span class="layui-badge layui-bg-orange">菜单</span>
+    {{#  } else { }}
+    <span class="layui-badge layui-bg-gray">按钮</span>
+    {{# } }}
+</script>
+
+<script type="text/html" id="rowToolbarTpl">
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+</script>
+
+<script type="text/javascript" th:inline="javascript">
+    layui.use(['element', 'form', 'layer', 'table'], function () {
+        var elemet = layui.element, form = layui.form, layer = layui.layer, table = layui.table;
+        var treeObj;
+
+        // 实例化table
+        kvfKit.initTableSet(table);
+        var tableIns = table.render({
+            elem: '#kContentTable'
+            ,url: api.sys.roleTreeListData //数据接口
+            ,cols: [[ //表头
+                {type:'checkbox', fixed: 'left'}
+                ,{field: 'name', title: '角色分类名称'}
+                ,{field: 'sort', title: '排序号', width:150}
+                ,{field: '', title: '操作', width: 150, fixed: 'right', templet: '#rowToolbarTpl'}
+            ]]
+        });
+
+        var area = ['510px', '548px'];
+
+        var $ = layui.$, active = {
+            batchdel: function(){
+                var checkStatus = table.checkStatus('kContentTable')
+                    ,checkData = checkStatus.data; //得到选中的数据
+
+                if(checkData.length === 0){
+                    return kvfKit.warningMsg('请选择数据');
+                }
+
+                layer.confirm('确定删除吗？', function(index) {
+
+                    var ids = [];
+                    $.each(checkData, function(i, n){
+                        ids[i] = n.id;
+                    });
+
+                    //执行 Ajax 后重载
+                    $.ajax({
+                        type: req.type.post,
+                        url: api.sys.roleTreeRmBatch,
+                        data: {ids: ids.toString()},
+                        success: function (r) {
+                            if (r.code === req.status.ok) {
+                                table.reload('kContentTable');
+                                kvfKit.sucessMsg('已删除');
+                            } else {
+                                kvfKit.errorMsg(r.msg);
+                            }
+                        }
+                    });
+
+                });
+            },
+            add: function(){
+                // todo 暂时只考虑设置一层角色树结构
+                /*var selNodes = treeObj.getSelectedNodes();
+                var id = selNodes[0].id;
+                var level = selNodes[0].level;
+                log(selNodes);*/
+
+                layer.open({
+                    type: 2
+                    ,title: '添加角色分类'
+                    ,content: api.sys.roleTreeEditView
+                    ,maxmin: true
+                    ,area: area   // 宽高
+                    ,btn: ['确定', '取消']
+                    ,yes: function(index, layero){
+                        //点击确认触发 iframe 内容中的按钮提交
+                        var submit = layero.find('iframe').contents().find("#kFormSubmit");
+                        submit.click();
+                    }
+                });
+            }
+        };
+
+        // 表格头部按钮 监听事件
+        kvfKit.activeInit(active);
+
+        // 表格行按钮 监听事件
+        table.on('tool(kContentTable)', function (obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+            log('layEvent=', layEvent);
+
+            if (layEvent === 'del') {
+                layer.confirm('确定删除吗？', function(index) {
+
+                    //执行 Ajax 后重载
+                    $.ajax({
+                        type: req.type.post,
+                        url: api.sys.roleTreeRm + data.id,
+                        async: false,
+                        success: function (r) {
+                            if (r.code === req.status.ok) {
+                                table.reload('kContentTable');
+                                kvfKit.sucessMsg('已删除');
+                            } else {
+                                kvfKit.errorMsg(r.msg);
+                            }
+                        }
+                    });
+                });
+            }
+            if (layEvent === 'edit') {
+                layer.open({
+                    type: 2
+                    ,title: '编辑用户'
+                    ,content:  api.sys.roleTreeEditView + '?id=' + data.id
+                    ,maxmin: true
+                    ,area: area   // 宽高
+                    ,btn: ['确定', '取消']
+                    ,yes: function(index, layero){
+                        //点击确认触发 iframe 内容中的按钮提交
+                        var submit = layero.find('iframe').contents().find("#kFormSubmit");
+                        submit.click();
+                    }
+                });
+            }
+
+        });
+
+        /* 左侧树 */
+        /*treeObj = $.fn.zTree.init($("#kLeftTree"), {
+            async: {
+                enable: true,
+                type: req.type.get,
+                url: api.sys.roleTreeListTree,
+                autoParam: ["id=parentId"],
+                otherParam: {},
+                dataFilter: function (treeId, parentNode, responseData) {
+                    if (!responseData.data){
+                        return null;
+                    }
+                    var nodes = responseData.data;
+                    $.each(nodes, function(i, n){
+                        if (n.type === 0 || n.type === 1) {
+                            n.isParent = true;
+                        }
+                    });
+                    return nodes;
+                }
+            },
+
+            callback: {
+                beforeClick: function (treeId, treeNode, clickFlag) {
+                    log(treeNode);
+                    if (treeNode.level === 3) { // 不可选中
+                        return false;
+                    }
+                },
+                onClick: function (event, treeId, treeNode) {
+                    // var params = kkutil.formToJson($("#searchForm"));
+                    var params = {};
+                    params.parentId = treeNode.id;
+                    log('tree params=', params);
+                    tableIns.reload({where: params, page: {current: 1}});
+                }
+            },
+            view: {showTitle: true},
+            data : {simpleData: {enable: true,idKey: "id",pIdKey: "parentId",rootPId: 0}}
+        }, [{id:0, name:"菜单树", isParent:true}]);
+        var rootNode = treeObj.getNodeByParam("id", 0, null);
+        treeObj.selectNode(rootNode);
+        treeObj.expandNode(rootNode);*/
+
+        // 监听查询
+        form.on('submit(kTableSearchFilter)', function (obj) {
+            var params = obj.field;
+            log('seach=', params);//
+            tableIns.reload({
+                where: params,
+                page: {current: 1}
+            });
+            return false;
+        });
+
+        // 绑定监听回车事件
+        kvfKit.bindEnterEventForLayuiForm();
+
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>LayOA管理系统</title>
+    <link th:replace="comm/base::static"/>
+</head>
+<body style="background-color: #f2f2f2;">
+
+<div id="kPage" class="layui-fluid" style="padding: 0">
+    <div class="layui-row kvf-fluid-padding15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">设置我的资料</div>
+                <div class="layui-card-body">
+                    <div class="layui-form">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">用户名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="username" readonly th:value="${user.username}" lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">不可修改。一般用于后台登入名</div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">姓名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="realname" th:value="${user.realname}" lay-verify="required" placeholder="请输入姓名" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">职务</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="jobTitle" th:value="${user.jobTitle}" placeholder="请输入职务" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">性别</label>
+                            <div class="layui-input-inline">
+                                <select name="sex">
+                                    <option value="0" th:selected="${user.sex == 0}">请选择</option>
+                                    <option value="1" th:selected="${user.sex == 1}">男</option>
+                                    <option value="2" th:selected="${user.sex == 2}">女</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">手机号码</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="phone" th:value="${user.phone}" placeholder="请输入号码" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">固定电话</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="tel" th:value="${user.tel}" placeholder="请输入电话" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">邮箱</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="email" th:value="${user.email}" placeholder="请输入邮箱" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">用户状态</label>
+                            <div class="layui-input-inline">
+                                <select name="status" lay-verify="required">
+                                    <option value="0" th:selected="${user.status == 0}">正常</option>
+                                    <option value="1" th:selected="${user.status == 1}">禁用</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">用户头像</label>
+                            <div class="layui-input-inline" style="text-align: center">
+                                <img id="avatarImg" th:src="@{/} + ${user.avatar==null?'static/image/avatar/default.png':user.avatar}" style="height: 100px; width: 100px; border-radius: 100px">
+                                <input name="avatar" placeholder="图片地址" th:value="${user.avatar}" class="layui-input layui-hide">
+                            </div>
+                            <div class="layui-input-inline layui-btn-container" style="width: auto;">
+                                <button type="button" class="layui-btn layui-btn-primary" id="LOA_avatarUpload">
+                                    <i class="layui-icon layui-icon-upload"></i>上传图片
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit="" lay-filter="kFormSubmit">确认修改</button>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-hide">
+                            <input type="text" name="id" th:value="${user.id}" placeholder="保存ID" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script th:replace="comm/base::context"></script>
+<script th:replace="comm/base::mainjs"></script>
+
+<script type="text/javascript" th:inline="javascript">
+    layui.use(['form', 'upload'], function () {
+        var $ = layui.$, form = layui.form, upload = layui.upload;
+
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#LOA_avatarUpload' //绑定元素
+            ,url: api.comm.fileUpload //上传接口
+            ,data: {type: 3}
+            ,accept: 'images'
+            ,done: function(r) {
+                //上传完毕回调
+                if (r.code === req.status.ok) {
+                    $('input[name="avatar"]').val(r.data.path);
+                    $('#avatarImg').attr('src', loaCtx + r.data.path);
+                    kvfKit.sucessMsg('上传成功');
+                } else {
+                    kvfKit.errorMsg('上传失败：' + r.msg);
+                }
+            }
+            ,error: function(index, upload) {
+                //请求异常回调
+                kvfKit.errorMsg('上传失败');
+            }
+        });
+
+        //监听提交
+        form.on('submit(kFormSubmit)', function (data) {
+            var field = data.field; //获取提交的字段
+
+            //提交 Ajax 成功后，关闭当前弹层并重载表格
+            $.ajax({
+                type: req.type.post,
+                url: api.sys.userSave,
+                data: field,
+                async: false,
+                success: function (r) {
+                    if (r.code === req.status.ok) {
+                        kvfKit.sucessMsg('修改成功');
+                    } else {
+                        kvfKit.errorMsg(r.msg);
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

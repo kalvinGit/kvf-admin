@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>LayOA管理系统</title>
+    <link th:replace="comm/base::static"/>
+</head>
+<body>
+<div class="layui-form" style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-inline">
+            <input type="text" name="username" th:value="${editInfo.username}" lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <!--<div class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <div class="layui-input-inline">
+            <input type="password" name="password" value="123456" lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+        </div>
+    </div>-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">姓名</label>
+        <div class="layui-input-inline">
+            <input type="text" name="realname" th:value="${editInfo.realname}" lay-verify="required" placeholder="请输入姓名" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">职务</label>
+        <div class="layui-input-inline">
+            <input type="text" name="jobTitle" th:value="${editInfo.jobTitle}" placeholder="请输入职务" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属部门</label>
+        <div class="layui-input-inline">
+            <input type="text" id="deptId" th:value="${editInfo.deptId}" th:data-name="${editInfo.deptName}" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">角色</label>
+        <div class="layui-input-inline">
+            <input type="text" id="roleIds" th:value="${editInfo.userRole==null?'':editInfo.userRole.roleIds}" th:data-name="${editInfo.userRole==null?'':editInfo.userRole.roleNames}" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">性别</label>
+        <div class="layui-input-inline">
+            <select name="sex">
+                <option value="0" th:selected="${editInfo.sex == 0}">请选择</option>
+                <option value="1" th:selected="${editInfo.sex == 1}">男</option>
+                <option value="2" th:selected="${editInfo.sex == 2}">女</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">手机号码</label>
+        <div class="layui-input-inline">
+            <input type="text" name="phone" th:value="${editInfo.phone}" placeholder="请输入号码" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">固定电话</label>
+        <div class="layui-input-inline">
+            <input type="text" name="tel" th:value="${editInfo.tel}" placeholder="请输入电话" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">邮箱</label>
+        <div class="layui-input-inline">
+            <input type="text" name="email" th:value="${editInfo.email}" placeholder="请输入邮箱" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <!--<div class="layui-form-item">
+        <label class="layui-form-label">用户状态</label>
+        <div class="layui-input-inline">
+            <select name="status" lay-verify="required">
+                <option value="0" th:selected="${editInfo.status == 0}">正常</option>
+                <option value="1" th:selected="${editInfo.status == 1}">禁用</option>
+            </select>
+        </div>
+    </div>-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户状态</label>
+        <div class="layui-input-block">
+            <input type="radio" name="status" value="0" title="正常" autocomplete="off" class="layui-input" th:checked="${editInfo.status==0}">
+            <input type="radio" name="status" value="1" title="禁用" autocomplete="off" class="layui-input" th:checked="${editInfo.status==1}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序号</label>
+        <div class="layui-input-inline">
+            <input type="text" name="sort" th:value="${editInfo.sort==null?'0':editInfo.sort}" placeholder="请输入" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <!--<div class="layui-form-item">
+        <label class="layui-form-label">发布状态</label>
+        <div class="layui-input-inline">
+            <input type="checkbox" lay-verify="required" lay-filter="status" name="status" lay-skin="switch" lay-text="已发布|待修改"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>待修改</em><i></i></div>
+        </div>
+    </div>-->
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit="" lay-filter="kFormSubmit" id="kFormSubmit" value="确认添加">
+        <input type="text" name="id" th:value="${editInfo.id}" placeholder="保存ID" autocomplete="off" class="layui-input">
+<!--        <input type="text" name="deptId" th:value="${editInfo.deptId}" placeholder="保存deptId" autocomplete="off" class="layui-input">-->
+    </div>
+</div>
+
+<script th:replace="comm/base::context"></script>
+<script th:replace="comm/base::mainjs"></script>
+<script th:src="@{/static/js/select-tree.js}"></script>
+<script>
+    layui.use(['form'], function () {
+        var $ = layui.$, form = layui.form;
+
+        var deptId = kvfKit.getUrlParam('deptId');
+        if (!deptId) {
+            deptId = $('input[name="deptId"]').val();
+        }
+
+        // 下拉树
+        var deptSelectTreeObj = initSelectTree("deptId", {
+            async: {
+                enable: true,
+                type: req.type.get,
+                url: api.sys.deptListTree,
+                autoParam: ["id=parentId"],
+                otherParam: {},
+                dataFilter: function (treeId, parentNode, responseData) {
+                    if (!responseData.data){
+                        return null;
+                    }
+                    var nodes = responseData.data;
+                    $.each(nodes, function(i, n){
+                        if (n.type === 0 || n.type === 1) {
+                            n.isParent = true;
+                        }
+                    });
+                    return nodes;
+                }
+            },
+            callback: {
+                beforeClick: function (treeId, treeNode, clickFlag) {
+                    log(treeNode);
+                    if (treeNode.level === 0) { // 不可选中
+                        return false;
+                    }
+                }
+            }
+        });
+
+        var deptNode = deptSelectTreeObj.getNodeByParam("id", 0, null);
+        deptSelectTreeObj.expandNode(deptNode);
+
+        // 下拉树
+        var roleSelectTreeObj = initSelectTree("roleIds", {
+            async: {
+                enable: true,
+                type: req.type.get,
+                url: api.sys.roleListTree,
+                autoParam: ["id=parentId"],
+                otherParam: {},
+                dataFilter: function (treeId, parentNode, responseData) {
+                    if (!responseData.data){
+                        return null;
+                    }
+                    var nodes = responseData.data;
+                    $.each(nodes, function(i, n){
+                        if (n.type === 0) {
+                            n.isParent = true;
+                            n.nocheck = true;
+                        }
+                    });
+                    return nodes;
+                }
+            },
+            callback: {
+                /*beforeAsync: function (treeId, treeNode) {
+                    log(treeNode);
+                    if (treeNode.level === 0 || treeNode.level === 1) { // 不可选中
+                        treeNode.nocheck = true;
+                    }
+                }*/
+            },
+            check: {
+                enable: true,
+                chkStyle: "checkbox",
+                chkboxType: { "Y": "s", "N": "s" }
+            }
+        }, [{id:0, name:"root", isParent:true, nocheck: true}]);
+
+        var roleNode = roleSelectTreeObj.getNodeByParam("id", 0, null);
+        roleSelectTreeObj.expandNode(roleNode);
+
+        //监听提交
+        form.on('submit(kFormSubmit)', function(data){
+            var field = data.field; //获取提交的字段
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            if (deptId) {
+                field.deptId = deptId;
+            }
+
+            log('field=', field);
+
+            //提交 Ajax 成功后，关闭当前弹层并重载表格
+            $.ajax({
+                type: req.type.post,
+                url: field.id ? api.sys.userEdit : api.sys.userAdd,
+                data: field,
+                async: false,
+                success: function (r) {
+                    if (r.code === req.status.ok) {
+                        parent.layui.table.reload('kContentTable',
+                            {where: {deptId: deptId}}); //重载表格
+                        parent.layer.close(index); //再执行关闭
+                    } else {
+                        kvfKit.errorMsg(r.msg);
+                    }
+                }
+            });
+
+        });
+    })
+</script>
+</body>
+</html>

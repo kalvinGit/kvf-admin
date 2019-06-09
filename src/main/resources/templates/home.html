@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>LayOA管理系统</title>
+    <link th:replace="comm/base::static"/>
+    <style>
+
+        .layui-carousel-ind {
+            position: absolute;
+            top: -41px;
+            text-align: right;
+        }
+        .layui-carousel ul.layui-row {
+            background: #ffffff;
+            margin: 0;
+        }
+        #shortcut ul.layui-row li {
+            text-align: center;
+            /*width: 87px;*/
+        }
+        .layui-carousel ul.layui-row li a i {
+            display: inline-block;
+            width: 100%;
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
+            border-radius: 2px;
+            font-size: 30px;
+            background-color: #F8F8F8;
+            color: #333;
+            transition: all .3s;
+            -webkit-transition: all .3s;
+        }
+
+        .kvf-backlog-body {
+            display: block;
+            padding: 10px 15px;
+            background-color: #f8f8f8;
+            color: #999;
+            border-radius: 2px;
+            transition: all .3s;
+            -webkit-transition: all .3s;
+        }
+
+        .kvf-backlog-body h3 {
+            padding-bottom: 10px;
+            font-size: 12px;
+        }
+        .kvf-backlog-body p cite {
+            font-style: normal;
+            font-size: 30px;
+            font-weight: 300;
+            color: #009688;
+        }
+    </style>
+</head>
+<body>
+
+<div id="kPage" class="layui-fluid kvf-fluid-padding15">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md4">
+            <div class="layui-card">
+                <div class="layui-card-header">快捷方式</div>
+                <div class="layui-card-body">
+
+                    <div class="layui-carousel" id="shortcut" lay-indicator="inside">
+                        <div carousel-item="">
+                            <ul class="layui-row layui-col-space10 layui-this">
+                                <li class="layui-col-xs3">
+                                    <a lay-href="home/homepage1.html">
+                                        <i class="layui-icon layui-icon-console"></i>
+                                        <cite>主页一</cite>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs3">
+                                    <a lay-href="home/homepage2.html">
+                                        <i class="layui-icon layui-icon-chart"></i>
+                                        <cite>主页二</cite>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs3">
+                                    <a lay-href="component/layer/list.html">
+                                        <i class="layui-icon layui-icon-template-1"></i>
+                                        <cite>弹层</cite>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs3">
+                                    <a data-event="im">
+                                        <i class="layui-icon layui-icon-chat"></i>
+                                        <cite>聊天</cite>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs3">
+                                    <a lay-href="component/progress/index.html">
+                                        <i class="layui-icon layui-icon-find-fill"></i>
+                                        <cite>进度条</cite>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs3">
+                                    <a lay-href="app/workorder/list.html">
+                                        <i class="layui-icon layui-icon-survey"></i>
+                                        <cite>工单</cite>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs3">
+                                    <a lay-href="user/user/list.html">
+                                        <i class="layui-icon layui-icon-user"></i>
+                                        <cite>用户</cite>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs3">
+                                    <a lay-href="set/system/website.html">
+                                        <i class="layui-icon layui-icon-set"></i>
+                                        <cite>设置</cite>
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul class="layui-row layui-col-space10">
+                                <li class="layui-col-xs3">
+                                    <a lay-href="set/user/info.html">
+                                        <i class="layui-icon layui-icon-set"></i>
+                                        <cite>我的资料</cite>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs3">
+                                    <a lay-href="set/user/info.html">
+                                        <i class="layui-icon layui-icon-set"></i>
+                                        <cite>我的资料</cite>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs3">
+                                    <a lay-href="set/user/info.html">
+                                        <i class="layui-icon layui-icon-set"></i>
+                                        <cite>我的资料</cite>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs3">
+                                    <a lay-href="set/user/info.html">
+                                        <i class="layui-icon layui-icon-set"></i>
+                                        <cite>我的资料</cite>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs3">
+                                    <a lay-href="set/user/info.html">
+                                        <i class="layui-icon layui-icon-set"></i>
+                                        <cite>我的资料</cite>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs3">
+                                    <a lay-href="set/user/info.html">
+                                        <i class="layui-icon layui-icon-set"></i>
+                                        <cite>我的资料</cite>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs3">
+                                    <a lay-href="set/user/info.html">
+                                        <i class="layui-icon layui-icon-set"></i>
+                                        <cite>我的资料</cite>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs3">
+                                    <a lay-href="set/user/info.html">
+                                        <i class="layui-icon layui-icon-set"></i>
+                                        <cite>我的资料</cite>
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-col-md4">
+            <div class="layui-card">
+                <div class="layui-card-header">待办事项</div>
+                <div class="layui-card-body">
+
+                    <div class="layui-carousel" id="backlog">
+                        <div carousel-item="">
+                            <ul class="layui-row layui-col-space10 layui-this">
+                                <li class="layui-col-xs6">
+                                    <a lay-href="app/content/comment.html" class="kvf-backlog-body">
+                                        <h3>待审评论</h3>
+                                        <p><cite>66</cite></p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs6">
+                                    <a lay-href="app/forum/list.html" class="kvf-backlog-body">
+                                        <h3>待审帖子</h3>
+                                        <p><cite>12</cite></p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs6">
+                                    <a lay-href="template/goodslist.html" class="kvf-backlog-body">
+                                        <h3>待审商品</h3>
+                                        <p><cite>99</cite></p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs6">
+                                    <a href="javascript:;" onclick="layer.tips('不跳转', this, {tips: 3});" class="kvf-backlog-body">
+                                        <h3>待发货</h3>
+                                        <p><cite>20</cite></p>
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul class="layui-row layui-col-space10">
+                                <li class="layui-col-xs6">
+                                    <a href="javascript:;" class="kvf-backlog-body">
+                                        <h3>待审友情链接</h3>
+                                        <p><cite style="color: #FF5722;">5</cite></p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-col-md4">
+            <div class="layui-card">
+                <div class="layui-card-header">其它</div>
+                <div class="layui-card-body">
+
+                    <div class="layui-carousel" id="other">
+                        <div carousel-item="">
+                            <ul class="layui-row layui-col-space10 layui-this">
+                                <li class="layui-col-xs6">
+                                    <a lay-href="app/content/comment.html" class="kvf-backlog-body">
+                                        <h3>待审评论</h3>
+                                        <p><cite>66</cite></p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs6">
+                                    <a lay-href="app/forum/list.html" class="kvf-backlog-body">
+                                        <h3>待审帖子</h3>
+                                        <p><cite>12</cite></p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs6">
+                                    <a lay-href="template/goodslist.html" class="kvf-backlog-body">
+                                        <h3>待审商品</h3>
+                                        <p><cite>99</cite></p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs6">
+                                    <a href="javascript:;" onclick="layer.tips('不跳转', this, {tips: 3});" class="kvf-backlog-body">
+                                        <h3>待发货</h3>
+                                        <p><cite>20</cite></p>
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul class="layui-row layui-col-space10">
+                                <li class="layui-col-xs6">
+                                    <a href="javascript:;" class="kvf-backlog-body">
+                                        <h3>待审友情链接</h3>
+                                        <p><cite style="color: #FF5722;">5</cite></p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">折线图</div>
+                <div class="layui-card-body">
+                    <div id="brokenline" style="width: 100%;height:332px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">饼图</div>
+                <div class="layui-card-body">
+                    <div id="cpieline" style="width: 100%;height:332px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script th:replace="comm/base::context"></script>
+<script th:replace="comm/base::mainjs"></script>
+<script th:replace="comm/base::echartjs"></script>
+
+<script type="text/javascript" th:inline="javascript">
+    layui.use(['carousel'], function () {
+        var $ = layui.$, carousel = layui.carousel;
+
+        carousel.render({
+            elem: '#shortcut'
+            ,width: '100%' //设置容器宽度
+            ,height: '200px'
+            ,arrow: 'none' //始终显示箭头
+            ,autoplay: false
+        });
+        carousel.render({
+            elem: '#backlog'
+            ,width: '100%' //设置容器宽度
+            ,height: '200px'
+            ,arrow: 'none' //始终显示箭头
+            ,autoplay: false
+        });
+        carousel.render({
+            elem: '#other'
+            ,width: '100%' //设置容器宽度
+            ,height: '200px'
+            ,arrow: 'none' //始终显示箭头
+            ,autoplay: false
+        });
+
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('brokenline'));
+
+        // 指定图表的配置项和数据
+        var brokenOption = {
+            title: {
+                text: '折线图堆叠'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: ['周一','周二','周三','周四','周五','周六','周日']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    name:'邮件营销',
+                    type:'line',
+                    stack: '总量',
+                    data:[120, 132, 101, 134, 90, 230, 210]
+                },
+                {
+                    name:'联盟广告',
+                    type:'line',
+                    stack: '总量',
+                    data:[220, 182, 191, 234, 290, 330, 310]
+                },
+                {
+                    name:'视频广告',
+                    type:'line',
+                    stack: '总量',
+                    data:[150, 232, 201, 154, 190, 330, 410]
+                },
+                {
+                    name:'直接访问',
+                    type:'line',
+                    stack: '总量',
+                    data:[320, 332, 301, 334, 390, 330, 320]
+                },
+                {
+                    name:'搜索引擎',
+                    type:'line',
+                    stack: '总量',
+                    data:[820, 932, 901, 934, 1290, 1330, 1320]
+                }
+            ]
+        };
+
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(brokenOption);
+
+        $(window).resize(function () {
+            myChart.resize();
+            myChart2.resize();
+        });
+
+        var myChart2 = echarts.init(document.getElementById('cpieline'));
+        var data = genData(50);
+        var cpieOption = {
+            title : {
+                text: '同名数量统计',
+                subtext: '纯属虚构',
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                type: 'scroll',
+                orient: 'vertical',
+                right: 10,
+                top: 20,
+                bottom: 20,
+                data: data.legendData,
+
+                selected: data.selected
+            },
+            series : [
+                {
+                    name: '姓名',
+                    type: 'pie',
+                    radius : '55%',
+                    center: ['40%', '50%'],
+                    data: data.seriesData,
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+
+        function genData(count) {
+            var nameList = [
+                '赵', '钱', '孙', '李', '周', '吴', '郑', '王', '冯', '陈', '褚', '卫', '蒋', '沈', '韩', '杨', '朱', '秦', '尤', '许', '何', '吕', '施', '张', '孔', '曹', '严', '华', '金', '魏', '陶', '姜', '戚', '谢', '邹', '喻', '柏', '水', '窦', '章', '云', '苏', '潘', '葛', '奚', '范', '彭', '郎', '鲁', '韦', '昌', '马', '苗', '凤', '花', '方', '俞', '任', '袁', '柳', '酆', '鲍', '史', '唐', '费', '廉', '岑', '薛', '雷', '贺', '倪', '汤', '滕', '殷', '罗', '毕', '郝', '邬', '安', '常', '乐', '于', '时', '傅', '皮', '卞', '齐', '康', '伍', '余', '元', '卜', '顾', '孟', '平', '黄', '和', '穆', '萧', '尹', '姚', '邵', '湛', '汪', '祁', '毛', '禹', '狄', '米', '贝', '明', '臧', '计', '伏', '成', '戴', '谈', '宋', '茅', '庞', '熊', '纪', '舒', '屈', '项', '祝', '董', '梁', '杜', '阮', '蓝', '闵', '席', '季', '麻', '强', '贾', '路', '娄', '危'
+            ];
+            var legendData = [];
+            var seriesData = [];
+            var selected = {};
+            for (var i = 0; i < 50; i++) {
+                var name = Math.random() > 0.65
+                    ? makeWord(4, 1) + '·' + makeWord(3, 0)
+                    : makeWord(2, 1);
+                legendData.push(name);
+                seriesData.push({
+                    name: name,
+                    value: Math.round(Math.random() * 100000)
+                });
+                selected[name] = i < 6;
+            }
+
+            return {
+                legendData: legendData,
+                seriesData: seriesData,
+                selected: selected
+            };
+
+            function makeWord(max, min) {
+                var nameLen = Math.ceil(Math.random() * max + min);
+                var name = [];
+                for (var i = 0; i < nameLen; i++) {
+                    name.push(nameList[Math.round(Math.random() * nameList.length - 1)]);
+                }
+                return name.join('');
+            }
+        }
+
+        myChart2.setOption(cpieOption);
+
+    });
+</script>
+
+</body>
+</html>

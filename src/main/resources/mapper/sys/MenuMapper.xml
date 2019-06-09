@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kalvin.kvf.mapper.sys.MenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kalvin.kvf.entity.sys.Menu">
+        <id column="id" property="id" />
+        <result column="parent_id" property="parentId" />
+        <result column="name" property="name" />
+        <result column="url" property="url" />
+        <result column="permission" property="permission" />
+        <result column="type" property="type" />
+        <result column="icon" property="icon" />
+        <result column="status" property="status" />
+        <result column="sort" property="sort" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, parent_id, name, url, permission, type, icon, status, sort, create_by, create_time
+    </sql>
+
+    <sql id="M_Base_Column_List">
+        m.id, m.parent_id, m.name, m.url, m.permission, m.type, m.icon, m.status, m.sort, m.create_by, m.create_time
+    </sql>
+
+    <select id="selectPermission" resultType="java.lang.String">
+        SELECT DISTINCT
+            b.permission
+        FROM
+            sys_menu AS b
+            INNER JOIN sys_role_menu AS c ON b.id = c.menu_id
+            INNER JOIN sys_user_role AS a ON a.role_id = c.role_id
+        WHERE
+            a.user_id = ${userId}
+        ORDER BY
+            b.sort ASC;
+    </select>
+
+    <select id="selectMenuList" resultType="com.kalvin.kvf.entity.sys.Menu">
+        select <include refid="Base_Column_List" /> from sys_menu
+        <trim prefix="where" prefixOverrides="and">
+            and status = 0
+            <if test="menu.parentId != null">
+                AND parent_id = #{menu.parentId}
+            </if>
+            <if test="menu.name != null and menu.name != ''">
+                AND name LIKE concat("%", #{menu.name, jdbcType=VARCHAR}, "%")
+            </if>
+        </trim>
+        order by type, sort asc
+    </select>
+
+    <select id="selectRoleMenu" resultType="com.kalvin.kvf.dto.ZTreeDTO">
+        <choose>
+            <when test="roleId == null">
+                select id, parent_id, name, false as checked, if(type = 2, false, true) as isParent from sys_menu where status=0
+            </when>
+            <otherwise>
+                select a.id, a.parent_id, a.name, if(b.id is null, false, true) as checked,
+                if(a.type = 2, false, true) as parent
+                from sys_menu as a
+                left join sys_role_menu as b
+                on a.id = b.menu_id and b.role_id = #{roleId, jdbcType=BIGINT} where a.status=0
+                order by a.type,a.sort
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="selectUserPermissionMenuList" resultType="com.kalvin.kvf.entity.sys.Menu">
+        SELECT DISTINCT
+            <include refid="M_Base_Column_List"/>
+        FROM
+            sys_menu AS m
+            INNER JOIN sys_role_menu AS b ON m.id = b.menu_id
+            INNER JOIN sys_user_role AS c ON b.role_id = c.role_id
+        WHERE
+            m.parent_id = #{parentId}
+            AND c.user_id = #{userId}
+            AND m.status = 0
+            AND m.type != 3
+        ORDER BY
+            m.sort ASC;
+    </select>
+
+    <select id="selectUserPermissionNavMenuList" resultType="com.kalvin.kvf.entity.sys.Menu">
+        SELECT DISTINCT
+            <include refid="M_Base_Column_List"/>
+        FROM
+            sys_menu AS m
+        INNER JOIN sys_role_menu AS b ON m.id = b.menu_id
+        INNER JOIN sys_user_role AS c ON b.role_id = c.role_id
+        WHERE
+            c.user_id = #{userId}
+            AND m.status = 0
+            AND m.type = 3
+        ORDER BY
+            m.sort ASC;
+    </select>
+
+</mapper>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>LayOA管理系统</title>
+    <link th:replace="comm/base::static"/>
+    <style>
+        /** 未展开 */
+        .treeTable-icon .layui-icon-layer:before {
+            content: "\e638";
+        }
+
+        /** 展开 */
+        .treeTable-icon.open .layui-icon-layer:before {
+            content: "\e638";
+        }
+        .treeTable-icon .layui-icon-file:before {
+            content: "\e621";
+        }
+    </style>
+</head>
+<body style="background-color: #f2f2f2;">
+<div class="layui-fluid kvf-fluid-padding15">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header kvf-card-header-auto">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">文章ID</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="id" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">作者</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="author" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">标题</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="title" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">标签</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="label" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-list" lay-submit="" lay-filter="LAY-app-contlist-search">
+                        <i class="layui-icon layui-icon-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn" id="btn-expand">全部展开</button>
+                <button class="layui-btn" id="btn-fold">全部折叠</button>
+                <button class="layui-btn layuiadmin-btn-list" data-type="batchdel">删除</button>
+                <button class="layui-btn layuiadmin-btn-list" data-type="add">添加</button>
+            </div>
+            <table id="kContentTable" lay-filter="kContentTable"></table>
+        </div>
+    </div>
+
+</div>
+
+
+<script type="text/html" id="rowToolbarTpl">
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+</script>
+
+<script th:replace="comm/base::context"></script>
+<script th:replace="comm/base::mainjs"></script>
+
+<script type="text/javascript" th:inline="javascript">
+    layui.config({
+        base: loaCtx + 'static/plugins/treetable-lay/'
+    }).extend({
+        treetable: 'treetable'
+    }).use(['table', 'treetable'], function () {
+
+        var $ = layui.jquery;
+        var table = layui.table;
+        var treetable = layui.treetable;
+
+        // 渲染表格
+        layer.load(2);
+        treetable.render({
+            treeColIndex: 1,
+            treeSpid: -1,
+            treeIdName: 'authorityId',
+            treePidName: 'parentId',
+            elem: '#kContentTable',
+            url: loaCtx + 'static/plugins/treetable-lay/menus.json',
+            page: false,
+            cols: [[
+                // {type: 'numbers'},
+                {type:'checkbox', fixed: 'left'},
+                {field: 'authorityName', minWidth: 200, title: '权限名称'},
+                {field: 'authority', title: '权限标识'},
+                {field: 'menuUrl', title: '菜单url'},
+                {field: 'orderNumber', width: 80, align: 'center', title: '排序号'},
+                {field: 'isMenu', width: 80, align: 'center', title: '类型'},
+                {templet: '#rowToolbarTpl', width: 120, align: 'center', title: '操作'}
+            ]],
+            done: function () {
+                layer.closeAll('loading');
+            }
+        });
+
+        table.on('tool(kContentTable)', function (obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+            log('tree data=', data);
+
+            if (layEvent === 'del') {
+                layer.confirm('确定删除吗？', function(index) {
+
+                    //执行 Ajax 后重载
+                    $.ajax({
+                        type: req.type.post,
+                        url: api.sys.userRm + data.id,
+                        async: false,
+                        success: function (r) {
+                            if (r.code === req.status.ok) {
+                                table.reload(tableId);
+                                kvfKit.sucessMsg('已删除');
+                            } else {
+                                kvfKit.errorMsg(r.msg);
+                            }
+                        }
+                    });
+                });
+            }
+        });
+
+        table.on('checkbox(kContentTable)', function(obj) {
+            console.log(obj.checked); //当前是否选中状态
+            console.log(obj.data); //选中行的相关数据
+            console.log(obj.type); //如果触发的是全选，则为：all，如果触发的是单选，则为：one
+        });
+
+        $('#btn-expand').click(function () {
+            treetable.expandAll('#kContentTable');
+        });
+
+        $('#btn-fold').click(function () {
+            treetable.foldAll('#kContentTable');
+        });
+
+        $('#btn-refresh').click(function () {
+            renderTable();
+        });
+
+
+    });
+</script>
+
+</body>
+</html>

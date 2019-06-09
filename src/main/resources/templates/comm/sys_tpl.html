@@ -1,0 +1,30 @@
+<!--
+layui模板，用于AJAX数据渲染
+【用法】http://www.layui.com/doc/modules/laytpl.html
+【命名规则规范】1、根元素用“laytpl”标签；2、th:fragment为“页面名称_容器元素ID”
+-->
+
+<!--头部横向导航菜单模板-->
+<laytpl th:fragment="headNavTpl">
+    {{# layui.each(d, function(i, item) { }}
+    <li class="layui-nav-item layui-hide-xs" lay-unselect="">
+        <a href="javascript:;" title="{{item.name}}" data-menu-id="{{item.id}}" data-menu-url="{{item.url}}">
+            <i class="{{=item.icon?item.icon:'fa fa-cube'}}"><cite class="layui-hide">{{item.name}}</cite></i>
+        </a>
+    </li>
+    {{# }) }}
+</laytpl>
+
+<!--左侧菜单导航模板-->
+<laytpl th:fragment="leftNavTpl">
+    {{# layui.each(d, function(i, item) { }}
+    <li class="layui-nav-item">
+        <a lay-tips="{{item.name}}" href="javascript:;"><i class="{{=item.icon?item.icon:'fa fa-list-ul'}}"></i><cite>{{item.name}}</cite></a>
+        <dl class="layui-nav-child">
+            {{# layui.each(item.subMenus, function(j, sItem) { }}
+            <dd><a lay-tips="{{sItem.name}}" href="javascript:;" data-menu-id="{{sItem.id}}" data-menu-url="{{sItem.url}}"><cite>{{sItem.name}}</cite></a></dd>
+            {{# }); }}
+        </dl>
+    </li>
+    {{# }) }}
+</laytpl>
