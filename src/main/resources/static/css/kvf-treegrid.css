@@ -1,0 +1,38 @@
+/*解决easyui某样式和layui样式冲突问题*/
+* {
+    -webkit-box-sizing: unset;
+    box-sizing: unset;
+}
+/*修改treegrid行选中样式*/
+.datagrid-row-selected {
+    background: #f2f2f2;
+    color: #66667d;
+}
+.panel.datagrid.panel-htop {
+    margin-top: 10px;
+}
+/*treegrid实现冻结右侧列效果样式 start*/
+.datagrid-header-row, .datagrid-row {
+    height: 39px;
+}
+.datagrid-view1 {
+    right: 0!important;
+    left: auto;
+    box-shadow: rgba(0, 0, 0, 0.08) -8px -8px 8px;
+}
+.datagrid-view2 {
+    left: 0;
+}
+.datagrid-view1 .datagrid-body {
+    overflow-y: auto;
+}
+.datagrid-view2 .datagrid-body {
+    overflow-y: auto;
+}
+.datagrid-view .datagrid-empty {
+    line-height: 26px;
+    padding: 15px;
+    text-align: center;
+    color: #999;
+}
+/*treegrid实现冻结右侧列效果样式 end*/
