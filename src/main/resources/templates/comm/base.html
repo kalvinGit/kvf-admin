@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-
+<!--全局title-->
+<title th:fragment="pagetitle">kvf-Admin</title>
 <body>
     <!-- loa上下文路径  -->
     <script th:fragment="context" th:inline="javascript">
@@ -9,6 +10,8 @@
 
     <!--系统图标-->
     <link th:fragment="icon" rel="shortcut icon" th:href="@{/static/favicon.ico}" type="image/x-icon"/>
+
+
 
     <!-- 共用css/js静态资源 -->
     <div th:fragment="static">
