@@ -3,18 +3,18 @@ package com.kalvin.kvf.exception;
 /**
  * 自定义异常类
  */
-public class LayOAException extends RuntimeException {
+public class KvfException extends RuntimeException {
 
     private static final long serialVersionUID = 3844100562400725986L;
     private Integer errorCode;
     private String msg;
 
-    public LayOAException(String msg) {
+    public KvfException(String msg) {
         super(msg);
         this.msg = msg;
     }
 
-    public LayOAException(int errorCode, String msg) {
+    public KvfException(int errorCode, String msg) {
         super(msg);
         this.errorCode = errorCode;
         this.msg = msg;

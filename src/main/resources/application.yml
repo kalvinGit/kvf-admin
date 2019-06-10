@@ -59,12 +59,6 @@ spring:
     servlet:
       content-type: text/html
 
-  # activity 配置
-  activiti:
-    check-process-definitions: false
-    database-schema-update: true
-    database-schema: ACT
-
 
 # mybatis-plus 配置
 mybatis-plus:

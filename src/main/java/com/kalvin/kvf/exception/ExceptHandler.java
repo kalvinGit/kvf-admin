@@ -16,8 +16,8 @@ public class ExceptHandler {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ExceptHandler.class);
 
-    @ExceptionHandler(LayOAException.class)
-    public R handleKvfException(LayOAException e) {
+    @ExceptionHandler(KvfException.class)
+    public R handleKvfException(KvfException e) {
         LOGGER.error("kvf异常：", e);
         if (e.getErrorCode() == null) {
             return R.fail(e.getMsg());

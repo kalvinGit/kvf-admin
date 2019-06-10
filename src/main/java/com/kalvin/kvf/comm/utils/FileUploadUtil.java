@@ -4,7 +4,7 @@ import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
 import com.kalvin.kvf.comm.constant.UploadPathEnum;
 import com.kalvin.kvf.dto.sys.UploadFileInfo;
-import com.kalvin.kvf.exception.LayOAException;
+import com.kalvin.kvf.exception.KvfException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,13 +25,13 @@ public class FileUploadUtil {
         String filename;
         try {
             if (multipartFile == null) {
-                throw new LayOAException("没有可上传的文件");
+                throw new KvfException("没有可上传的文件");
             }
 
             filename = multipartFile.getOriginalFilename();
 
             if (pathEnum == null && StrUtil.isBlank(toPath)) {
-                throw new LayOAException("上传路径不存在");
+                throw new KvfException("上传路径不存在");
             } else if (pathEnum != null) {
                 path = pathEnum.getPath() + filename;
                 uploadPath = ClassUtil.getClassPath() +  path;
@@ -50,7 +50,7 @@ public class FileUploadUtil {
             multipartFile.transferTo(file);
             return new UploadFileInfo(filename, path, uploadPath);
         } catch (Exception e) {
-            throw new LayOAException("上传文件失败：" + e.getMessage());
+            throw new KvfException("上传文件失败：" + e.getMessage());
         }
 
     }

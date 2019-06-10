@@ -2,7 +2,7 @@ package com.kalvin.kvf.controller;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.kalvin.kvf.dto.R;
-import com.kalvin.kvf.exception.LayOAException;
+import com.kalvin.kvf.exception.KvfException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +29,7 @@ public class LoaController<T, S extends IService<T>> extends BaseController {
             try {
                 entity = clazz.newInstance();
             } catch (InstantiationException | IllegalAccessException e) {
-                throw new LayOAException("发生异常:" + e.getMessage());
+                throw new KvfException("发生异常:" + e.getMessage());
             }
         } else {
             entity = service.getById(id);

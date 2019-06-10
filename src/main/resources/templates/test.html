@@ -84,7 +84,7 @@
 
 <script type="text/javascript" th:inline="javascript">
     layui.config({
-        base: loaCtx + 'static/plugins/treetable-lay/'
+        base: BASE_WEB + 'static/plugins/treetable-lay/'
     }).extend({
         treetable: 'treetable'
     }).use(['table', 'treetable'], function () {
@@ -101,7 +101,7 @@
             treeIdName: 'authorityId',
             treePidName: 'parentId',
             elem: '#kContentTable',
-            url: loaCtx + 'static/plugins/treetable-lay/menus.json',
+            url: BASE_WEB + 'static/plugins/treetable-lay/menus.json',
             page: false,
             cols: [[
                 // {type: 'numbers'},

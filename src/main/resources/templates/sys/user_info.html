@@ -78,7 +78,7 @@
                                 <input name="avatar" placeholder="图片地址" th:value="${user.avatar}" class="layui-input layui-hide">
                             </div>
                             <div class="layui-input-inline layui-btn-container" style="width: auto;">
-                                <button type="button" class="layui-btn layui-btn-primary" id="LOA_avatarUpload">
+                                <button type="button" class="layui-btn layui-btn-primary" id="kAvatarUpload">
                                     <i class="layui-icon layui-icon-upload"></i>上传图片
                                 </button>
                             </div>
@@ -109,7 +109,7 @@
 
         //执行实例
         var uploadInst = upload.render({
-            elem: '#LOA_avatarUpload' //绑定元素
+            elem: '#kAvatarUpload' //绑定元素
             ,url: api.comm.fileUpload //上传接口
             ,data: {type: 3}
             ,accept: 'images'
@@ -117,7 +117,7 @@
                 //上传完毕回调
                 if (r.code === req.status.ok) {
                     $('input[name="avatar"]').val(r.data.path);
-                    $('#avatarImg').attr('src', loaCtx + r.data.path);
+                    $('#avatarImg').attr('src', BASE_WEB + r.data.path);
                     kvfKit.sucessMsg('上传成功');
                 } else {
                     kvfKit.errorMsg('上传失败：' + r.msg);

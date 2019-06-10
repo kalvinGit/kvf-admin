@@ -1,7 +1,7 @@
 package com.kalvin.kvf.comm.utils;
 
 import com.kalvin.kvf.entity.sys.User;
-import com.kalvin.kvf.exception.LayOAException;
+import com.kalvin.kvf.exception.KvfException;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.session.Session;
@@ -64,7 +64,7 @@ public class ShiroUtils {
     public static String getKaptcha(String key) {
         Object kaptcha = getSessionAttribute(key);
         if(kaptcha == null){
-            throw new LayOAException("验证码已失效");
+            throw new KvfException("验证码已失效");
         }
         getSession().removeAttribute(key);
         return kaptcha.toString();

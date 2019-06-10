@@ -40,7 +40,7 @@
                 <table id="kContentTable" lay-filter="kContentTable"></table>
             </div>
             <div class="layui-form-item layui-hide">
-                <input type="button" lay-submit="" lay-filter="LOA-table-reload" id="LOA-table-reload" value="确认添加">
+                <input type="button" lay-submit="" lay-filter="kFormSubmit" id="kFormSubmit" value="确认添加">
             </div>
         </div>
 
@@ -128,7 +128,7 @@
             active[type] ? active[type].call(this) : '';
         });
 
-        form.on('submit(LOA-table-reload)', function () {
+        form.on('submit(kFormSubmit)', function () {
             table.reload('kContentTable');
         });
 

@@ -17,25 +17,9 @@
                     <div class="layui-form layui-card-header kvf-card-header-auto">
                         <div class="layui-form-item">
                             <div class="layui-inline">
-                                <label class="layui-form-label">用户账号</label>
+                                <label class="layui-form-label">表名</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="username" placeholder="请输入" autocomplete="off" class="layui-input">
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">用户姓名</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="realname" placeholder="请输入" autocomplete="off" class="layui-input">
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">用户状态</label>
-                                <div class="layui-input-inline">
-                                    <select class="layui-select" name="status">
-                                        <option value="">请选择</option>
-                                        <option value="0">正常</option>
-                                        <option value="1">禁用</option>
-                                    </select>
+                                    <input type="text" name="tableName" placeholder="请输入表名" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
                             <div class="layui-inline">
@@ -60,56 +44,17 @@
 <script th:replace="comm/base::context"></script>
 <script th:replace="comm/base::mainjs"></script>
 
-<script type="text/html" id="sexTpl">
-    {{#  if(d.sex == 1){ }}
-    <span class="layui-badge layui-bg-blue">男</span>
-    {{#  } else if(d.sex == 2) { }}
-    <span class="layui-badge">女</span>
-    {{#  } else { }}
-    <span class="layui-badge layui-bg-gray">未知</span>
-    {{# } }}
-</script>
-
-<script type="text/html" id="statusTpl">
-    {{#  if(d.status == 0){ }}
-    <span class="layui-badge layui-bg-green">正常</span>
-    {{#  } else { }}
-    <span class="layui-badge">禁用</span>
-    {{# } }}
-</script>
-
-<!--主要为了解决当值为0时，不显示的问题（估计是layui的bug）-->
-<script type="text/html" id="sortTpl">
-    {{# if(d.sort == 0){ }}
-    <span>0</span>
-    {{#  } else { }}
-    <span>{{ d. sort }}</span>
-    {{# } }}
-</script>
-
-<script type="text/html" id="deptTpl">
-    {{# var data = kvfKit.get(api.sys.getDept + d.deptId).data; }}
-    {{# return data ? data.name : '<span class="layui-badge-rim">未分配</span>'; }}
-</script>
-
-<script type="text/html" id="roleNamesTpl">
-    {{# var data = kvfKit.get(api.sys.getUserRoleNames + d.id).data; }}
-    {{# return data ? data : '<span class="layui-badge-rim">未分配</span>'; }}
-</script>
-
 <!--头部工具栏模板-->
 <script type="text/html" id="headToolbarTpl">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
-        <button class="layui-btn layui-btn-sm" lay-event="batchdel">删除</button>
+        <button class="layui-btn layui-btn-sm" lay-event="batchGen">批量生成</button>
     </div>
 </script>
 
 <!--表格行工具栏模板-->
 <script type="text/html" id="rowToolbarTpl">
-    <a class="layui-btn layui-bg-orange layui-btn-xs" lay-event="reset"><i class="layui-icon layui-icon-password"></i>重置密码</a>
-    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="fastGen"><i class="layui-icon layui-icon-fonts-code"></i>快速生成</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="customGen"><i class="layui-icon layui-icon-fonts-code"></i>自定义生成</a>
 </script>
 
 <script type="text/javascript" th:inline="javascript">
@@ -120,19 +65,13 @@
         // 实例化table
         var tableIns = table.render($.extend(config.layui.table, {
             elem: '#' + tableId
-            ,url: api.sys.userListData //数据接口
+            ,url: BASE_WEB + 'gen/list/tableData' //数据接口
             ,toolbar: '#headToolbarTpl'
+            ,defaultToolbar: []
             ,cols: [[ //表头
                 {type:'checkbox', fixed: 'left'}
-                ,{field: 'realname', title: '姓名', width:100}
-                ,{field: 'username', title: '用户名', width:100}
-                ,{field: 'deptId', title: '所属部门', sort: true, templet: '#deptTpl'}
-                ,{field: 'roleNames', title: '角色', width:120, templet: '#roleNamesTpl'}
-                ,{field: 'sex', title: '性别', width:80, sort: true, templet: '#sexTpl'}
-                ,{field: 'phone', title: '手机号码', sort: true, width:150}
-                // ,{field: 'jobTitle', title: '职务名称', width:120}
-                ,{field: 'status', title: '用户状态', align: 'center', sort: true, templet: '#statusTpl', width: 100}
-                ,{field: 'sort', title: '排序号', align: 'center', sort: true, width:80, templet: '#sortTpl'}
+                ,{field: 'tableName', title: '表名', width:180}
+                ,{field: 'tableComment', title: '备注'}
                 ,{field: '', title: '操作', width: 235, fixed: 'right', templet: '#rowToolbarTpl'}
             ]]
         }));
@@ -144,22 +83,7 @@
             var checkStatus = table.checkStatus(obj.config.id);
             var checkData = checkStatus.data; // 得到选中的数据
             switch(obj.event) {
-                case 'add':
-                    layer.open({
-                        type: 2
-                        ,title: '添加用户'
-                        ,content: api.sys.userEditView
-                        ,maxmin: true
-                        ,area: area   // 宽高
-                        ,btn: ['确定', '取消']
-                        ,yes: function(index, layero){
-                            //点击确认触发 iframe 内容中的按钮提交
-                            var submit = layero.find('iframe').contents().find("#kFormSubmit");
-                            submit.click();
-                        }
-                    });
-                    break;
-                case 'batchdel':
+                case 'batchGen':
                     if(checkData.length === 0){
                         return kvfKit.warningMsg('请选择数据');
                     }
@@ -196,7 +120,7 @@
             var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
             var tr = obj.tr; //获得当前行 tr 的DOM对象
 
-            if (layEvent === 'del') {
+            if (layEvent === 'fastGen') {
                 layer.confirm('确定删除吗？', function(index) {
 
                     //执行 Ajax 后重载
@@ -215,7 +139,7 @@
                     });
                 });
             }
-            if (layEvent === 'edit') {
+            if (layEvent === 'customGen') {
                 layer.open({
                     type: 2
                     ,title: '编辑用户'

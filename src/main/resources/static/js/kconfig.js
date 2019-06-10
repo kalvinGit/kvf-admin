@@ -9,7 +9,7 @@ var config = {
             cellMinWidth: 60
             ,request: {pageName : 'current', limitName : 'size'}
             ,response : {statusName : 'code', statusCode : 200, msgName : 'msg', dataName : 'data', countName: 'total'}
-            ,height: 490
+            ,height: 540
             ,defaultToolbar: ['filter', 'exports', 'print']  // 表格头部右侧按钮，若不需要，直接配置空数组
             ,page: {    //开启分页
                 curr : 1,
@@ -56,62 +56,62 @@ var req = {
  * @type {{}}
  */
 var api = {
-    homeView: loaCtx + '', // loa主页地址
-    login: loaCtx + 'login',
+    homeView: BASE_WEB + '', // loa主页地址
+    login: BASE_WEB + 'login',
     comm: {
-        selUserView: loaCtx + 'comm/selUser',
-        userMenus: loaCtx + 'index/menus',  // 用户目录菜单（左侧）
-        userNavMenus: loaCtx + 'index/navMenus',  // 用户导航菜单（横向）
-        fileUpload: loaCtx + 'comm/fileUpload'
+        selUserView: BASE_WEB + 'comm/selUser',
+        userMenus: BASE_WEB + 'index/menus',  // 用户目录菜单（左侧）
+        userNavMenus: BASE_WEB + 'index/navMenus',  // 用户导航菜单（横向）
+        fileUpload: BASE_WEB + 'comm/fileUpload'
     },
     sys: {  // 系统模块接口
-        userListData: loaCtx + 'sys/user/list/data',
-        userRm: loaCtx + 'sys/user/remove/',
-        userRmBatch: loaCtx + 'sys/user/removeBatch',
-        userEditView: loaCtx + 'sys/user/edit',
-        userAdd: loaCtx + 'sys/user/add',
-        userEdit: loaCtx + 'sys/user/edit',
-        userResetPwd: loaCtx + 'sys/user/resetPwd',
-        userChangePwd: loaCtx + 'sys/user/changePwd',
-        menuListData: loaCtx + 'sys/menu/list/data',
-        menuRm: loaCtx + 'sys/menu/remove/',
-        menuRmBatch: loaCtx + 'sys/menu/removeBatch',
-        menuEditView: loaCtx + 'sys/menu/edit',
-        menuAdd: loaCtx + 'sys/menu/add',
-        menuEdit: loaCtx + 'sys/menu/edit',
-        menuListTree: loaCtx + 'sys/menu/list/tree',
-        menuListTreeData: loaCtx + 'sys/menu/list/treeData',
-        menuRoleTree: loaCtx + 'sys/menu/role/tree',
-        deptListData: loaCtx + 'sys/dept/list/data',
-        deptRm: loaCtx + 'sys/dept/remove/',
-        deptRmBatch: loaCtx + 'sys/dept/removeBatch',
-        deptEditView: loaCtx + 'sys/dept/edit',
-        deptAdd: loaCtx + 'sys/dept/add',
-        deptEdit: loaCtx + 'sys/dept/edit',
-        deptListTree: loaCtx + 'sys/dept/list/tree',
-        getDept: loaCtx + 'sys/dept/get/',
-        roleListData: loaCtx + 'sys/role/list/data',
-        roleListTree: loaCtx + 'sys/role/list/tree',
-        roleRm: loaCtx + 'sys/role/remove/',
-        roleRmBatch: loaCtx + 'sys/role/removeBatch',
-        roleEditView: loaCtx + 'sys/role/edit',
-        rolePermissionView: loaCtx + 'sys/role/permission',
-        roleAdd: loaCtx + 'sys/role/add',
-        roleEdit: loaCtx + 'sys/role/edit',
-        roleSetPermission: loaCtx + 'sys/role/set/permission',
-        /*roleTreeListData: loaCtx + 'sys/roleTree/list/data',
-        roleTreeRm: loaCtx + 'sys/roleTree/remove/',
-        roleTreeRmBatch: loaCtx + 'sys/roleTree/removeBatch',
-        roleTreeEditView: loaCtx + 'sys/roleTree/edit',
-        roleTreeSave: loaCtx + 'sys/roleTree/save',
-        roleTreeListTree: loaCtx + 'sys/roleTree/list/tree',*/
-        userRoleView: loaCtx + 'sys/userRole/index',
-        userRoleListData: loaCtx + 'sys/userRole/list/data',
-        userRoleSave: loaCtx + 'sys/userRole/save',
-        userRoleRmBatch: loaCtx + 'sys/userRole/removeBatch',
-        userRoleCount: loaCtx + 'sys/userRole/count',
-        getUserRoleNames: loaCtx + 'sys/userRole/get/roleNames/',
-        logListData: loaCtx + 'sys/log/list/data'
+        userListData: BASE_WEB + 'sys/user/list/data',
+        userRm: BASE_WEB + 'sys/user/remove/',
+        userRmBatch: BASE_WEB + 'sys/user/removeBatch',
+        userEditView: BASE_WEB + 'sys/user/edit',
+        userAdd: BASE_WEB + 'sys/user/add',
+        userEdit: BASE_WEB + 'sys/user/edit',
+        userResetPwd: BASE_WEB + 'sys/user/resetPwd',
+        userChangePwd: BASE_WEB + 'sys/user/changePwd',
+        menuListData: BASE_WEB + 'sys/menu/list/data',
+        menuRm: BASE_WEB + 'sys/menu/remove/',
+        menuRmBatch: BASE_WEB + 'sys/menu/removeBatch',
+        menuEditView: BASE_WEB + 'sys/menu/edit',
+        menuAdd: BASE_WEB + 'sys/menu/add',
+        menuEdit: BASE_WEB + 'sys/menu/edit',
+        menuListTree: BASE_WEB + 'sys/menu/list/tree',
+        menuListTreeData: BASE_WEB + 'sys/menu/list/treeData',
+        menuRoleTree: BASE_WEB + 'sys/menu/role/tree',
+        deptListData: BASE_WEB + 'sys/dept/list/data',
+        deptRm: BASE_WEB + 'sys/dept/remove/',
+        deptRmBatch: BASE_WEB + 'sys/dept/removeBatch',
+        deptEditView: BASE_WEB + 'sys/dept/edit',
+        deptAdd: BASE_WEB + 'sys/dept/add',
+        deptEdit: BASE_WEB + 'sys/dept/edit',
+        deptListTree: BASE_WEB + 'sys/dept/list/tree',
+        getDept: BASE_WEB + 'sys/dept/get/',
+        roleListData: BASE_WEB + 'sys/role/list/data',
+        roleListTree: BASE_WEB + 'sys/role/list/tree',
+        roleRm: BASE_WEB + 'sys/role/remove/',
+        roleRmBatch: BASE_WEB + 'sys/role/removeBatch',
+        roleEditView: BASE_WEB + 'sys/role/edit',
+        rolePermissionView: BASE_WEB + 'sys/role/permission',
+        roleAdd: BASE_WEB + 'sys/role/add',
+        roleEdit: BASE_WEB + 'sys/role/edit',
+        roleSetPermission: BASE_WEB + 'sys/role/set/permission',
+        /*roleTreeListData: BASE_WEB + 'sys/roleTree/list/data',
+        roleTreeRm: BASE_WEB + 'sys/roleTree/remove/',
+        roleTreeRmBatch: BASE_WEB + 'sys/roleTree/removeBatch',
+        roleTreeEditView: BASE_WEB + 'sys/roleTree/edit',
+        roleTreeSave: BASE_WEB + 'sys/roleTree/save',
+        roleTreeListTree: BASE_WEB + 'sys/roleTree/list/tree',*/
+        userRoleView: BASE_WEB + 'sys/userRole/index',
+        userRoleListData: BASE_WEB + 'sys/userRole/list/data',
+        userRoleSave: BASE_WEB + 'sys/userRole/save',
+        userRoleRmBatch: BASE_WEB + 'sys/userRole/removeBatch',
+        userRoleCount: BASE_WEB + 'sys/userRole/count',
+        getUserRoleNames: BASE_WEB + 'sys/userRole/get/roleNames/',
+        logListData: BASE_WEB + 'sys/log/list/data'
 
     },
     bus: {} // 业务模块接口
