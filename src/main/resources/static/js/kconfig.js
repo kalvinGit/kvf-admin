@@ -120,6 +120,12 @@ var api = {
 /**
  * layui 全局配置
  */
+layui.config({
+    base: BASE_WEB + 'static/plugins/lay-formselect/'
+}).extend({
+    // formSelects: 'formSelects-v4'
+});
+
 layui.use(['layer'], function () {
     var layer = layui.layer;
     layer.config({

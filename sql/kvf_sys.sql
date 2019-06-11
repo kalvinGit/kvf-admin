@@ -56,9 +56,9 @@ INSERT INTO `sys_user` VALUES (3, 2, 'test', 'e10adc3949ba59abbe56e057f20f883e',
 DROP TABLE IF EXISTS `sys_dept`;
 CREATE TABLE `sys_dept`  (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `parent_id` bigint(20) NOT NULL COMMENT '上级部门ID，一级部门为0',
+  `parent_id` bigint(20) NOT NULL COMMENT '上级部门ID。一级部门为0',
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '部门名称',
-  `type` tinyint(2) NOT NULL COMMENT '类型。0：公司；1：部门；2:科室/小组',
+  `type` tinyint(2) NOT NULL COMMENT '类型。0：公司；1：部门；2：科室/小组',
   `area_id` bigint(20) NULL DEFAULT NULL COMMENT '所在区域ID',
   `sort` int(11) NOT NULL DEFAULT 0 COMMENT '排序值。越小越靠前',
   `status` tinyint(2) NOT NULL DEFAULT 0 COMMENT '状态。0：正常；1：禁用',
@@ -82,10 +82,10 @@ INSERT INTO `sys_dept` VALUES (3, 2, '研发组', 2, 1, 0, 0, '2019-05-01 17:13:
 DROP TABLE IF EXISTS `sys_menu`;
 CREATE TABLE `sys_menu`  (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `parent_id` bigint(20) NOT NULL COMMENT '父菜单ID，一级菜单为0',
+  `parent_id` bigint(20) NOT NULL COMMENT '父菜单ID。一级菜单为0',
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '菜单名称',
   `url` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '菜单URL',
-  `permission` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '授权标识(多个用逗号分隔，如：user:list,user:create)',
+  `permission` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '授权标识。多个用逗号分隔，如：user:list,user:create',
   `type` tinyint(2) NULL DEFAULT NULL COMMENT '类型。0：目录；1：菜单；2：按钮；3：导航菜单',
   `icon` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '菜单图标',
   `status` tinyint(2) NOT NULL DEFAULT 0 COMMENT '状态。0：正常；1：禁用',
@@ -120,6 +120,9 @@ INSERT INTO `sys_menu` VALUES (21, 5, '编辑', NULL, 'sys:dept:edit', 2, NULL, 
 INSERT INTO `sys_menu` VALUES (22, 5, '删除', NULL, 'sys:dept:del', 2, NULL, 0, 2, NULL, '2019-05-11 14:31:13');
 INSERT INTO `sys_menu` VALUES (23, 2, '重置密码', NULL, 'sys:user:reset', 2, NULL, 0, 3, NULL, '2019-05-12 18:01:10');
 INSERT INTO `sys_menu` VALUES (24, 0, 'Druid监控', 'druid/index.html', NULL, 3, 'fa fa-eye', 0, 0, NULL, '2019-05-20 22:43:09');
+INSERT INTO `sys_menu` VALUES (25, 0, '代码生成', '', NULL, 0, 'fa fa-bolt', 0, 2, NULL, '2019-06-10 22:47:31');
+INSERT INTO `sys_menu` VALUES (26, 25, '生成管理', 'gen/table/index', 'gen:table:index', 1, NULL, 0, 0, NULL, '2019-06-10 22:50:09');
+
 
 
 
@@ -131,7 +134,7 @@ CREATE TABLE `sys_role` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '角色名称',
   `parent_id` bigint(20) NOT NULL COMMENT '父级ID',
-  `type` tinyint(2) NOT NULL COMMENT '类型，0：分类，1：角色',
+  `type` tinyint(2) NOT NULL COMMENT '类型。0：分类；1：角色',
   `remarks` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '备注',
   `create_by` bigint(20) DEFAULT NULL COMMENT '创建人',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
@@ -221,7 +224,7 @@ CREATE TABLE `sys_log`  (
   `ip` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'IP',
   `browser` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '浏览器',
   `os` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '系统',
-  `time` bigint(20) NOT NULL DEFAULT 0 COMMENT '请求耗时（毫秒）',
+  `time` bigint(20) NOT NULL DEFAULT 0 COMMENT '请求耗时。毫秒',
   `create_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '日志表' ROW_FORMAT = Dynamic;

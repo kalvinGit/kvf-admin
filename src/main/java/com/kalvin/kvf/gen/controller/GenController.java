@@ -3,12 +3,16 @@ package com.kalvin.kvf.gen.controller;
 
 import com.kalvin.kvf.controller.BaseController;
 import com.kalvin.kvf.dto.R;
+import com.kalvin.kvf.gen.dto.TableColumnDTO;
 import com.kalvin.kvf.gen.service.ITableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 /**
  * <p>
@@ -30,9 +34,12 @@ public class GenController extends BaseController {
         return new ModelAndView("gen/table");
     }
 
-    @GetMapping(value = "setting")
-    public ModelAndView setting() {
-        return new ModelAndView("gen/setting");
+    @GetMapping(value = "setting/{tableName}")
+    public ModelAndView setting(@PathVariable String tableName) {
+        ModelAndView mv = new ModelAndView("gen/setting");
+        List<TableColumnDTO> tableColumnDTOS = tableService.listTableColumn(tableName);
+        mv.addObject("tableColumns", tableColumnDTOS);
+        return mv;
     }
 
     @GetMapping(value = "list/tableData")

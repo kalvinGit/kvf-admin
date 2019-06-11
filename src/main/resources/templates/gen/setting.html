@@ -29,11 +29,11 @@
                 <div class="layui-input-block">
                     <!-- 这里的xm-select属性是多选的ID, 如多处使用请保证全局唯一 -->
                     <select name="queryCol" xm-select="queryCol" xm-select-search>
-                        <option value="1">北京</option>
-                        <option value="2">上海</option>
+                        <option  th:each="tableColumn:${tableColumns}" th:value="${tableColumn.columnName}" th:text="${tableColumn.columnComment}">北京</option>
+                        <!--<option value="2">上海</option>
                         <option value="3">广州</option>
                         <option value="4">深圳</option>
-                        <option value="5">天津</option>
+                        <option value="5">天津</option>-->
                     </select>
                 </div>
             </div>
@@ -45,10 +45,9 @@
         <div class="layui-field-box">
             <div class="layui-form-item">
                 <label class="layui-form-label">头部按钮</label>
-                <div class="layui-input-block" id="headBtn">
-                    <button type="button" class="layui-btn layui-btn-sm" data-id="add">添加</button>
-                    <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" data-id="batchdel">删除</button>
-                    <input type="hidden" name="headBtn" value="添加,删除" autocomplete="off" class="layui-input">
+                <div class="layui-input-block" id="headBtnBox">
+                    <!--<button type="button" class="layui-btn layui-btn-sm" data-id="add">添加</button>
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" data-id="batchdel">删除</button>-->
                 </div>
             </div>
         </div>
@@ -59,11 +58,10 @@
         <div class="layui-field-box">
             <div class="layui-form-item">
                 <label class="layui-form-label">行内按钮</label>
-                <div class="layui-input-block" id="rowBtn">
-                    <button type="button" class="layui-btn layui-btn-sm" data-id="add">添加</button>
-                    <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" data-id="edit">编辑</button>
-                    <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" data-id="del">删除</button>
-                    <input type="hidden" name="rowBtn" value="添加,删除" autocomplete="off" class="layui-input">
+                <div class="layui-input-block" id="rowBtnBox">
+                    <!--<button type="button" class="layui-btn layui-btn-sm" data-id="add"><i class="layui-icon layui-icon-add-1"></i>添加</button>
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" data-id="edit"><i class="layui-icon layui-icon-edit"></i>编辑</button>
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" data-id="del"><i class="layui-icon layui-icon-delete"></i>删除</button>-->
                 </div>
             </div>
         </div>
@@ -114,30 +112,42 @@
         <div class="layui-form-item">
             <label class="layui-form-label">名称</label>
             <div class="layui-input-inline">
-                <input type="text" name="btnName" autocomplete="off" class="layui-input">
+                <input type="text" name="btnName" lay-verify="required" autocomplete="off" class="layui-input" placeholder="按钮名称">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">唯一标识</label>
             <div class="layui-input-inline">
-                <input type="text" name="btnId" autocomplete="off" class="layui-input">
+                <input type="text" name="btnId" lay-verify="required" autocomplete="off" class="layui-input" placeholder="英文字母，用于按钮事件ID">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">权限标识</label>
             <div class="layui-input-inline">
-                <input type="text" name="btnPerId" autocomplete="off" class="layui-input">
+                <input type="text" name="btnPerId" lay-verify="required" autocomplete="off" class="layui-input" placeholder="sys:xxx:add">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">配色</label>
+            <div class="layui-input-block">
+                <input type="radio" name="btnColorScheme" value="layui-btn-primary" title="白" autocomplete="off" class="layui-input">
+                <input type="radio" name="btnColorScheme" value="" title="绿" autocomplete="off" class="layui-input" checked>
+                <input type="radio" name="btnColorScheme" value="layui-btn-normal" title="蓝" autocomplete="off" class="layui-input">
+                <input type="radio" name="btnColorScheme" value="layui-btn-warm" title="橙" autocomplete="off" class="layui-input">
+                <input type="radio" name="btnColorScheme" value="layui-btn-danger" title="赤" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">图标</label>
             <div class="layui-input-inline">
-                <input type="text" name="btnIcon" autocomplete="off" class="layui-input">
+                <input type="text" name="btnIcon" autocomplete="off" class="layui-input" placeholder="layui-icon layui-icon-edit">
             </div>
         </div>
 
         <div class="layui-form-item layui-hide">
             <input type="button" lay-submit="" lay-filter="kBtnFormSubmit" id="kBtnFormSubmit" value="确认添加">
+            <input type="text" name="id" autocomplete="off" class="layui-input">
+            <input type="text" name="type" autocomplete="off" class="layui-input">
         </div>
     </div>
 </div>
@@ -146,84 +156,135 @@
 <script th:replace="comm/base::mainjs"></script>
 <script>
 
-    layui.use(['form'], function () {
-        var $ = layui.$, form = layui.form;
-
-        var $headBtnEl = $('#headBtn').find('button');
-        var $rowBtnEl = $('#rowBtn').find('button');
+    layui.use(['element', 'form', 'formSelects'], function () {
+        var $ = layui.$, element = layui.element, form = layui.form, formSelects = layui.formSelects;
+        var $headBtnBoxEl = $('#headBtnBox');
+        var $rowBtnBoxEl = $('#rowBtnBox');
+        var $headBtnEl = $headBtnBoxEl.find('button');
+        var $rowBtnEl = $rowBtnBoxEl.find('button');
         var tipsIdx, timer;
-        var headBtnSetArr = {add: {btnName: '添加', btnId: 'add', btnPerId: 'sys:xxx:add', btnIcon: ''}, batchdel: {btnName: '批量删除', btnId: 'batchdel', btnPerId: 'sys:xxx:del', btnIcon: ''}};
-        var rowBtnSetArr = {edit: {btnName: '编辑', btnId: 'edit', btnPerId: 'sys:xxx:edit', btnIcon: ''}, del: {btnName: '删除', btnId: 'del', btnPerId: 'sys:xxx:del', btnIcon: ''}};
+        var headBtnSetObj = {
+            1: {btnName: '添加', btnId: 'add', btnPerId: 'sys:xxx:add', btnColorScheme: '', btnIcon: ''},
+            2: {btnName: '批量删除', btnId: 'batchdel', btnPerId: 'sys:xxx:del', btnColorScheme: 'layui-btn-danger', btnIcon: ''}};
+        var rowBtnSetObj = {
+            1: {btnName: '编辑', btnId: 'edit', btnPerId: 'sys:xxx:edit', btnColorScheme: 'layui-btn-normal', btnIcon: 'layui-icon layui-icon-edit'},
+            2: {btnName: '删除', btnId: 'del', btnPerId: 'sys:xxx:del', btnColorScheme: 'layui-btn-danger', btnIcon: 'layui-icon layui-icon-delete'}};
+
+        init();
 
         // 监听头部按钮事件
-        $headBtnEl.on('click', function () {
+        $headBtnBoxEl.on('click', 'button', function () {
             var that = $(this);
             clearTimeout(timer);
             timer = setTimeout(function () {
-                open(that.data('id'), 'head');
-            }, 300);
-        }).on('dblclick', function () {
+                open('head', that);
+            }, 200);
+        }).on('dblclick', 'button', function () {
             clearTimeout(timer);
-            alert('双击事件');
-        }).hover(function () {
+            removeBtn(this, 'head');
+        }).on('mouseenter', 'button', function () {
             tipsIdx = layer.tips('单击修改，双击删除。', $(this), {tips: 1, time: 5000});
-        }, function () {
+        }).on('mouseleave', 'button', function () {
             layer.close(tipsIdx);
         });
 
         // 监听行按钮事件
-        $rowBtnEl.on('click', function () {
+        $rowBtnBoxEl.on('click', 'button', function () {
             var that = $(this);
             clearTimeout(timer);
             timer = setTimeout(function () {
-                open(that.data('id'), 'row');
-            }, 300);
-        }).on('dblclick', function () {
+                open('row', that);
+            }, 200);
+        }).on('dblclick', 'button', function () {
             clearTimeout(timer);
-            alert('双击事件');
-        }).hover(function () {
+            removeBtn(this, 'head');
+        }).on('mouseenter', 'button', function () {
             tipsIdx = layer.tips('单击修改，双击删除。', $(this), {tips: 1, time: 5000});
-        }, function () {
+        }).on('mouseleave', 'button', function () {
             layer.close(tipsIdx);
         });
 
         $('#addHeadBtn').on('click', function () {
-            open();
+            open('head');
         });
 
         $('#addRowBtn').on('click', function () {
-            open();
+            open('row');
         });
 
-        function open(id, type) {
+        var openIdx;
+        function open(type, that) {
+            var id = $(that).data('id');
             var tempObj = {};
+            $('input[name="type"]').val(type);
             if (type === 'head') {
-                tempObj = headBtnSetArr;
+                tempObj = headBtnSetObj;
             }
             if (type === 'row') {
-                tempObj = rowBtnSetArr;
+                tempObj = rowBtnSetObj;
             }
-            if (id) {
+            if (id && tempObj[id]) {
+                tempObj[id]['check[' + tempObj[id]['btnColorScheme'] + ']'] = true;
                 form.val('btnForm', tempObj[id]);
             } else {
-                form.val('btnForm', {btnName: '', btnId: '', btnPerId: '', btnIcon: ''});
+                form.val('btnForm', {btnName: '', btnId: '', btnPerId: '', btnColorScheme: '', btnIcon: '', 'check[]': true});
             }
-            layer.open({
+            form.render('radio');
+            openIdx = layer.open({
                 type: 1
                 ,title: '按钮配置'
                 ,content: $('#headBtnEditTpl')
                 ,maxmin: false
-                ,area: ['418px', '335px']   // 宽高
+                ,area: ['511px', '390px']   // 宽高
                 ,btn: ['确定', '取消']
-                ,yes: function(index, layero){
-                    layer.close(index);
+                ,yes: function(index, layero) {
+                    $('#kBtnFormSubmit').click();
                 }
             });
         }
 
+        function removeBtn(that, type) {
+            var id = $(that).data('id');
+            $(that).remove();
+            if (type === 'head') {
+                delete headBtnSetObj[id];
+            }
+            if (type === 'row') {
+                delete rowBtnSetObj[id];
+            }
+        }
 
-        // formSelects.render('selectId');
-        // formSelects.value('selectId');
+        function genBtnObjId() {
+            return Math.floor(Math.random() * 1000);
+        }
+
+        function renderHeadBtn(data) {
+            $headBtnBoxEl.append(renderBtnTpl(data));
+        }
+
+        function renderRowBtn(data) {
+            $rowBtnBoxEl.append(renderBtnTpl(data));
+        }
+
+        function renderBtnTpl(data) {
+            return '<button type="button" class="layui-btn layui-btn-sm ' + data.btnColorScheme + '" data-id="' + data.id + '"><i class="' + data.btnIcon + '"></i>' + data.btnName + '</button>';
+        }
+
+        function init() {
+            var headKeys = Object.keys(headBtnSetObj);
+            var rowKeys = Object.keys(rowBtnSetObj);
+            for (var i in headKeys) {
+                headBtnSetObj[headKeys[i]]['id'] = headKeys[i];
+                renderHeadBtn(headBtnSetObj[headKeys[i]])
+            }
+            for (var j in rowKeys) {
+                rowBtnSetObj[rowKeys[j]]['id'] = rowKeys[j];
+                renderRowBtn(rowBtnSetObj[rowKeys[j]])
+            }
+        }
+
+        formSelects.render('queryCol');
+        // formSelects.value('queryCol', [1]);
 
         //监听提交
         form.on('submit(kFormSubmit)', function(data){
@@ -248,6 +309,37 @@
                     }
                 }
             });*/
+        });
+
+        form.on('submit(kBtnFormSubmit)', function (data) {
+            var field = data.field;
+            var id = genBtnObjId();
+            switch (field.type) {
+                case 'head':
+                    if (field.id) {
+                        delete headBtnSetObj[field.id];
+                        headBtnSetObj[field.id] = field;
+                        $headBtnBoxEl.find('button[data-id="' + field.id + '"]').replaceWith(renderBtnTpl(field));
+                    } else {
+                        field.id = id;
+                        headBtnSetObj[id] = field;
+                        renderHeadBtn(field);
+                    }
+
+                    break;
+                case 'row':
+                    if (field.id) {
+                        delete rowBtnSetObj[field.id];
+                        rowBtnSetObj[field.id] = field;
+                        $rowBtnBoxEl.find('button[data-id="' + field.id + '"]').replaceWith(renderBtnTpl(field));
+                    } else {
+                        field.id = id;
+                        rowBtnSetObj[id] = field;
+                        renderRowBtn(field);
+                    }
+            }
+            layer.close(openIdx);
+            return false;
 
         });
     })

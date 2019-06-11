@@ -13,6 +13,8 @@ public class TableColumnDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String tableColumnName;
-    private String tableColumnComment;
+    private String columnName;
+    private String columnComment;
+    private String columnType;
+    private String dataType;
 }
