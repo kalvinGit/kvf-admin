@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="comm/base::pagetitle"></title>
+    <link th:replace="comm/base::static"/>
+</head>
+<body>
+<div class="layui-form" style="padding: 20px 30px 0 0;">
+
+    <fieldset class="layui-elem-field">
+        <legend>表格</legend>
+        <div class="layui-field-box">
+            <div class="layui-form-item">
+                <label class="layui-form-label">表格类型</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="type" value="0" title="普通表格(layui table)" autocomplete="off" class="layui-input" checked>
+                    <input type="radio" name="type" value="1" title="树形表格(treegrid)" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="layui-elem-field">
+        <legend>查询字段配置</legend>
+        <div class="layui-field-box">
+            <div class="layui-form-item">
+                <label class="layui-form-label">请选择</label>
+                <div class="layui-input-block">
+                    <!-- 这里的xm-select属性是多选的ID, 如多处使用请保证全局唯一 -->
+                    <select name="queryCol" xm-select="queryCol" xm-select-search>
+                        <option value="1">北京</option>
+                        <option value="2">上海</option>
+                        <option value="3">广州</option>
+                        <option value="4">深圳</option>
+                        <option value="5">天津</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="layui-elem-field">
+        <legend>表格头部(head)按钮配置<button id="addHeadBtn" type="button" class="layui-btn layui-btn-xs layui-btn-normal" style="margin: 0 0 4px 5px;">添加按钮</button></legend>
+        <div class="layui-field-box">
+            <div class="layui-form-item">
+                <label class="layui-form-label">头部按钮</label>
+                <div class="layui-input-block" id="headBtn">
+                    <button type="button" class="layui-btn layui-btn-sm" data-id="add">添加</button>
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" data-id="batchdel">删除</button>
+                    <input type="hidden" name="headBtn" value="添加,删除" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="layui-elem-field">
+        <legend>表格行(row)按钮<button id="addRowBtn" type="button" class="layui-btn layui-btn-xs layui-btn-normal" style="margin: 0 0 4px 5px;">添加按钮</button></legend>
+        <div class="layui-field-box">
+            <div class="layui-form-item">
+                <label class="layui-form-label">行内按钮</label>
+                <div class="layui-input-block" id="rowBtn">
+                    <button type="button" class="layui-btn layui-btn-sm" data-id="add">添加</button>
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" data-id="edit">编辑</button>
+                    <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" data-id="del">删除</button>
+                    <input type="hidden" name="rowBtn" value="添加,删除" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="layui-elem-field">
+        <legend>表格核心配置</legend>
+        <div class="layui-field-box">
+            <div class="layui-form-item">
+                <label class="layui-form-label">只展示列</label>
+                <div class="layui-input-block">
+                    <!-- 这里的xm-select属性是多选的ID, 如多处使用请保证全局唯一 -->
+                    <select name="onlyShowCol" xm-select="onlyShowCol" xm-select-search>
+                        <option value="1">北京</option>
+                        <option value="2">上海</option>
+                        <option value="3">广州</option>
+                        <option value="4">深圳</option>
+                        <option value="5">天津</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">不展示列</label>
+                <div class="layui-input-block">
+                    <!-- 这里的xm-select属性是多选的ID, 如多处使用请保证全局唯一 -->
+                    <select name="onlyNotShowCol" xm-select="onlyNotShowCol" xm-select-search>
+                        <option value="1">北京</option>
+                        <option value="2">上海</option>
+                        <option value="3">广州</option>
+                        <option value="4">深圳</option>
+                        <option value="5">天津</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+    </fieldset>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit="" lay-filter="kFormSubmit" id="kFormSubmit" value="确认添加">
+        <input type="text" name="id" placeholder="保存ID" autocomplete="off" class="layui-input">
+    </div>
+</div>
+
+<!--按钮配置页面模块-->
+<div class="layui-container" style="display: none; width: 100%;" id="headBtnEditTpl">
+    <div class="layui-form" lay-filter="btnForm" style="margin-top: 15px">
+        <div class="layui-form-item">
+            <label class="layui-form-label">名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="btnName" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">唯一标识</label>
+            <div class="layui-input-inline">
+                <input type="text" name="btnId" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限标识</label>
+            <div class="layui-input-inline">
+                <input type="text" name="btnPerId" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">图标</label>
+            <div class="layui-input-inline">
+                <input type="text" name="btnIcon" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-hide">
+            <input type="button" lay-submit="" lay-filter="kBtnFormSubmit" id="kBtnFormSubmit" value="确认添加">
+        </div>
+    </div>
+</div>
+
+<script th:replace="comm/base::context"></script>
+<script th:replace="comm/base::mainjs"></script>
+<script>
+
+    layui.use(['form'], function () {
+        var $ = layui.$, form = layui.form;
+
+        var $headBtnEl = $('#headBtn').find('button');
+        var $rowBtnEl = $('#rowBtn').find('button');
+        var tipsIdx, timer;
+        var headBtnSetArr = {add: {btnName: '添加', btnId: 'add', btnPerId: 'sys:xxx:add', btnIcon: ''}, batchdel: {btnName: '批量删除', btnId: 'batchdel', btnPerId: 'sys:xxx:del', btnIcon: ''}};
+        var rowBtnSetArr = {edit: {btnName: '编辑', btnId: 'edit', btnPerId: 'sys:xxx:edit', btnIcon: ''}, del: {btnName: '删除', btnId: 'del', btnPerId: 'sys:xxx:del', btnIcon: ''}};
+
+        // 监听头部按钮事件
+        $headBtnEl.on('click', function () {
+            var that = $(this);
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                open(that.data('id'), 'head');
+            }, 300);
+        }).on('dblclick', function () {
+            clearTimeout(timer);
+            alert('双击事件');
+        }).hover(function () {
+            tipsIdx = layer.tips('单击修改，双击删除。', $(this), {tips: 1, time: 5000});
+        }, function () {
+            layer.close(tipsIdx);
+        });
+
+        // 监听行按钮事件
+        $rowBtnEl.on('click', function () {
+            var that = $(this);
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                open(that.data('id'), 'row');
+            }, 300);
+        }).on('dblclick', function () {
+            clearTimeout(timer);
+            alert('双击事件');
+        }).hover(function () {
+            tipsIdx = layer.tips('单击修改，双击删除。', $(this), {tips: 1, time: 5000});
+        }, function () {
+            layer.close(tipsIdx);
+        });
+
+        $('#addHeadBtn').on('click', function () {
+            open();
+        });
+
+        $('#addRowBtn').on('click', function () {
+            open();
+        });
+
+        function open(id, type) {
+            var tempObj = {};
+            if (type === 'head') {
+                tempObj = headBtnSetArr;
+            }
+            if (type === 'row') {
+                tempObj = rowBtnSetArr;
+            }
+            if (id) {
+                form.val('btnForm', tempObj[id]);
+            } else {
+                form.val('btnForm', {btnName: '', btnId: '', btnPerId: '', btnIcon: ''});
+            }
+            layer.open({
+                type: 1
+                ,title: '按钮配置'
+                ,content: $('#headBtnEditTpl')
+                ,maxmin: false
+                ,area: ['418px', '335px']   // 宽高
+                ,btn: ['确定', '取消']
+                ,yes: function(index, layero){
+                    layer.close(index);
+                }
+            });
+        }
+
+
+        // formSelects.render('selectId');
+        // formSelects.value('selectId');
+
+        //监听提交
+        form.on('submit(kFormSubmit)', function(data){
+            var field = data.field; //获取提交的字段
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+
+            log('field=', field);
+
+            //提交 Ajax 成功后，关闭当前弹层并重载表格
+            /*$.ajax({
+                type: req.type.post,
+                url: field.id ? api.sys.userEdit : api.sys.userAdd,
+                data: field,
+                async: false,
+                success: function (r) {
+                    if (r.code === req.status.ok) {
+                        parent.layui.table.reload('kContentTable',
+                            {where: {deptId: deptId}}); //重载表格
+                        parent.layer.close(index); //再执行关闭
+                    } else {
+                        kvfKit.errorMsg(r.msg);
+                    }
+                }
+            });*/
+
+        });
+    })
+</script>
+</body>
+</html>

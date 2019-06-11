@@ -140,30 +140,20 @@
                 });
             }
             if (layEvent === 'customGen') {
-                layer.open({
+                var idx = layer.open({
                     type: 2
-                    ,title: '编辑用户'
-                    ,content:  api.sys.userEditView + '?id=' + data.id
+                    ,title: '自义定生成设置'
+                    ,content:  BASE_WEB + 'gen/setting'
                     ,maxmin: true
                     ,area: area   // 宽高
-                    ,btn: ['确定', '取消']
+                    ,btn: ['生成代码', '取消']
                     ,yes: function(index, layero){
                         //点击确认触发 iframe 内容中的按钮提交
                         var submit = layero.find('iframe').contents().find("#kFormSubmit");
                         submit.click();
                     }
                 });
-            }
-            if (layEvent === 'reset') {
-                layer.confirm('确定重置密码吗？', function (index) {
-                    kvfKit.aPost(api.sys.userResetPwd, {}, function (r) {
-                        if (r.code === req.status.ok) {
-                            kvfKit.sucessMsg('重置成功');
-                        } else {
-                            kvfKit.errorMsg(r.msg);
-                        }
-                    });
-                });
+                layer.full(idx);
             }
 
         });

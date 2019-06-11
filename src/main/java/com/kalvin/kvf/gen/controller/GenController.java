@@ -30,6 +30,11 @@ public class GenController extends BaseController {
         return new ModelAndView("gen/table");
     }
 
+    @GetMapping(value = "setting")
+    public ModelAndView setting() {
+        return new ModelAndView("gen/setting");
+    }
+
     @GetMapping(value = "list/tableData")
     public R listTableData(String tableName, int current, int size) {
         return R.ok(tableService.listTablePage(tableName, current, size));

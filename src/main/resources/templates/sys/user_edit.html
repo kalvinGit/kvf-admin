@@ -196,9 +196,9 @@
         form.on('submit(kFormSubmit)', function(data){
             var field = data.field; //获取提交的字段
             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-            if (deptId) {
+            /*if (deptId) {
                 field.deptId = deptId;
-            }
+            }*/
 
             log('field=', field);
 
@@ -210,8 +210,7 @@
                 async: false,
                 success: function (r) {
                     if (r.code === req.status.ok) {
-                        parent.layui.table.reload('kContentTable',
-                            {where: {deptId: deptId}}); //重载表格
+                        parent.layui.table.reload('kContentTable'); //重载表格
                         parent.layer.close(index); //再执行关闭
                     } else {
                         kvfKit.errorMsg(r.msg);
