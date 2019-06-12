@@ -14,8 +14,8 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">表格类型</label>
                 <div class="layui-input-block">
-                    <input type="radio" name="type" value="0" title="普通表格(layui table)" autocomplete="off" class="layui-input" checked>
-                    <input type="radio" name="type" value="1" title="树形表格(treegrid)" autocomplete="off" class="layui-input">
+                    <input type="radio" name="type" value="table" title="普通表格(layui table)" autocomplete="off" class="layui-input" checked>
+                    <input type="radio" name="type" value="treegrid" title="树形表格(treegrid)" autocomplete="off" class="layui-input">
                 </div>
             </div>
         </div>
@@ -166,7 +166,7 @@
 </script>
 
 <script type="text/html" id="columnSetTpl">
-    <div class="layui-form-item" data-id="{{d.columnComment}}">
+    <div class="layui-form-item" data-id="{{d.columnName}}">
         <label class="layui-form-label">{{d.columnComment}}({{d.columnName}})</label>
         <div class="layui-input-block">
             <div style="float:left;">
@@ -194,8 +194,6 @@
         var $ = layui.$, element = layui.element, form = layui.form, formSelects = layui.formSelects;
         var $headBtnBoxEl = $('#headBtnBox');
         var $rowBtnBoxEl = $('#rowBtnBox');
-        var $headBtnEl = $headBtnBoxEl.find('button');
-        var $rowBtnEl = $rowBtnBoxEl.find('button');
         var tipsIdx, timer;
         var headBtnSetObj = {
             1: {btnName: '添加', btnId: 'add', btnPerId: 'sys:xxx:add', btnColorScheme: '', btnIcon: ''},
@@ -353,15 +351,43 @@
 
         }
         
-        function assColumnSetParams() {
+        function getColumnSetParams() {
             var arr = [];
             var $columnSetItemEl = $('#columnSetBox').find('.layui-form-item');
             $.each($columnSetItemEl, function (i, item) {
                 var id = $(item).data('id');
                 var sort = $('input[name="' + id + '_sort"]:checked').val();
                 var format = $('input[name="' + id + '_format"]:checked').val();
-                arr.push({column: id});
+                arr.push({name: id, sort: sort == 0, format: format == 0});
             });
+            return arr;
+        }
+
+        function getQueryColumnParams() {
+            var arr = [];
+            var queryColVals = formSelects.value('queryCol');
+            $.each(queryColVals, function (i, item) {
+                arr.push({name: item.value, comment: item.name});
+            });
+            return arr;
+        }
+
+        function getHeadBtnParams() {
+            var arr = [];
+            var keys = Object.keys(headBtnSetObj);
+            for (var i in keys) {
+                arr.push(headBtnSetObj[keys[i]]);
+            }
+            return arr;
+        }
+
+        function getRowParams() {
+            var arr = [];
+            var keys = Object.keys(rowBtnSetObj);
+            for (var i in keys) {
+                arr.push(rowBtnSetObj[keys[i]]);
+            }
+            return arr;
         }
 
         function init() {
@@ -396,13 +422,20 @@
 
         //监听提交
         form.on('submit(kFormSubmit)', function(data){
-            var field = data.field; //获取提交的字段
-            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            var field = data.field; // 获取提交的字段
+            var columnSetArr = getColumnSetParams();
+            var queryColumnArr = getQueryColumnParams();
+            var headBtnArr = getHeadBtnParams();
+            var rowBtnArr = getRowParams();
 
-            log('field=', field);
+            var params = {};
+            params.tableType = field.type;
+            params.headButtons = headBtnArr;
+            params.rowButtons = rowBtnArr;
+            params.queryColumns = queryColumnArr;
+            params.columns = columnSetArr;
 
-            log('headBtn=', headBtnSetObj);
-            log('rowBtn=', rowBtnSetObj);
+            log('params=', params);
 
             //提交 Ajax 成功后，关闭当前弹层并重载表格
             /*$.ajax({
