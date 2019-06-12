@@ -123,10 +123,10 @@ var api = {
 layui.config({
     base: BASE_WEB + 'static/plugins/lay-formselect/'
 }).extend({
-    // formSelects: 'formSelects-v4'
+    formSelects: 'formSelects-v4'
 });
 
-layui.use(['layer'], function () {
+layui.use(['layer', 'laytpl'], function () {
     var layer = layui.layer;
     layer.config({
         // anim: 1, //默认动画风格

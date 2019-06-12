@@ -17,4 +17,6 @@ public class TableColumnDTO implements Serializable {
     private String columnComment;
     private String columnType;
     private String dataType;
+    private String isNullable;  // YES/NO
+    private String columnKey;   // PRI(主键)
 }

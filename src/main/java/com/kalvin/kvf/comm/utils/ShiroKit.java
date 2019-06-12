@@ -14,7 +14,7 @@ import org.apache.shiro.subject.Subject;
  * @author Kalvin
  * @Date 2019年05月05日 13:35
  */
-public class ShiroUtils {
+public class ShiroKit {
 
     /**
      * 密码散列算法为md5

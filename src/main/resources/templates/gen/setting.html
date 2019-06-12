@@ -29,11 +29,7 @@
                 <div class="layui-input-block">
                     <!-- 这里的xm-select属性是多选的ID, 如多处使用请保证全局唯一 -->
                     <select name="queryCol" xm-select="queryCol" xm-select-search>
-                        <option  th:each="tableColumn:${tableColumns}" th:value="${tableColumn.columnName}" th:text="${tableColumn.columnComment}">北京</option>
-                        <!--<option value="2">上海</option>
-                        <option value="3">广州</option>
-                        <option value="4">深圳</option>
-                        <option value="5">天津</option>-->
+                        <option  th:each="tableColumn:${tableColumns}" th:value="${tableColumn.columnName}" th:text="${tableColumn.columnComment}"></option>
                     </select>
                 </div>
             </div>
@@ -71,31 +67,43 @@
         <legend>表格核心配置</legend>
         <div class="layui-field-box">
             <div class="layui-form-item">
-                <label class="layui-form-label">只展示列</label>
+                <label class="layui-form-label">不展示列</label>
                 <div class="layui-input-block">
                     <!-- 这里的xm-select属性是多选的ID, 如多处使用请保证全局唯一 -->
-                    <select name="onlyShowCol" xm-select="onlyShowCol" xm-select-search>
-                        <option value="1">北京</option>
-                        <option value="2">上海</option>
-                        <option value="3">广州</option>
-                        <option value="4">深圳</option>
-                        <option value="5">天津</option>
+                    <select name="notShowCol" xm-select="notShowCol" xm-select-search>
+                        <option  th:each="tableColumn:${tableColumns}" th:value="${tableColumn.columnName}" th:data-type="${tableColumn.dataType}" th:data-columnKey="${tableColumn.columnKey}" th:text="${tableColumn.columnComment}" th:selected="${tableColumn.columnKey=='PRI'}"></option>
                     </select>
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">不展示列</label>
+                <label class="layui-form-label">只展示列</label>
                 <div class="layui-input-block">
                     <!-- 这里的xm-select属性是多选的ID, 如多处使用请保证全局唯一 -->
-                    <select name="onlyNotShowCol" xm-select="onlyNotShowCol" xm-select-search>
-                        <option value="1">北京</option>
-                        <option value="2">上海</option>
-                        <option value="3">广州</option>
-                        <option value="4">深圳</option>
-                        <option value="5">天津</option>
+                    <select name="onlyShowCol" xm-select="onlyShowCol" xm-select-search>
+                        <option  th:each="tableColumn:${tableColumns}" th:value="${tableColumn.columnName}" th:data-type="${tableColumn.dataType}" th:data-columnKey="${tableColumn.columnKey}" th:text="${tableColumn.columnComment}"></option>
                     </select>
                 </div>
             </div>
+            <hr class="layui-bg-cyan">
+            <div id="columnSetBox">
+                <!--<div class="layui-form-item">
+                    <label class="layui-form-label">id</label>
+                    <div class="layui-input-block">
+                        <div style="float:left;">
+                            <label class="layui-form-label">是否排序</label>
+                            <input type="radio" name="id_sort" value="0" title="是" autocomplete="off" class="layui-input">
+                            <input type="radio" name="id_sort" value="1" title="否" autocomplete="off" class="layui-input" checked>
+                        </div>
+
+                        <div style="float:left;">
+                            <label class="layui-form-label">是否格式化</label>
+                            <input type="radio" name="id_format" value="0" title="是" autocomplete="off" class="layui-input">
+                            <input type="radio" name="id_format" value="1" title="否" autocomplete="off" class="layui-input" checked>
+                        </div>
+                    </div>
+                </div>-->
+            </div>
+
 
         </div>
     </fieldset>
@@ -151,6 +159,32 @@
         </div>
     </div>
 </div>
+
+<!--模板 start-->
+<script type="text/html" id="btnTpl">
+    <button type="button" class="layui-btn layui-btn-sm {{d.btnColorScheme}}" data-id="{{d.id}}"><i class="{{d.btnIcon}}"></i>{{d.btnName}}</button>
+</script>
+
+<script type="text/html" id="columnSetTpl">
+    <div class="layui-form-item" data-id="{{d.columnComment}}">
+        <label class="layui-form-label">{{d.columnComment}}({{d.columnName}})</label>
+        <div class="layui-input-block">
+            <div style="float:left;">
+                <label class="layui-form-label">是否排序</label>
+                <input type="radio" name="{{d.columnName}}_sort" value="0" title="是" autocomplete="off" class="layui-input">
+                <input type="radio" name="{{d.columnName}}_sort" value="1" title="否" autocomplete="off" class="layui-input" checked>
+            </div>
+
+            <div style="float:left;">
+                <label class="layui-form-label">是否格式化</label>
+                <input type="radio" name="{{d.columnName}}_format" {{= d.dataType==='tinyint'?'checked':''}} value="0" title="是" autocomplete="off" class="layui-input">
+                <input type="radio" name="{{d.columnName}}_format" {{= d.dataType==='tinyint'?'':'checked'}} value="1" title="否" autocomplete="off" class="layui-input">
+            </div>
+            <!--                    <input type="text" name="tel" placeholder="" autocomplete="off" class="layui-input">-->
+        </div>
+    </div>
+</script>
+<!--模板 end-->
 
 <script th:replace="comm/base::context"></script>
 <script th:replace="comm/base::mainjs"></script>
@@ -227,7 +261,7 @@
                 tempObj[id]['check[' + tempObj[id]['btnColorScheme'] + ']'] = true;
                 form.val('btnForm', tempObj[id]);
             } else {
-                form.val('btnForm', {btnName: '', btnId: '', btnPerId: '', btnColorScheme: '', btnIcon: '', 'check[]': true});
+                form.val('btnForm', {id: '', btnName: '', btnId: '', btnPerId: '', btnColorScheme: '', btnIcon: '', 'check[]': true});
             }
             form.render('radio');
             openIdx = layer.open({
@@ -259,15 +293,75 @@
         }
 
         function renderHeadBtn(data) {
-            $headBtnBoxEl.append(renderBtnTpl(data));
+            $headBtnBoxEl.append(kvfKit.renderTpl('btnTpl', data));
         }
 
         function renderRowBtn(data) {
-            $rowBtnBoxEl.append(renderBtnTpl(data));
+            $rowBtnBoxEl.append(kvfKit.renderTpl('btnTpl', data));
         }
 
-        function renderBtnTpl(data) {
-            return '<button type="button" class="layui-btn layui-btn-sm ' + data.btnColorScheme + '" data-id="' + data.id + '"><i class="' + data.btnIcon + '"></i>' + data.btnName + '</button>';
+        function addColumn(data) {
+            $('#columnSetBox').append(kvfKit.renderTpl('columnSetTpl', data));
+            form.render('radio');
+        }
+
+        function clearColumnSetBox() {
+            $('#columnSetBox').html('');
+        }
+
+        function renderColumnSetBox() {
+            var notShowColVals = formSelects.value('notShowCol');
+            var onlyShowColVals = formSelects.value('onlyShowCol');
+            var showColVals, showColId;
+            // 如果不展示列多选框没有一个选中，那么使用只展示多选框选中的
+            if (notShowColVals.length === 0 && onlyShowColVals.length > 0) {
+                showColId = 'onlyShowCol';
+                showColVals = onlyShowColVals;
+            } else {
+                showColId = 'notShowCol';
+                showColVals = notShowColVals;
+            }
+            var $xsEl = $('select[xm-select="' + showColId + '"]');
+
+            clearColumnSetBox();
+
+            if (showColId === 'notShowCol') {
+                var allColVals = [];
+                var $allColEls = $xsEl.find('option');
+
+                $.each($allColEls, function (i, item) {
+                    allColVals.push($(item).val());
+                });
+
+                $.each(showColVals, function (i, item) {
+                    var rmIdx = allColVals.indexOf(item.value);
+                    allColVals.splice(rmIdx, 1);
+                });
+
+                $.each(allColVals, function (i, n) {
+                    var cc = $xsEl.find('option[value="' + n + '"]').text();
+                    var dataType = $xsEl.find('option[value="' + n + '"]').data('type');
+                    addColumn({columnName: n, columnComment: cc, dataType: dataType});
+                });
+
+            } else {
+                $.each(showColVals, function (i, item) {
+                    var dataType = $xsEl.find('option[value="' + item.value + '"]').data('type');
+                    addColumn({columnName: item.value, columnComment: item.name, dataType: dataType});
+                });
+            }
+
+        }
+        
+        function assColumnSetParams() {
+            var arr = [];
+            var $columnSetItemEl = $('#columnSetBox').find('.layui-form-item');
+            $.each($columnSetItemEl, function (i, item) {
+                var id = $(item).data('id');
+                var sort = $('input[name="' + id + '_sort"]:checked').val();
+                var format = $('input[name="' + id + '_format"]:checked').val();
+                arr.push({column: id});
+            });
         }
 
         function init() {
@@ -281,10 +375,24 @@
                 rowBtnSetObj[rowKeys[j]]['id'] = rowKeys[j];
                 renderRowBtn(rowBtnSetObj[rowKeys[j]])
             }
+
+            renderColumnSetBox();
         }
 
         formSelects.render('queryCol');
-        // formSelects.value('queryCol', [1]);
+
+        formSelects.on(null, function(id, vals, choice, isAdd, isDisabled) {
+            switch (id) {
+                case 'queryCol':
+                    break;
+                case 'onlyShowCol':
+                    renderColumnSetBox();
+                    break;
+                case 'notShowCol':
+                    renderColumnSetBox();
+                    break;
+            }
+        }, true);
 
         //监听提交
         form.on('submit(kFormSubmit)', function(data){
@@ -292,6 +400,9 @@
             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
 
             log('field=', field);
+
+            log('headBtn=', headBtnSetObj);
+            log('rowBtn=', rowBtnSetObj);
 
             //提交 Ajax 成功后，关闭当前弹层并重载表格
             /*$.ajax({
@@ -319,7 +430,7 @@
                     if (field.id) {
                         delete headBtnSetObj[field.id];
                         headBtnSetObj[field.id] = field;
-                        $headBtnBoxEl.find('button[data-id="' + field.id + '"]').replaceWith(renderBtnTpl(field));
+                        $headBtnBoxEl.find('button[data-id="' + field.id + '"]').replaceWith(kvfKit.renderTpl('btnTpl', field));
                     } else {
                         field.id = id;
                         headBtnSetObj[id] = field;
@@ -331,7 +442,7 @@
                     if (field.id) {
                         delete rowBtnSetObj[field.id];
                         rowBtnSetObj[field.id] = field;
-                        $rowBtnBoxEl.find('button[data-id="' + field.id + '"]').replaceWith(renderBtnTpl(field));
+                        $rowBtnBoxEl.find('button[data-id="' + field.id + '"]').replaceWith(kvfKit.renderTpl('btnTpl', field));
                     } else {
                         field.id = id;
                         rowBtnSetObj[id] = field;
@@ -342,6 +453,19 @@
             return false;
 
         });
+
+        var tipIdx;
+        $('div.xm-select-parent[fs_id="notShowCol"]').hover(function () {
+            tipIdx = layer.tips('最高优先级', $(this), {tips: 1});
+        }, function () {
+            layer.close(tipIdx);
+        });
+        /*$('div.xm-select-parent[fs_id="onlyShowCol"]').hover(function () {
+            tipIdx = layer.tips('当上面的多选框（不展示列）无选择时有效', $(this), {tips: 1});
+        }, function () {
+            layer.close(tipIdx);
+        });*/
+
     })
 </script>
 </body>

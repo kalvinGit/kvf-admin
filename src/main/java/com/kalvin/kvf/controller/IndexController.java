@@ -1,10 +1,9 @@
 package com.kalvin.kvf.controller;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSON;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.kalvin.kvf.comm.utils.ShiroUtils;
+import com.kalvin.kvf.comm.utils.ShiroKit;
 import com.kalvin.kvf.dto.R;
 import com.kalvin.kvf.entity.sys.User;
 import com.kalvin.kvf.service.sys.IMenuService;
@@ -27,7 +26,7 @@ public class IndexController extends BaseController {
 
     @GetMapping(value = "/")
     public ModelAndView index() {
-        User user = userService.getById(ShiroUtils.getUserId());
+        User user = userService.getById(ShiroKit.getUserId());
         return new ModelAndView("index").addObject("authUserInfo", user);
     }
 
@@ -48,12 +47,12 @@ public class IndexController extends BaseController {
 
     @GetMapping(value = "index/menus")
     public R menus() {
-        return R.ok(menuService.listUserPermissionMenuWithSubByUserId(ShiroUtils.getUserId()));
+        return R.ok(menuService.listUserPermissionMenuWithSubByUserId(ShiroKit.getUserId()));
     }
 
     @GetMapping(value = "index/navMenus")
     public R navMenus() {
-        return R.ok(menuService.listUserPermissionNavMenuByUserId(ShiroUtils.getUserId()));
+        return R.ok(menuService.listUserPermissionNavMenuByUserId(ShiroKit.getUserId()));
     }
 
     @GetMapping(value = "tree/list")

@@ -3,8 +3,8 @@ package com.kalvin.kvf.controller;
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 import com.kalvin.kvf.comm.annotation.Action;
-import com.kalvin.kvf.comm.utils.HttpServletContextUtil;
-import com.kalvin.kvf.comm.utils.ShiroUtils;
+import com.kalvin.kvf.comm.utils.HttpServletContextKit;
+import com.kalvin.kvf.comm.utils.ShiroKit;
 import com.kalvin.kvf.dto.R;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -36,7 +36,7 @@ public class LoginController extends BaseController {
 
     @GetMapping(value = "login")
     public ModelAndView login() {
-        Subject subject = ShiroUtils.getSubject();
+        Subject subject = ShiroKit.getSubject();
         if (subject.isAuthenticated()) {
             return new ModelAndView("redirect:");
         }
@@ -47,13 +47,13 @@ public class LoginController extends BaseController {
     @PostMapping(value = "login")
     public R login(@RequestParam("username") String username, @RequestParam("password") String password, String vercode) {
         // todo 先不要验证码
-        /*String kaptcha = ShiroUtils.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
+        /*String kaptcha = ShiroKit.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
         if (!vercode.equalsIgnoreCase(kaptcha)) {
             return R.fail("验证码不正确");
         }*/
 
         try {
-            Subject subject = ShiroUtils.getSubject();
+            Subject subject = ShiroKit.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken(username, password);
             subject.login(token);
         } catch (Exception e) {
@@ -68,8 +68,8 @@ public class LoginController extends BaseController {
     @Action("退出")
     @GetMapping(value = "logout")
     public ModelAndView logout() {
-        String username = ShiroUtils.getUser().getUsername();
-        ShiroUtils.logout();
+        String username = ShiroKit.getUser().getUsername();
+        ShiroKit.logout();
         LOGGER.info("{}退出登录", username);
         return new ModelAndView("redirect:/login");
     }
@@ -80,7 +80,7 @@ public class LoginController extends BaseController {
      */
     @GetMapping("captcha.jpg")
     public void captcha() throws IOException {
-        HttpServletResponse response = HttpServletContextUtil.getHttpServletResponse();
+        HttpServletResponse response = HttpServletContextKit.getHttpServletResponse();
         response.setHeader("Cache-Control", "no-store, no-cache");
         response.setContentType("image/jpeg");
 
@@ -89,7 +89,7 @@ public class LoginController extends BaseController {
         // 生成图片验证码
         BufferedImage image = producer.createImage(text);
         // 保存到shiro session
-        ShiroUtils.setSessionAttribute(Constants.KAPTCHA_SESSION_KEY, text);
+        ShiroKit.setSessionAttribute(Constants.KAPTCHA_SESSION_KEY, text);
 
         ServletOutputStream out = response.getOutputStream();
         ImageIO.write(image, "jpg", out);

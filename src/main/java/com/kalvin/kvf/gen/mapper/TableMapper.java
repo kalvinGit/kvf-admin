@@ -15,7 +15,7 @@ public interface TableMapper {
     @Select("select table_name,table_comment from information_schema.TABLES where TABLE_SCHEMA=(select database()) and table_name like concat(#{tableName}, '%')")
     List<TableDTO> listTableByName(String tableName, IPage page);
 
-    @Select("select column_name, column_comment, column_type, data_type from information_schema.COLUMNS where TABLE_SCHEMA = (select database()) and TABLE_NAME=#{tableName}")
+    @Select("select column_name, column_comment, column_type, data_type, is_nullable, column_key from information_schema.COLUMNS where TABLE_SCHEMA = (select database()) and TABLE_NAME=#{tableName}")
     List<TableColumnDTO> listTableColumn(String tableName);
 
 }

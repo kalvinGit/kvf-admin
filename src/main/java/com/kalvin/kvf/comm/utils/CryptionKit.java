@@ -11,7 +11,7 @@ import com.kalvin.kvf.comm.constant.SysConstant;
  * @author Kalvin
  * @Date 2019年05月05日 14:48
  */
-public class CryptionUtil {
+public class CryptionKit {
 
     /**
      * 【作用】生成初始密码<br>

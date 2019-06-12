@@ -1,7 +1,7 @@
 package com.kalvin.kvf.controller;
 
 import com.kalvin.kvf.comm.constant.UploadPathEnum;
-import com.kalvin.kvf.comm.utils.FileUploadUtil;
+import com.kalvin.kvf.comm.utils.FileUploadKit;
 import com.kalvin.kvf.dto.R;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,7 +24,7 @@ public class CommonController {
 
     @PostMapping(value = "fileUpload")
     public R fileUpload(@RequestParam(value = "file") MultipartFile file, int type) {
-        return R.ok(FileUploadUtil.uploadRelative(file, UploadPathEnum.get(type)));
+        return R.ok(FileUploadKit.uploadRelative(file, UploadPathEnum.get(type)));
     }
 
 }

@@ -15,9 +15,9 @@ import java.io.File;
  * 文件上传工具
  * @author Kalvin
  */
-public class FileUploadUtil {
+public class FileUploadKit {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(FileUploadUtil.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(FileUploadKit.class);
 
     public static UploadFileInfo upload(MultipartFile multipartFile, UploadPathEnum pathEnum, String toPath) {
         String path;
@@ -56,10 +56,10 @@ public class FileUploadUtil {
     }
 
     public static UploadFileInfo uploadRelative(MultipartFile multipartFile, UploadPathEnum pathEnum) {
-        return FileUploadUtil.upload(multipartFile, pathEnum, null);
+        return FileUploadKit.upload(multipartFile, pathEnum, null);
     }
 
     public static UploadFileInfo uploadAbsolute(MultipartFile multipartFile, String toPath) {
-        return FileUploadUtil.upload(multipartFile, null, toPath);
+        return FileUploadKit.upload(multipartFile, null, toPath);
     }
 }

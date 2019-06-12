@@ -2,8 +2,8 @@ package com.kalvin.kvf.comm.shiro;
 
 import cn.hutool.core.util.StrUtil;
 import com.kalvin.kvf.comm.constant.SysConstant;
-import com.kalvin.kvf.comm.utils.CryptionUtil;
-import com.kalvin.kvf.comm.utils.ShiroUtils;
+import com.kalvin.kvf.comm.utils.CryptionKit;
+import com.kalvin.kvf.comm.utils.ShiroKit;
 import com.kalvin.kvf.entity.sys.Menu;
 import com.kalvin.kvf.entity.sys.User;
 import com.kalvin.kvf.service.sys.IMenuService;
@@ -92,7 +92,7 @@ public class UserRealm extends AuthorizingRealm {
             throw new UnknownAccountException("账号或密码不正确");
         }
 
-        String password = CryptionUtil.genUserPwd(new String((char[]) token.getCredentials()));
+        String password = CryptionKit.genUserPwd(new String((char[]) token.getCredentials()));
         if (!user.getPassword().equals(password)) {
             // 密码错误
             throw new IncorrectCredentialsException("账号或密码不正确");
@@ -109,8 +109,8 @@ public class UserRealm extends AuthorizingRealm {
     @Override
     public void setCredentialsMatcher(CredentialsMatcher credentialsMatcher) {
         HashedCredentialsMatcher shaCredentialsMatcher = new HashedCredentialsMatcher();
-        shaCredentialsMatcher.setHashAlgorithmName(ShiroUtils.HASH_ALGORITHM_NAME);
-        shaCredentialsMatcher.setHashIterations(ShiroUtils.HASH_ITERATIONS);
+        shaCredentialsMatcher.setHashAlgorithmName(ShiroKit.HASH_ALGORITHM_NAME);
+        shaCredentialsMatcher.setHashIterations(ShiroKit.HASH_ITERATIONS);
         super.setCredentialsMatcher(shaCredentialsMatcher);
     }
 

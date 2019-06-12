@@ -1,7 +1,7 @@
 package com.kalvin.kvf.comm.shiro;
 
-import com.kalvin.kvf.comm.utils.ShiroFilterUtil;
-import com.kalvin.kvf.comm.utils.ShiroUtils;
+import com.kalvin.kvf.comm.utils.ShiroFilterKit;
+import com.kalvin.kvf.comm.utils.ShiroKit;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,14 +20,14 @@ public class LoginFilter extends AccessControlFilter {
 
     @Override
     protected boolean isAccessAllowed(ServletRequest servletRequest, ServletResponse servletResponse, Object o) throws Exception {
-        return ShiroUtils.isLogin();
+        return ShiroKit.isLogin();
     }
 
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
-        if (ShiroFilterUtil.isAjax(request)) {
+        if (ShiroFilterKit.isAjax(request)) {
             LOGGER.info("当前用户没有登录，并且是Ajax请求");
-            ShiroFilterUtil.out(response);
+            ShiroFilterKit.out(response);
             return false;
         }
         // 保存Request和Response 到登录后的链接

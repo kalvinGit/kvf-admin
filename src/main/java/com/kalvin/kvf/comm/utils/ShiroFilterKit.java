@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class ShiroFilterUtil {
+public class ShiroFilterKit {
 
     /**
      * 是否是Ajax请求,如果是ajax请求响应头会有，x-requested-with

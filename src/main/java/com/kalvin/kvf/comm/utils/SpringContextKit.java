@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  * @Date 2019年04月08日 9:48
  */
 @Component
-public class SpringContextUtil implements ApplicationContextAware {
+public class SpringContextKit implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
 

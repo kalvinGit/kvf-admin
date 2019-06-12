@@ -1,6 +1,7 @@
 package com.kalvin.kvf.gen.controller;
 
 
+import com.kalvin.kvf.comm.utils.AuxiliaryKit;
 import com.kalvin.kvf.controller.BaseController;
 import com.kalvin.kvf.dto.R;
 import com.kalvin.kvf.gen.dto.TableColumnDTO;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -38,7 +40,10 @@ public class GenController extends BaseController {
     public ModelAndView setting(@PathVariable String tableName) {
         ModelAndView mv = new ModelAndView("gen/setting");
         List<TableColumnDTO> tableColumnDTOS = tableService.listTableColumn(tableName);
-        mv.addObject("tableColumns", tableColumnDTOS);
+        List<TableColumnDTO> collect = tableColumnDTOS.stream()
+                .map(tc -> tc.setColumnComment(AuxiliaryKit.handleTableColumnCommentRemark(tc.getColumnComment())))
+                .collect(Collectors.toList());
+        mv.addObject("tableColumns", collect);
         return mv;
     }
 

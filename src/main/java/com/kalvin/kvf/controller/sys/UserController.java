@@ -5,8 +5,8 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.kalvin.kvf.comm.utils.CryptionUtil;
-import com.kalvin.kvf.comm.utils.ShiroUtils;
+import com.kalvin.kvf.comm.utils.CryptionKit;
+import com.kalvin.kvf.comm.utils.ShiroKit;
 import com.kalvin.kvf.controller.BaseController;
 import com.kalvin.kvf.dto.R;
 import com.kalvin.kvf.dto.sys.UserEditDTO;
@@ -72,7 +72,7 @@ public class UserController extends BaseController {
     @GetMapping(value = "info")
     public ModelAndView info() {
         ModelAndView mv = new ModelAndView("sys/user_info");
-        User user = userService.getById(ShiroUtils.getUserId());
+        User user = userService.getById(ShiroKit.getUserId());
         mv.addObject("user", user);
         return mv;
     }
@@ -94,7 +94,7 @@ public class UserController extends BaseController {
     public R add(User user, @RequestParam("roleIds") List<Long> roleIds) {
         user.setDeptId(user.getDeptId() == null ? 0 : user.getDeptId());
         // 生成用户初始密码并加密
-        user.setPassword(CryptionUtil.genUserPwd());
+        user.setPassword(CryptionKit.genUserPwd());
         userService.saveOrUpdate(user);
         userRoleService.saveOrUpdateBatchUserRole(roleIds, user.getId());
         return R.ok();
@@ -133,12 +133,12 @@ public class UserController extends BaseController {
     @PostMapping(value = "changePwd")
     public R changePwd(String oldPassword, String password) {
         if (StrUtil.isBlank(oldPassword) && StrUtil.isBlank(password)) {
-            password = CryptionUtil.genUserPwd();
+            password = CryptionKit.genUserPwd();
         } else {
-            User user = userService.getById(ShiroUtils.getUserId());
-            oldPassword = CryptionUtil.genUserPwd(oldPassword);
+            User user = userService.getById(ShiroKit.getUserId());
+            oldPassword = CryptionKit.genUserPwd(oldPassword);
             if (user.getPassword().equals(oldPassword)) {
-                password = CryptionUtil.genUserPwd(password);
+                password = CryptionKit.genUserPwd(password);
                 if (user.getPassword().equals(password)) {
                     return R.fail("新密码不能与旧密码相同");
                 }
@@ -148,7 +148,7 @@ public class UserController extends BaseController {
         }
         userService.update(new LambdaUpdateWrapper<User>()
                 .set(User::getPassword, password)
-                .eq(User::getId, ShiroUtils.getUserId()));
+                .eq(User::getId, ShiroKit.getUserId()));
         return R.ok();
     }
 

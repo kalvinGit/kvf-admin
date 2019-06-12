@@ -6,7 +6,7 @@ import cn.hutool.http.useragent.Browser;
 import cn.hutool.http.useragent.Platform;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.kalvin.kvf.comm.annotation.Action;
-import com.kalvin.kvf.comm.utils.HttpServletContextUtil;
+import com.kalvin.kvf.comm.utils.HttpServletContextKit;
 import com.kalvin.kvf.entity.sys.Log;
 import com.kalvin.kvf.entity.sys.User;
 import com.kalvin.kvf.service.sys.ILogService;
@@ -94,7 +94,7 @@ public class ActionAspect {
 		}
 
 		// 获取request
-		HttpServletRequest request = HttpServletContextUtil.getHttpServletRequest();
+		HttpServletRequest request = HttpServletContextKit.getHttpServletRequest();
 		// 设置IP地址
 		String clientIP = ServletUtil.getClientIP(request);
 		if ("0:0:0:0:0:0:0:1".equals(clientIP)) {
