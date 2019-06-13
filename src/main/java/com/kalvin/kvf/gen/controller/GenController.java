@@ -6,11 +6,15 @@ import com.kalvin.kvf.controller.BaseController;
 import com.kalvin.kvf.dto.R;
 import com.kalvin.kvf.gen.dto.TableColumnDTO;
 import com.kalvin.kvf.gen.service.ITableService;
+import com.kalvin.kvf.gen.utils.VelocityKit;
 import com.kalvin.kvf.gen.vo.GenConfigVO;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.StringWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,6 +45,7 @@ public class GenController extends BaseController {
         List<TableColumnDTO> collect = tableColumnDTOS.stream()
                 .map(tc -> tc.setColumnComment(AuxiliaryKit.handleTableColumnCommentRemark(tc.getColumnComment())))
                 .collect(Collectors.toList());
+        mv.addObject("tableName", tableName);
         mv.addObject("tableColumns", collect);
         return mv;
     }
@@ -53,7 +58,14 @@ public class GenController extends BaseController {
     @PostMapping(value = "code")
     public R genCode(@RequestBody GenConfigVO genConfigVO) {
         LOGGER.info("genConfig={}", genConfigVO);
-        return R.ok();
+        VelocityContext ctx = new VelocityContext();
+        ctx.put("config", genConfigVO);
+        Template t = VelocityKit.getTemplate("table.vm");
+        StringWriter sw = new StringWriter();
+        t.merge(ctx, sw);
+
+//        LOGGER.info("html={}", sw.toString());
+        return R.ok(sw.toString());
     }
 
 }

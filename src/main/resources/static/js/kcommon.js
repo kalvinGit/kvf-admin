@@ -244,7 +244,23 @@ var kvfKit = {
             html = laytpl($('#' + tplId).html()).render(data);
         });
         return html;
+    },
+    underlineToHump: function (str) {
+        var re=/_(\w)/g;
+        return str.replace(re, function () {
+            return arguments[1].toUpperCase();
+        });
+    },
+    humpToUnderline: function (str) {
+        var temp = str.replace(/[A-Z]/g, function (match) {
+            return "_" + match.toLowerCase();
+        });
+        if(temp.slice(0,1) === '_'){ // 如果首字母是大写，执行replace时会多一个_，这里需要去掉
+            temp = temp.slice(1);
+        }
+        return temp;
     }
+
 };
 
 /**

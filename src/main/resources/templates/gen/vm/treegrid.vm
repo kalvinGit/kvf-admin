@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title th:replace="comm/base::pagetitle"></title>
+    <link th:replace="comm/base::static"/>
+    <link rel="stylesheet" th:href="@{/static/plugins/easyui/themes/material/easyui.css}">
+    <link rel="stylesheet" th:href="@{/static/plugins/easyui/themes/icon.css}">
+    <link rel="stylesheet" th:href="@{/static/css/kvf-treegrid.css}">
+</head>
+<body style="background-color: #f2f2f2;">
+
+<div id="kPage" class="layui-fluid" style="padding: 0">
+    <div class="layui-row">
+        <div class="layui-col-md12" id="kMainContentCol">
+            <div class="layui-fluid kvf-fluid-padding15">
+                <div class="layui-card">
+                    <div class="layui-form layui-card-header kvf-card-header-auto">
+                        <div class="layui-form-item">
+                            #foreach($queryColumn in $config.queryColumns)
+                            <div class="layui-inline">
+                                <label class="layui-form-label">$queryColumn.comment</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="$queryColumn.name" placeholder="请输入$queryColumn.comment" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            #if($config.queryColumns.size() == $foreach.count)
+                            <div class="layui-inline">
+                                <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
+                                    <i class="layui-icon layui-icon-search"></i>
+                                </button>
+                            </div>
+                            #end
+                            #end
+                        </div>
+                    </div>
+
+                    <div class="layui-card-body">
+                        <table id="kTreeGrid" style="height: 545px"></table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script th:replace="comm/base::context"></script>
+<script th:replace="comm/base::mainjs"></script>
+<script th:src="@{/static/plugins/easyui/easyloader.js}"></script>
+
+<script type="text/html" id="statusTpl">
+    {{# if(d.status === 0) { }}
+    <span class="layui-badge layui-bg-green">正常</span>
+    {{# } else { }}
+    <span class="layui-badge layui-bg-gray">禁用</span>
+    {{# } }}
+</script>
+
+<script type="text/html" id="typeTpl">
+    {{#  if(d.type == 0){ }}
+    <span class="layui-badge layui-bg-blue">公司</span>
+    {{#  } else if(d.type == 1) { }}
+    <span class="layui-badge layui-bg-orange">部门</span>
+    {{#  } else { }}
+    <span class="layui-badge layui-bg-cyan">科室</span>
+    {{# } }}
+</script>
+
+<!--头部工具栏模板-->
+<script type="text/html" id="headToolbarTpl" style="padding: 6px 0 0 6px">
+    #foreach($headButton in $config.headButtons)
+    <button class="layui-btn layui-btn-sm $headButton.colorScheme" data-event="$headButton.key">
+        #if($headButton.icon != '')
+            <i class="$headButton.icon"></i>
+        #end
+        $headButton.name
+    </button>
+    #end
+</script>
+
+<!--表格行工具栏模板-->
+<script type="text/html" id="rowToolbarTpl">
+    #foreach($rowButton in $config.rowButtons)
+    <a class="layui-btn layui-btn-xs $rowButton.colorScheme" data-event="$rowButton.key" onclick="active.add(this)" data-id="{{d.id}}">
+        #if($rowButton.icon != '')
+            <i class="$rowButton.icon"></i>
+        #end
+        $rowButton.name
+    </a>
+    #end
+</script>
+
+<script type="text/javascript" th:inline="none">
+    var active;
+    layui.use(['element', 'form', 'layer', 'table', 'laytpl'], function () {
+        var elemet = layui.element, form = layui.form, layer = layui.layer;
+        var treeGridId = 'kTreeGrid';
+        var area = ['444px', '340px'];
+
+        var treeGridInst;
+        easyloader.load('treegrid', function () {
+
+            treeGridInst = $('#' + treeGridId).treegrid($.extend(config.easyui.treegrid, {
+                url: api.sys.deptListData,
+                method: 'get',
+                idField: 'id',
+                treeField: 'name',
+                toolbar: '#headToolbarTpl',
+                onExpand: function (row) {
+                    treeGridKit.fitRightFrozenCol(treeGridInst);
+                },
+                onCollapse: function (row) {
+                    treeGridKit.fitRightFrozenCol(treeGridInst);
+                },
+                loadFilter: function (r) {
+                    var rows = r.data;
+                    r.rows = rows;
+                    var rootType;
+                    for (var i = 0; i < rows.length; i++) {
+                        if (r.type === 'q') {
+                            if (i === 0) {
+                                rootType = rows[i].type;
+                            }
+                            if (rows[i].type !== rootType) {
+                                rows[i]._parentId = rows[i].parentId;
+                            }
+                        } else {
+                            if (rows[i].parentId !== 0) {
+                                rows[i]._parentId = rows[i].parentId;
+                            }
+                        }
+
+                        if (rows[i].type === 2) {
+                            rows[i].state = "open";
+                        } else {
+                            rows[i].state = "closed";
+                        }
+                    }
+                    return r;
+                },
+                onLoadSuccess: function (row, data) {
+                    treeGridKit.fitRightFrozenCol(treeGridInst);
+                },
+                frozenColumns: [[
+                    {field: 'toolbar', title: '操作', width: 200, align: 'center', fixed: true, formatter: formatter.rowToolbar}
+                ]],
+                columns: [[
+                    {field: 'name', title: '机构名称', width:220, fixed: false}
+                    ,{field: 'type', title: '类型', width:100, align: 'center', formatter: formatter.type, fixed: true}
+                    ,{field: 'status', title: '状态', width:100, align: 'center', formatter: formatter.status, fixed: true}
+                    ,{field: 'sort', title: '排序号', width:100, align: 'center', fixed: true}
+                    ,{field: 'createTime', title: '创建时间', width:180, fixed: true}
+                ]]
+
+            }));
+
+            treeGridKit.setPager(treeGridInst);
+        });
+
+        // 监听事件
+        active = {
+            add: function (that) {
+                var id = $(that).data('id');
+                id = id || 0;
+                var level = treeGridInst.treegrid('getLevel', id);
+                log('level=', level);
+
+                layer.open({
+                    type: 2
+                    ,title: '添加'
+                    ,content: api.sys.deptEditView + '?parentId=' + id + '&type=' + level
+                    ,maxmin: true
+                    ,area: area   // 宽高
+                    ,btn: ['确定', '取消']
+                    ,yes: function(index, layero){
+                        //点击确认触发 iframe 内容中的按钮提交
+                        var submit = layero.find('iframe').contents().find("#kFormSubmit");
+                        submit.click();
+                    }
+                });
+            },
+            batchdel: function () {
+                var checkData = treeGridInst.treegrid('getCheckedNodes');
+                if(checkData.length === 0){
+                    return kvfKit.warningMsg('请选择数据');
+                }
+                layer.confirm('确定删除吗？', function(index) {
+
+                    var ids = [];
+                    $.each(checkData, function(i, n){
+                        ids[i] = n.id;
+                    });
+
+                    //执行 Ajax 后重载
+                    $.ajax({
+                        type: req.type.post,
+                        url: api.sys.deptRmBatch,
+                        data: {ids: ids.toString()},
+                        success: function (r) {
+                            if (r.code === req.status.ok) {
+                                treeGridKit.reload(treeGridInst);
+                                kvfKit.sucessMsg('已删除');
+                            } else {
+                                kvfKit.errorMsg(r.msg);
+                            }
+                        }
+                    });
+
+                });
+            },
+            edit: function (that) {
+                var id = $(that).data('id');
+                layer.open({
+                    type: 2
+                    ,title: '编辑'
+                    ,content:  api.sys.deptEditView + '?id=' + id
+                    ,maxmin: true
+                    ,area: area   // 宽高
+                    ,btn: ['确定', '取消']
+                    ,yes: function(index, layero){
+                        //点击确认触发 iframe 内容中的按钮提交
+                        var submit = layero.find('iframe').contents().find("#kFormSubmit");
+                        submit.click();
+                    }
+                });
+            },
+            del: function (that) {
+                layer.confirm('确定删除吗？', function(index) {
+                    var id = $(that).data('id');
+                    // 执行 Ajax 后重载
+                    $.ajax({
+                        type: req.type.post,
+                        url: api.sys.deptRm + id,
+                        async: false,
+                        success: function (r) {
+                            if (r.code === req.status.ok) {
+                                treeGridKit.reload(treeGridInst);
+                                kvfKit.sucessMsg('已删除');
+                            } else {
+                                kvfKit.errorMsg(r.msg);
+                            }
+                        }
+                    });
+                });
+            }
+        };
+
+        kvfKit.activeInit(active);
+
+        $(window).resize(function () {
+            treeGridKit.fitRightFrozenCol(treeGridInst);
+        });
+
+        // 列格式化函数
+        var formatter = {
+            rowToolbar: function (value, row, index) {
+                return kvfKit.renderTpl('rowToolbarTpl', row);
+            },
+            status: function (value, row, index) {
+                return kvfKit.renderTpl('statusTpl', row);
+            },
+            type: function (value, row, index) {
+                return kvfKit.renderTpl('typeTpl', row);
+            }
+        };
+
+        // 监听查询
+        form.on('submit(kTableSearchFilter)', function (obj) {
+            var params = obj.field;
+            log('seach=', params); //
+
+            $.get(api.sys.deptListData, params, function(r) {
+                r.type = 'q';
+                treeGridInst.treegrid('loadData', r);
+            }, 'json');
+
+            return false;
+        });
+
+        // 绑定监听回车事件
+        kvfKit.bindEnterEventForLayuiForm();
+
+    });
+</script>
+
+</body>
+</html>

@@ -86,31 +86,14 @@
             </div>
             <hr class="layui-bg-cyan">
             <div id="columnSetBox">
-                <!--<div class="layui-form-item">
-                    <label class="layui-form-label">id</label>
-                    <div class="layui-input-block">
-                        <div style="float:left;">
-                            <label class="layui-form-label">是否排序</label>
-                            <input type="radio" name="id_sort" value="0" title="是" autocomplete="off" class="layui-input">
-                            <input type="radio" name="id_sort" value="1" title="否" autocomplete="off" class="layui-input" checked>
-                        </div>
-
-                        <div style="float:left;">
-                            <label class="layui-form-label">是否格式化</label>
-                            <input type="radio" name="id_format" value="0" title="是" autocomplete="off" class="layui-input">
-                            <input type="radio" name="id_format" value="1" title="否" autocomplete="off" class="layui-input" checked>
-                        </div>
-                    </div>
-                </div>-->
             </div>
-
 
         </div>
     </fieldset>
 
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit="" lay-filter="kFormSubmit" id="kFormSubmit" value="确认添加">
-        <input type="text" name="id" placeholder="保存ID" autocomplete="off" class="layui-input">
+        <input type="text" name="tableName" th:value="${tableName}" autocomplete="off" class="layui-input">
     </div>
 </div>
 
@@ -180,7 +163,6 @@
                 <input type="radio" name="{{d.columnName}}_format" {{= d.dataType==='tinyint'?'checked':''}} value="0" title="是" autocomplete="off" class="layui-input">
                 <input type="radio" name="{{d.columnName}}_format" {{= d.dataType==='tinyint'?'':'checked'}} value="1" title="否" autocomplete="off" class="layui-input">
             </div>
-            <!--                    <input type="text" name="tel" placeholder="" autocomplete="off" class="layui-input">-->
         </div>
     </div>
 </script>
@@ -194,13 +176,17 @@
         var $ = layui.$, element = layui.element, form = layui.form, formSelects = layui.formSelects;
         var $headBtnBoxEl = $('#headBtnBox');
         var $rowBtnBoxEl = $('#rowBtnBox');
+        var tableName = $('input[name="tableName"]').val();
+        var moduleName = tableName.substring(0, tableName.indexOf('_'));
+        var funName = kvfKit.underlineToHump(tableName.substring(tableName.indexOf('_') + 1));
         var tipsIdx, timer;
+        var prePerId = moduleName + ":" + funName;
         var headBtnSetObj = {
-            1: {btnName: '添加', btnId: 'add', btnPerId: 'sys:xxx:add', btnColorScheme: '', btnIcon: ''},
-            2: {btnName: '批量删除', btnId: 'batchdel', btnPerId: 'sys:xxx:del', btnColorScheme: 'layui-btn-danger', btnIcon: ''}};
+            1: {btnName: '添加', btnId: 'add', btnPerId: prePerId + ':add', btnColorScheme: '', btnIcon: ''},
+            2: {btnName: '批量删除', btnId: 'batchdel', btnPerId: prePerId + ':del', btnColorScheme: 'layui-btn-danger', btnIcon: ''}};
         var rowBtnSetObj = {
-            1: {btnName: '编辑', btnId: 'edit', btnPerId: 'sys:xxx:edit', btnColorScheme: 'layui-btn-normal', btnIcon: 'layui-icon layui-icon-edit'},
-            2: {btnName: '删除', btnId: 'del', btnPerId: 'sys:xxx:del', btnColorScheme: 'layui-btn-danger', btnIcon: 'layui-icon layui-icon-delete'}};
+            1: {btnName: '编辑', btnId: 'edit', btnPerId: prePerId + ':edit', btnColorScheme: 'layui-btn-normal', btnIcon: 'layui-icon layui-icon-edit'},
+            2: {btnName: '删除', btnId: 'del', btnPerId: prePerId + ':del', btnColorScheme: 'layui-btn-danger', btnIcon: 'layui-icon layui-icon-delete'}};
 
         init();
 
@@ -244,6 +230,11 @@
             open('row');
         });
 
+        $('input[name="btnId"]').on('keyup', function () {
+            var $btnPerIdEl = $('input[name="btnPerId"]');
+            $btnPerIdEl.val(prePerId + ":" + $(this).val());
+        });
+
         var openIdx;
         function open(type, that) {
             var id = $(that).data('id');
@@ -259,7 +250,7 @@
                 tempObj[id]['check[' + tempObj[id]['btnColorScheme'] + ']'] = true;
                 form.val('btnForm', tempObj[id]);
             } else {
-                form.val('btnForm', {id: '', btnName: '', btnId: '', btnPerId: '', btnColorScheme: '', btnIcon: '', 'check[]': true});
+                form.val('btnForm', {id: '', btnName: '', btnId: '', btnPerId: prePerId, btnColorScheme: '', btnIcon: '', 'check[]': true});
             }
             form.render('radio');
             openIdx = layer.open({
@@ -411,14 +402,11 @@
 
         formSelects.on(null, function(id, vals, choice, isAdd, isDisabled) {
             switch (id) {
-                case 'queryCol':
-                    break;
                 case 'onlyShowCol':
                     renderColumnSetBox();
                     break;
                 case 'notShowCol':
                     renderColumnSetBox();
-                    break;
             }
         }, true);
 
@@ -447,6 +435,14 @@
                 success: function (r) {
                     if (r.code === req.status.ok) {
                         kvfKit.sucessMsg('代码生成成功！');
+
+                        var oidx = layer.open({
+                            type: 1
+                            ,title: '页面预览'
+                            ,content: r.data
+                            ,maxmin: false
+                        });
+                        layer.full(oidx);
                     } else {
                         kvfKit.errorMsg(r.msg);
                     }
