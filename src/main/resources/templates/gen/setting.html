@@ -376,7 +376,8 @@
             var arr = [];
             var keys = Object.keys(headBtnSetObj);
             for (var i in keys) {
-                arr.push(headBtnSetObj[keys[i]]);
+                var current = headBtnSetObj[keys[i]];
+                arr.push({name: current['btnName'], key: current['btnId'], perId: current['btnPerId'], colorScheme: current['btnColorScheme'], icon: current['btnIcon']});
             }
             return arr;
         }
@@ -385,7 +386,8 @@
             var arr = [];
             var keys = Object.keys(rowBtnSetObj);
             for (var i in keys) {
-                arr.push(rowBtnSetObj[keys[i]]);
+                var current = rowBtnSetObj[keys[i]];
+                arr.push({name: current['btnName'], key: current['btnId'], perId: current['btnPerId'], colorScheme: current['btnColorScheme'], icon: current['btnIcon']});
             }
             return arr;
         }
@@ -437,22 +439,19 @@
 
             log('params=', params);
 
-            //提交 Ajax 成功后，关闭当前弹层并重载表格
-            /*$.ajax({
+            $.ajax({
                 type: req.type.post,
-                url: field.id ? api.sys.userEdit : api.sys.userAdd,
-                data: field,
-                async: false,
+                url: api.genCode,
+                data: JSON.stringify(params),
+                contentType: 'application/json',
                 success: function (r) {
                     if (r.code === req.status.ok) {
-                        parent.layui.table.reload('kContentTable',
-                            {where: {deptId: deptId}}); //重载表格
-                        parent.layer.close(index); //再执行关闭
+                        kvfKit.sucessMsg('代码生成成功！');
                     } else {
                         kvfKit.errorMsg(r.msg);
                     }
                 }
-            });*/
+            });
         });
 
         form.on('submit(kBtnFormSubmit)', function (data) {

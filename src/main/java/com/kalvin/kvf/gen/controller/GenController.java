@@ -6,11 +6,9 @@ import com.kalvin.kvf.controller.BaseController;
 import com.kalvin.kvf.dto.R;
 import com.kalvin.kvf.gen.dto.TableColumnDTO;
 import com.kalvin.kvf.gen.service.ITableService;
+import com.kalvin.kvf.gen.vo.GenConfigVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -50,6 +48,12 @@ public class GenController extends BaseController {
     @GetMapping(value = "list/tableData")
     public R listTableData(String tableName, int current, int size) {
         return R.ok(tableService.listTablePage(tableName, current, size));
+    }
+
+    @PostMapping(value = "code")
+    public R genCode(@RequestBody GenConfigVO genConfigVO) {
+        LOGGER.info("genConfig={}", genConfigVO);
+        return R.ok();
     }
 
 }

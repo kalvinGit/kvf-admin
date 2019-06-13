@@ -114,7 +114,7 @@ var api = {
         logListData: BASE_WEB + 'sys/log/list/data'
 
     },
-    bus: {} // 业务模块接口
+    genCode: BASE_WEB + 'gen/code'
 };
 
 /**
@@ -142,7 +142,7 @@ $.ajaxSetup({
     complete:function(xhr, textStatus){
         // 通过XMLHttpRequest取得响应头，sessionstatus，
         var sessionStatus = xhr.getResponseHeader("session-status");
-        log('sessionStatus=', sessionStatus);
+        // log('sessionStatus=', sessionStatus);
         if(sessionStatus === "timeout"){
             // 如果超时就处理 ，指定要跳转的页面(比如登陆页)
             layer.confirm('未登录或登录超时，是否重新登录?', function () {
@@ -150,7 +150,6 @@ $.ajaxSetup({
             });
         }
     },
-    // type: req.type.post,
     error: function(jqXHR, textStatus, errorThrown) {
         var errorMsg = jqXHR.responseJSON.message;
         log('errorMsg=', errorMsg);
