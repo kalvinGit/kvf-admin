@@ -71,7 +71,7 @@
                 <div class="layui-input-block">
                     <!-- 这里的xm-select属性是多选的ID, 如多处使用请保证全局唯一 -->
                     <select name="notShowCol" xm-select="notShowCol" xm-select-search>
-                        <option  th:each="tableColumn:${tableColumns}" th:value="${tableColumn.columnName}" th:data-type="${tableColumn.dataType}" th:data-comment="${tableColumn.comment}" th:text="${tableColumn.columnComment}" th:selected="${tableColumn.columnKey=='PRI'}"></option>
+                        <option  th:each="tableColumn:${tableColumns}" th:value="${tableColumn.columnNameCamelCase}" th:data-type="${tableColumn.dataType}" th:data-comment="${tableColumn.comment}" th:text="${tableColumn.columnComment}" th:selected="${tableColumn.columnKey=='PRI'}"></option>
                     </select>
                 </div>
             </div>
@@ -80,7 +80,7 @@
                 <div class="layui-input-block">
                     <!-- 这里的xm-select属性是多选的ID, 如多处使用请保证全局唯一 -->
                     <select name="onlyShowCol" xm-select="onlyShowCol" xm-select-search>
-                        <option  th:each="tableColumn:${tableColumns}" th:value="${tableColumn.columnName}" th:data-type="${tableColumn.dataType}" th:data-comment="${tableColumn.comment}" th:text="${tableColumn.columnComment}"></option>
+                        <option  th:each="tableColumn:${tableColumns}" th:value="${tableColumn.columnNameCamelCase}" th:data-type="${tableColumn.dataType}" th:data-comment="${tableColumn.comment}" th:text="${tableColumn.columnComment}"></option>
                     </select>
                 </div>
             </div>
@@ -185,8 +185,8 @@
             1: {btnName: '添加', btnId: 'add', btnPerId: prePerId + ':add', btnColorScheme: '', btnIcon: ''},
             2: {btnName: '批量删除', btnId: 'batchdel', btnPerId: prePerId + ':del', btnColorScheme: 'layui-btn-danger', btnIcon: ''}};
         var rowBtnSetObj = {
-            1: {btnName: '编辑', btnId: 'edit', btnPerId: prePerId + ':edit', btnColorScheme: 'layui-btn-normal', btnIcon: 'layui-icon layui-icon-edit'},
-            2: {btnName: '删除', btnId: 'del', btnPerId: prePerId + ':del', btnColorScheme: 'layui-btn-danger', btnIcon: 'layui-icon layui-icon-delete'}};
+            2: {btnName: '编辑', btnId: 'edit', btnPerId: prePerId + ':edit', btnColorScheme: 'layui-btn-normal', btnIcon: 'layui-icon layui-icon-edit'},
+            3: {btnName: '删除', btnId: 'del', btnPerId: prePerId + ':del', btnColorScheme: 'layui-btn-danger', btnIcon: 'layui-icon layui-icon-delete'}};
 
         init();
 
@@ -282,7 +282,7 @@
         }
         
         function getTablePriKey() {
-            return $('select[xm-select="notShowCol"]:selected').val();
+            return $('select[xm-select="notShowCol"] option:selected').val();
         }
 
         function renderHeadBtn(data) {

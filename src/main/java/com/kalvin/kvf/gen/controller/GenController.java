@@ -2,6 +2,7 @@ package com.kalvin.kvf.gen.controller;
 
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.kalvin.kvf.comm.utils.AuxiliaryKit;
 import com.kalvin.kvf.controller.BaseController;
 import com.kalvin.kvf.dto.R;
@@ -51,6 +52,7 @@ public class GenController extends BaseController {
                 .peek(tc -> {
                     tc.setComment(tc.getColumnComment());
                     tc.setColumnComment(AuxiliaryKit.parseTableColumnCommentName(tc.getColumnComment()));
+                    tc.setColumnNameCamelCase(StrUtil.toCamelCase(tc.getColumnName()));
                 })
                 .collect(Collectors.toList());
         mv.addObject("tableName", tableName);
@@ -66,6 +68,8 @@ public class GenController extends BaseController {
     @PostMapping(value = "code")
     public R genCode(@RequestBody GenConfigVO genConfigVO) {
         LOGGER.info("genConfig={}", genConfigVO);
+        String tableType = genConfigVO.getTableType();
+        String tplName = tableType.equals("treegrid") ? "treegrid.vm" : "table.vm";
         VelocityContext ctx = new VelocityContext();
         List<ColumnsValueRelationDTO> columnsValueRelationsList = new ArrayList<>();    // 列备注的值对应说明关系列表
         List<ColumnConfigDTO> columns = genConfigVO.getColumns();
@@ -73,17 +77,18 @@ public class GenController extends BaseController {
             if (column.isFormat()) {
                 List<ColumnCommentValueRelationDTO> columnValueRelations = AuxiliaryKit
                         .parseTableColumnCommentValueRelation(column.get_comment());
-                if (CollectionUtil.isNotEmpty(columnValueRelations)) {
-                    ColumnsValueRelationDTO columnsValueRelations = new ColumnsValueRelationDTO();
-                    columnsValueRelations.setColumn(column.getName());
-                    columnsValueRelations.setColumnCommentValueRelations(columnValueRelations);
-                    columnsValueRelationsList.add(columnsValueRelations);
-                }
+                ColumnsValueRelationDTO columnsValueRelations = new ColumnsValueRelationDTO();
+                columnsValueRelations.setColumn(column.getName());
+                columnsValueRelations.setColumnCommentValueRelations(columnValueRelations);
+                columnsValueRelationsList.add(columnsValueRelations);
+                /*if (CollectionUtil.isNotEmpty(columnValueRelations)) {
+
+                }*/
             }
         });
         ctx.put("config", genConfigVO);
         ctx.put("columnsValueRelations", columnsValueRelationsList);
-        Template t = VelocityKit.getTemplate("table.vm");
+        Template t = VelocityKit.getTemplate(tplName);
 
         StringWriter sw = new StringWriter();
         t.merge(ctx, sw);

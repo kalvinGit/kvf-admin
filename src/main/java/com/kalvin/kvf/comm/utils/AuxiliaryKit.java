@@ -34,12 +34,12 @@ public class AuxiliaryKit {
         }
         String[] split = columnComment.split("。");
         String vr = split[1].trim();
-        if (!vr.contains("：")) {
-            throw new RuntimeException("格式化列失败：无法解析列注释，注释不符合统一规范：" + vr);
-        }
         for (String item : vr.split("；")) {
-            String[] itemArr = item.split("：");
-            list.add(new ColumnCommentValueRelationDTO(itemArr[0], itemArr[1]));
+            if (item.contains("：")) {
+//                throw new RuntimeException("格式化列失败：无法解析列注释，注释不符合统一规范：" + vr);
+                String[] itemArr = item.split("：");
+                list.add(new ColumnCommentValueRelationDTO(itemArr[0], itemArr[1]));
+            }
         }
         return list;
     }

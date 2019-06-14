@@ -14,6 +14,7 @@ public class TableColumnDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String columnName;
+    private String columnNameCamelCase;
     private String columnComment;   // 仅列名称备注，不包括其它说明
     private String comment; // 列备注（全）
     private String columnType;
