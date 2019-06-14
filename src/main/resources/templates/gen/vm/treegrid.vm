@@ -51,24 +51,6 @@
 <script th:replace="comm/base::mainjs"></script>
 <script th:src="@{/static/plugins/easyui/easyloader.js}"></script>
 
-<script type="text/html" id="statusTpl">
-    {{# if(d.status === 0) { }}
-    <span class="layui-badge layui-bg-green">正常</span>
-    {{# } else { }}
-    <span class="layui-badge layui-bg-gray">禁用</span>
-    {{# } }}
-</script>
-
-<script type="text/html" id="typeTpl">
-    {{#  if(d.type == 0){ }}
-    <span class="layui-badge layui-bg-blue">公司</span>
-    {{#  } else if(d.type == 1) { }}
-    <span class="layui-badge layui-bg-orange">部门</span>
-    {{#  } else { }}
-    <span class="layui-badge layui-bg-cyan">科室</span>
-    {{# } }}
-</script>
-
 <!--头部工具栏模板-->
 <script type="text/html" id="headToolbarTpl" style="padding: 6px 0 0 6px">
     #foreach($headButton in $config.headButtons)
@@ -92,6 +74,23 @@
     </a>
     #end
 </script>
+
+#foreach($columnValueRelations in $columnsValueRelations)
+<script type="text/html" id="${columnValueRelations.column}Tpl">
+    #foreach($columnValueRelation in $columnValueRelations.columnCommentValueRelations)
+        #if($foreach.count == 1)
+        {{#  if(d.$columnValueRelations.column == $columnValueRelation.key){ }}
+        <span class="layui-badge layui-bg-blue">$columnValueRelation.name</span>
+        #else
+        {{# } else if(d.$columnValueRelations.column == $columnValueRelation.key) { }}
+        <span class="layui-badge layui-bg-blue">$columnValueRelation.name</span>
+        #end
+        #if($foreach.count == $columnValueRelations.columnCommentValueRelations.size())
+        {{# } }}
+        #end
+    #end
+</script>
+#end
 
 <script type="text/javascript" th:inline="none">
     var active;

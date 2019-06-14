@@ -22,6 +22,10 @@ public class GenConfigVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private String tableName;
+    private String primaryKey;  // 主键字段
+    private String moduleName;   // 模块名称：如sys
+    private String funName;     // 功能名称：如user
     private String tableType;   // 类型：table、treegrid
     private List<ColumnConfigDTO> columns;
     private List<QueryColumnConfigDTO> queryColumns;

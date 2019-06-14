@@ -1,9 +1,13 @@
 package com.kalvin.kvf.gen.controller;
 
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.kalvin.kvf.comm.utils.AuxiliaryKit;
 import com.kalvin.kvf.controller.BaseController;
 import com.kalvin.kvf.dto.R;
+import com.kalvin.kvf.gen.dto.ColumnCommentValueRelationDTO;
+import com.kalvin.kvf.gen.dto.ColumnConfigDTO;
+import com.kalvin.kvf.gen.dto.ColumnsValueRelationDTO;
 import com.kalvin.kvf.gen.dto.TableColumnDTO;
 import com.kalvin.kvf.gen.service.ITableService;
 import com.kalvin.kvf.gen.utils.VelocityKit;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,7 +48,10 @@ public class GenController extends BaseController {
         ModelAndView mv = new ModelAndView("gen/setting");
         List<TableColumnDTO> tableColumnDTOS = tableService.listTableColumn(tableName);
         List<TableColumnDTO> collect = tableColumnDTOS.stream()
-                .map(tc -> tc.setColumnComment(AuxiliaryKit.handleTableColumnCommentRemark(tc.getColumnComment())))
+                .peek(tc -> {
+                    tc.setComment(tc.getColumnComment());
+                    tc.setColumnComment(AuxiliaryKit.parseTableColumnCommentName(tc.getColumnComment()));
+                })
                 .collect(Collectors.toList());
         mv.addObject("tableName", tableName);
         mv.addObject("tableColumns", collect);
@@ -59,8 +67,24 @@ public class GenController extends BaseController {
     public R genCode(@RequestBody GenConfigVO genConfigVO) {
         LOGGER.info("genConfig={}", genConfigVO);
         VelocityContext ctx = new VelocityContext();
+        List<ColumnsValueRelationDTO> columnsValueRelationsList = new ArrayList<>();    // 列备注的值对应说明关系列表
+        List<ColumnConfigDTO> columns = genConfigVO.getColumns();
+        columns.forEach(column -> {
+            if (column.isFormat()) {
+                List<ColumnCommentValueRelationDTO> columnValueRelations = AuxiliaryKit
+                        .parseTableColumnCommentValueRelation(column.get_comment());
+                if (CollectionUtil.isNotEmpty(columnValueRelations)) {
+                    ColumnsValueRelationDTO columnsValueRelations = new ColumnsValueRelationDTO();
+                    columnsValueRelations.setColumn(column.getName());
+                    columnsValueRelations.setColumnCommentValueRelations(columnValueRelations);
+                    columnsValueRelationsList.add(columnsValueRelations);
+                }
+            }
+        });
         ctx.put("config", genConfigVO);
+        ctx.put("columnsValueRelations", columnsValueRelationsList);
         Template t = VelocityKit.getTemplate("table.vm");
+
         StringWriter sw = new StringWriter();
         t.merge(ctx, sw);
 

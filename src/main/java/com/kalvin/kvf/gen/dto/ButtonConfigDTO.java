@@ -18,6 +18,7 @@ public class ButtonConfigDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private Integer id;
     private String name;
     private String key;
     private String perId;   // 权限标识

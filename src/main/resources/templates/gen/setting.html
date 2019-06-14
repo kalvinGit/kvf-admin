@@ -71,7 +71,7 @@
                 <div class="layui-input-block">
                     <!-- 这里的xm-select属性是多选的ID, 如多处使用请保证全局唯一 -->
                     <select name="notShowCol" xm-select="notShowCol" xm-select-search>
-                        <option  th:each="tableColumn:${tableColumns}" th:value="${tableColumn.columnName}" th:data-type="${tableColumn.dataType}" th:data-columnKey="${tableColumn.columnKey}" th:text="${tableColumn.columnComment}" th:selected="${tableColumn.columnKey=='PRI'}"></option>
+                        <option  th:each="tableColumn:${tableColumns}" th:value="${tableColumn.columnName}" th:data-type="${tableColumn.dataType}" th:data-comment="${tableColumn.comment}" th:text="${tableColumn.columnComment}" th:selected="${tableColumn.columnKey=='PRI'}"></option>
                     </select>
                 </div>
             </div>
@@ -80,7 +80,7 @@
                 <div class="layui-input-block">
                     <!-- 这里的xm-select属性是多选的ID, 如多处使用请保证全局唯一 -->
                     <select name="onlyShowCol" xm-select="onlyShowCol" xm-select-search>
-                        <option  th:each="tableColumn:${tableColumns}" th:value="${tableColumn.columnName}" th:data-type="${tableColumn.dataType}" th:data-columnKey="${tableColumn.columnKey}" th:text="${tableColumn.columnComment}"></option>
+                        <option  th:each="tableColumn:${tableColumns}" th:value="${tableColumn.columnName}" th:data-type="${tableColumn.dataType}" th:data-comment="${tableColumn.comment}" th:text="${tableColumn.columnComment}"></option>
                     </select>
                 </div>
             </div>
@@ -149,7 +149,7 @@
 </script>
 
 <script type="text/html" id="columnSetTpl">
-    <div class="layui-form-item" data-id="{{d.columnName}}">
+    <div class="layui-form-item" data-id="{{d.columnName}}" data-comment="{{d.columnComment}}" data-_comment="{{d.comment}}">
         <label class="layui-form-label">{{d.columnComment}}({{d.columnName}})</label>
         <div class="layui-input-block">
             <div style="float:left;">
@@ -280,6 +280,10 @@
         function genBtnObjId() {
             return Math.floor(Math.random() * 1000);
         }
+        
+        function getTablePriKey() {
+            return $('select[xm-select="notShowCol"]:selected').val();
+        }
 
         function renderHeadBtn(data) {
             $headBtnBoxEl.append(kvfKit.renderTpl('btnTpl', data));
@@ -330,13 +334,15 @@
                 $.each(allColVals, function (i, n) {
                     var cc = $xsEl.find('option[value="' + n + '"]').text();
                     var dataType = $xsEl.find('option[value="' + n + '"]').data('type');
-                    addColumn({columnName: n, columnComment: cc, dataType: dataType});
+                    var comment = $xsEl.find('option[value="' + n + '"]').data('comment');
+                    addColumn({columnName: n, columnComment: cc, comment: comment, dataType: dataType});
                 });
 
             } else {
                 $.each(showColVals, function (i, item) {
                     var dataType = $xsEl.find('option[value="' + item.value + '"]').data('type');
-                    addColumn({columnName: item.value, columnComment: item.name, dataType: dataType});
+                    var comment = $xsEl.find('option[value="' + item.value + '"]').data('comment');
+                    addColumn({columnName: item.value, columnComment: item.name, comment: comment, dataType: dataType});
                 });
             }
 
@@ -347,9 +353,11 @@
             var $columnSetItemEl = $('#columnSetBox').find('.layui-form-item');
             $.each($columnSetItemEl, function (i, item) {
                 var id = $(item).data('id');
+                var comment = $(item).data('comment');
+                var _comment = $(item).data('_comment');
                 var sort = $('input[name="' + id + '_sort"]:checked').val();
                 var format = $('input[name="' + id + '_format"]:checked').val();
-                arr.push({name: id, sort: sort == 0, format: format == 0});
+                arr.push({name: id, comment: comment, _comment: _comment, sort: sort == 0, format: format == 0});
             });
             return arr;
         }
@@ -368,7 +376,7 @@
             var keys = Object.keys(headBtnSetObj);
             for (var i in keys) {
                 var current = headBtnSetObj[keys[i]];
-                arr.push({name: current['btnName'], key: current['btnId'], perId: current['btnPerId'], colorScheme: current['btnColorScheme'], icon: current['btnIcon']});
+                arr.push({id:keys[i], name: current['btnName'], key: current['btnId'], perId: current['btnPerId'], colorScheme: current['btnColorScheme'], icon: current['btnIcon']});
             }
             return arr;
         }
@@ -378,7 +386,7 @@
             var keys = Object.keys(rowBtnSetObj);
             for (var i in keys) {
                 var current = rowBtnSetObj[keys[i]];
-                arr.push({name: current['btnName'], key: current['btnId'], perId: current['btnPerId'], colorScheme: current['btnColorScheme'], icon: current['btnIcon']});
+                arr.push({id:keys[i], name: current['btnName'], key: current['btnId'], perId: current['btnPerId'], colorScheme: current['btnColorScheme'], icon: current['btnIcon']});
             }
             return arr;
         }
@@ -417,8 +425,13 @@
             var queryColumnArr = getQueryColumnParams();
             var headBtnArr = getHeadBtnParams();
             var rowBtnArr = getRowParams();
+            var primaryKey = getTablePriKey();
 
             var params = {};
+            params.tableName = tableName;
+            params.primaryKey = primaryKey;
+            params.moduleName = moduleName;
+            params.funName = funName;
             params.tableType = field.type;
             params.headButtons = headBtnArr;
             params.rowButtons = rowBtnArr;
@@ -435,7 +448,7 @@
                 success: function (r) {
                     if (r.code === req.status.ok) {
                         kvfKit.sucessMsg('代码生成成功！');
-
+                        log(r.data);
                         var oidx = layer.open({
                             type: 1
                             ,title: '页面预览'

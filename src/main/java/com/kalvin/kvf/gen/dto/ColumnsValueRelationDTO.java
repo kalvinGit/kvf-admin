@@ -5,22 +5,19 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
- * 表格列配置
  * @author Kalvin
- * @Date 2019/06/13 10:45
+ * @Date 2019/06/14 12:00
  */
 @Data
 @Accessors(chain = true)
 @ToString
-public class ColumnConfigDTO implements Serializable {
+public class ColumnsValueRelationDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String name;
-    private String comment;
-    private String _comment;    // 备注（全）
-    private boolean sort;
-    private boolean format;
+    private String column;
+    private List<ColumnCommentValueRelationDTO> columnCommentValueRelations;
 }

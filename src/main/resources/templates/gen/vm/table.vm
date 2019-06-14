@@ -50,7 +50,7 @@
 <script type="text/html" id="headToolbarTpl">
     #foreach($headButton in $config.headButtons)
     <button class="layui-btn layui-btn-sm $headButton.colorScheme" lay-event="$headButton.key">
-        #if($headButton.icon != '')
+        #if($!headButton.icon)
         <i class="$headButton.icon"></i>
         #end
         $headButton.name
@@ -62,13 +62,30 @@
 <script type="text/html" id="rowToolbarTpl">
     #foreach($rowButton in $config.rowButtons)
     <a class="layui-btn layui-btn-xs $rowButton.colorScheme" lay-event="$rowButton.key">
-        #if($rowButton.icon != '')
+        #if($!rowButton.icon)
         <i class="$rowButton.icon"></i>
         #end
         $rowButton.name
     </a>
     #end
 </script>
+
+#foreach($columnValueRelations in $columnsValueRelations)
+<script type="text/html" id="${columnValueRelations.column}Tpl">
+    #foreach($columnValueRelation in $columnValueRelations.columnCommentValueRelations)
+    #if($foreach.count == 1)
+    {{#  if(d.$columnValueRelations.column == $columnValueRelation.key){ }}
+    <span class="layui-badge layui-bg-blue">$columnValueRelation.name</span>
+    #else
+    {{# } else if(d.$columnValueRelations.column == $columnValueRelation.key) { }}
+    <span class="layui-badge layui-bg-blue">$columnValueRelation.name</span>
+    #end
+    #if($foreach.count == $columnValueRelations.columnCommentValueRelations.size())
+    {{# } }}
+    #end
+    #end
+</script>
+#end
 
 <script type="text/javascript" th:inline="javascript">
     layui.use(['element', 'form', 'layer', 'table'], function () {
@@ -78,13 +95,17 @@
         // 实例化table
         var tableIns = table.render($.extend(config.layui.table, {
             elem: '#' + tableId
-            ,url: BASE_WEB + 'gen/list/tableData' //数据接口
+            ,url: BASE_WEB + '$config.moduleName/$config.funName/list/data' // 数据接口
             ,toolbar: '#headToolbarTpl'
             ,cols: [[ //表头
                 {type:'checkbox', fixed: 'left'}
-                ,{field: 'tableName', title: '表名', width:180}
-                ,{field: 'tableComment', title: '备注'}
+                #foreach($column in $config.columns)
+                ,{field: '$column.name', title: '$column.comment'#if($column.sort), sort: true#end, width: 100#if($column.format), templet: '#${column.name}Tpl' #end}
+                #end
+                #if($config.rowButtons.size() > 0)
                 ,{field: '', title: '操作', width: 235, fixed: 'right', templet: '#rowToolbarTpl'}
+                #end
+
             ]]
         }));
 
@@ -95,21 +116,36 @@
             var checkStatus = table.checkStatus(obj.config.id);
             var checkData = checkStatus.data; // 得到选中的数据
             switch(obj.event) {
-                case 'batchGen':
+                #foreach($headButton in $config.headButtons)
+                case '$headButton.key':
+                    #if($headButton.id == 1)
+                    layer.open({
+                        type: 2
+                        ,title: '$headButton.name'
+                        ,content: BASE_WEB + '$config.moduleName/$config.funName/edit'
+                        ,maxmin: true
+                        ,area: area   // 宽高
+                        ,btn: ['确定', '取消']
+                        ,yes: function(index, layero){
+                            //点击确认触发 iframe 内容中的按钮提交
+                            var submit = layero.find('iframe').contents().find("#kFormSubmit");
+                            submit.click();
+                        }
+                    });
+                    #elseif($headButton.id == 2)
                     if(checkData.length === 0){
                         return kvfKit.warningMsg('请选择数据');
                     }
                     layer.confirm('确定删除吗？', function(index) {
-
                         var ids = [];
                         $.each(checkData, function(i, n){
-                            ids[i] = n.id;
+                            ids[i] = n.$config.primaryKey;
                         });
 
                         //执行 Ajax 后重载
                         $.ajax({
                             type: req.type.post,
-                            url: api.sys.userRmBatch,
+                            url: BASE_WEB + '$config.moduleName/$config.funName/removeBatch',
                             data: {ids: ids.toString()},
                             success: function (r) {
                                 if (r.code === req.status.ok) {
@@ -120,9 +156,22 @@
                                 }
                             }
                         });
-
                     });
+                    #else
+                    layer.open({
+                        type: 1
+                        ,title: '$headButton.name'
+                        ,content: '<div><h3>该功能未实现</h3></div>'    // content使用url打开，请把类型type更改为2
+                        ,maxmin: true
+                        ,area: area   // 宽高
+                        ,btn: ['确定', '取消']
+                        ,yes: function(index, layero){
+                            // todo点击确定处理事件
+                        }
+                    });
+                    #end
                     break;
+                #end
             }
         });
 
@@ -132,6 +181,43 @@
             var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
             var tr = obj.tr; //获得当前行 tr 的DOM对象
 
+            #foreach($rowButton in $config.rowButtons)
+            if (layEvent === '$rowButton.key') {
+                #if($rowButton.id == 1)
+                layer.open({
+                    type: 2
+                    ,title: '$rowButton.name'
+                    ,content:  BASE_WEB + 'gen/setting/' + data.tableName
+                    ,maxmin: true
+                    ,area: area   // 宽高
+                    ,btn: ['确定', '取消']
+                    ,yes: function(index, layero){
+                        //点击确认触发 iframe 内容中的按钮提交
+                        var submit = layero.find('iframe').contents().find("#kFormSubmit");
+                        submit.click();
+                    }
+                });
+                #elseif($rowButton.id == 2)
+                #else
+                #end
+                layer.confirm('确定删除吗？', function(index) {
+                    //执行 Ajax 后重载
+                    $.ajax({
+                        type: req.type.post,
+                        url: api.sys.userRm + data.id,
+                        async: false,
+                        success: function (r) {
+                            if (r.code === req.status.ok) {
+                                table.reload(tableId);
+                                kvfKit.sucessMsg('已删除');
+                            } else {
+                                kvfKit.errorMsg(r.msg);
+                            }
+                        }
+                    });
+                });
+            }
+            #end
             if (layEvent === 'fastGen') {
                 layer.confirm('确定删除吗？', function(index) {
 
