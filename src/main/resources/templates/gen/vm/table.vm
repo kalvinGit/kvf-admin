@@ -61,7 +61,7 @@
 </script>
 
 <!--表格列格式化模板 start-->
-#foreach($columnValueRelations in $columnsValueRelations)
+#foreach($columnValueRelations in $config.columnsValueRelations)
 <script type="text/html" id="${columnValueRelations.column}Tpl">
     #if($columnValueRelations.columnCommentValueRelations.size() == 0)
     <!--todo由于注释不统一规范，无法为你生成格式化代码，请自行处理-->

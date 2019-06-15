@@ -2,6 +2,7 @@ package com.kalvin.kvf.gen.vo;
 
 import com.kalvin.kvf.gen.dto.ButtonConfigDTO;
 import com.kalvin.kvf.gen.dto.ColumnConfigDTO;
+import com.kalvin.kvf.gen.dto.ColumnsValueRelationDTO;
 import com.kalvin.kvf.gen.dto.QueryColumnConfigDTO;
 import lombok.Data;
 import lombok.ToString;
@@ -31,4 +32,10 @@ public class GenConfigVO implements Serializable {
     private List<QueryColumnConfigDTO> queryColumns;
     private List<ButtonConfigDTO> headButtons;
     private List<ButtonConfigDTO> rowButtons;
+    private List<ColumnsValueRelationDTO> columnsValueRelations;    // 列值对应说明关系列表数据
+
+    public GenConfigVO(String tableName, String tableType) {
+        this.tableName = tableName;
+        this.tableType = tableType;
+    }
 }

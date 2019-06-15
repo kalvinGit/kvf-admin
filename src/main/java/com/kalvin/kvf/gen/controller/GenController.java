@@ -1,15 +1,11 @@
 package com.kalvin.kvf.gen.controller;
 
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.StrUtil;
 import com.kalvin.kvf.comm.utils.AuxiliaryKit;
 import com.kalvin.kvf.controller.BaseController;
 import com.kalvin.kvf.dto.R;
-import com.kalvin.kvf.gen.dto.ColumnCommentValueRelationDTO;
-import com.kalvin.kvf.gen.dto.ColumnConfigDTO;
-import com.kalvin.kvf.gen.dto.ColumnsValueRelationDTO;
 import com.kalvin.kvf.gen.dto.TableColumnDTO;
+import com.kalvin.kvf.gen.service.IGenService;
 import com.kalvin.kvf.gen.service.ITableService;
 import com.kalvin.kvf.gen.utils.VelocityKit;
 import com.kalvin.kvf.gen.vo.GenConfigVO;
@@ -20,9 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -39,6 +33,9 @@ public class GenController extends BaseController {
     @Autowired
     private ITableService tableService;
 
+    @Autowired
+    private IGenService genService;
+
     @GetMapping(value = "table/index")
     public ModelAndView table() {
         return new ModelAndView("gen/table");
@@ -48,15 +45,8 @@ public class GenController extends BaseController {
     public ModelAndView setting(@PathVariable String tableName) {
         ModelAndView mv = new ModelAndView("gen/setting");
         List<TableColumnDTO> tableColumnDTOS = tableService.listTableColumn(tableName);
-        List<TableColumnDTO> collect = tableColumnDTOS.stream()
-                .peek(tc -> {
-                    tc.setComment(tc.getColumnComment());
-                    tc.setColumnComment(AuxiliaryKit.parseTableColumnCommentName(tc.getColumnComment()));
-                    tc.setColumnNameCamelCase(StrUtil.toCamelCase(tc.getColumnName()));
-                })
-                .collect(Collectors.toList());
         mv.addObject("tableName", tableName);
-        mv.addObject("tableColumns", collect);
+        mv.addObject("tableColumns", AuxiliaryKit.handleTableColumns(tableColumnDTOS));
         return mv;
     }
 
@@ -65,35 +55,34 @@ public class GenController extends BaseController {
         return R.ok(tableService.listTablePage(tableName, current, size));
     }
 
-    @PostMapping(value = "code")
-    public R genCode(@RequestBody GenConfigVO genConfigVO) {
+    @PostMapping(value = "custom/generate/code")
+    public R customGenerateCode(@RequestBody GenConfigVO genConfigVO) {
         LOGGER.info("genConfig={}", genConfigVO);
         String tableType = genConfigVO.getTableType();
         String tplName = tableType.equals("treegrid") ? "treegrid.vm" : "table.vm";
-        VelocityContext ctx = new VelocityContext();
-        List<ColumnsValueRelationDTO> columnsValueRelationsList = new ArrayList<>();    // 列备注的值对应说明关系列表
-        List<ColumnConfigDTO> columns = genConfigVO.getColumns();
-        columns.forEach(column -> {
-            if (column.isFormat()) {
-                List<ColumnCommentValueRelationDTO> columnValueRelations = AuxiliaryKit
-                        .parseTableColumnCommentValueRelation(column.get_comment());
-                ColumnsValueRelationDTO columnsValueRelations = new ColumnsValueRelationDTO();
-                columnsValueRelations.setColumn(column.getName());
-                columnsValueRelations.setColumnCommentValueRelations(columnValueRelations);
-                columnsValueRelationsList.add(columnsValueRelations);
-                /*if (CollectionUtil.isNotEmpty(columnValueRelations)) {
+        genConfigVO.setColumnsValueRelations(AuxiliaryKit.getColumnsValueRelations(genConfigVO.getColumns()));
 
-                }*/
-            }
-        });
+        VelocityContext ctx = VelocityKit.getContext();
         ctx.put("config", genConfigVO);
-        ctx.put("columnsValueRelations", columnsValueRelationsList);
+//        ctx.put("columnsValueRelations", columnsValueRelationsList);
         Template t = VelocityKit.getTemplate(tplName);
 
         StringWriter sw = new StringWriter();
         t.merge(ctx, sw);
 
 //        LOGGER.info("html={}", sw.toString());
+        return R.ok(sw.toString());
+    }
+
+    @PostMapping(value = "quickly/generate/code")
+    public R quicklyGenerateCode(String tableName, String tableType) {
+        String tplName = tableType.equals("treegrid") ? "treegrid.vm" : "table.vm";
+        GenConfigVO config = genService.init(tableName, tableType);
+        VelocityContext ctx = VelocityKit.getContext();
+        ctx.put("config", config);
+        Template t = VelocityKit.getTemplate(tplName);
+        StringWriter sw = new StringWriter();
+        t.merge(ctx, sw);
         return R.ok(sw.toString());
     }
 

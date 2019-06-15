@@ -65,7 +65,7 @@
         // 实例化table
         var tableIns = table.render($.extend(config.layui.table, {
             elem: '#' + tableId
-            ,url: BASE_WEB + 'gen/list/tableData' //数据接口
+            ,url: api.gen.tableListData //数据接口
             ,toolbar: '#headToolbarTpl'
             ,defaultToolbar: []
             ,cols: [[ //表头
@@ -121,17 +121,23 @@
             var tr = obj.tr; //获得当前行 tr 的DOM对象
 
             if (layEvent === 'fastGen') {
-                layer.confirm('确定删除吗？', function(index) {
-
+                layer.confirm('确定一键生成代码吗？', function(index) {
                     //执行 Ajax 后重载
                     $.ajax({
                         type: req.type.post,
-                        url: api.sys.userRm + data.id,
+                        url: api.gen.quicklyGenerateCode + "?tableName=" + data.tableName + "&tableType=" + data.tableType,
                         async: false,
                         success: function (r) {
                             if (r.code === req.status.ok) {
-                                table.reload(tableId);
-                                kvfKit.sucessMsg('已删除');
+                                kvfKit.sucessMsg('代码生成成功');
+                                log('quickly=', r.data);
+                                var oidx = layer.open({
+                                    type: 1
+                                    ,title: '页面预览'
+                                    ,content: r.data
+                                    ,maxmin: false
+                                });
+                                layer.full(oidx);
                             } else {
                                 kvfKit.errorMsg(r.msg);
                             }
@@ -143,7 +149,7 @@
                 var idx = layer.open({
                     type: 2
                     ,title: '自义定生成设置'
-                    ,content:  BASE_WEB + 'gen/setting/' + data.tableName
+                    ,content: api.gen.customGenerateSetting + data.tableName
                     ,maxmin: true
                     ,area: area   // 宽高
                     ,btn: ['生成代码', '取消']

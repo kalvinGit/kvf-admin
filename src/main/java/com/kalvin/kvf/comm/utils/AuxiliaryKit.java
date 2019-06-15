@@ -2,9 +2,13 @@ package com.kalvin.kvf.comm.utils;
 
 import cn.hutool.core.util.StrUtil;
 import com.kalvin.kvf.gen.dto.ColumnCommentValueRelationDTO;
+import com.kalvin.kvf.gen.dto.ColumnConfigDTO;
+import com.kalvin.kvf.gen.dto.ColumnsValueRelationDTO;
+import com.kalvin.kvf.gen.dto.TableColumnDTO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 辅助工具
@@ -42,6 +46,45 @@ public class AuxiliaryKit {
             }
         }
         return list;
+    }
+
+    public static List<ColumnsValueRelationDTO> getColumnsValueRelations(List<ColumnConfigDTO> columns) {
+        List<ColumnsValueRelationDTO> columnsValueRelationsList = new ArrayList<>();    // 列备注的值对应说明关系列表
+        columns.forEach(column -> {
+            if (column.isFormat()) {
+                List<ColumnCommentValueRelationDTO> columnValueRelations = AuxiliaryKit
+                        .parseTableColumnCommentValueRelation(column.get_comment());
+                ColumnsValueRelationDTO columnsValueRelations = new ColumnsValueRelationDTO();
+                columnsValueRelations.setColumn(column.getName());
+                columnsValueRelations.setColumnCommentValueRelations(columnValueRelations);
+                columnsValueRelationsList.add(columnsValueRelations);
+            }
+        });
+        return columnsValueRelationsList;
+    }
+
+    public static List<TableColumnDTO> handleTableColumns(List<TableColumnDTO> tableColumns) {
+        return tableColumns.stream()
+                .peek(tc -> {
+                    tc.setComment(tc.getColumnComment());
+                    tc.setColumnComment(AuxiliaryKit.parseTableColumnCommentName(tc.getColumnComment()));
+                    tc.setColumnNameCamelCase(StrUtil.toCamelCase(tc.getColumnName()));
+                })
+                .collect(Collectors.toList());
+    }
+
+    public static List<ColumnConfigDTO> tableColumnsToColumnConfigs(List<TableColumnDTO> tableColumns) {
+        List<ColumnConfigDTO> columnConfigs = new ArrayList<>();
+        tableColumns.forEach(tc -> {
+            ColumnConfigDTO columnConfig = new ColumnConfigDTO();
+            columnConfig.setName(tc.getColumnName());
+            columnConfig.setComment(tc.getColumnComment());
+            columnConfig.set_comment(tc.getComment());
+            columnConfig.setSort(false);
+            columnConfig.setFormat(tc.getColumnKey().equals("PRI"));
+            columnConfigs.add(columnConfig);
+        });
+        return columnConfigs;
     }
 
 }

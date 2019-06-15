@@ -14,7 +14,7 @@ import java.io.FileWriter;
  */
 public class VelocityKit {
 
-    private final static String preTempPath = "templates/gen/vm/";
+    private final static String PRE_TEMP_PATH = "templates/gen/vm/";
 
     private static VelocityEngine velocityEngine = null;
 
@@ -31,7 +31,11 @@ public class VelocityKit {
         if (velocityEngine == null) {
             VelocityKit.newEngine();
         }
-        return velocityEngine.getTemplate(preTempPath + templateName);
+        return velocityEngine.getTemplate(PRE_TEMP_PATH + templateName);
+    }
+
+    public static VelocityContext getContext() {
+        return new VelocityContext();
     }
 
     public static void toFile(String templateName, VelocityContext ctx, String destPath) {

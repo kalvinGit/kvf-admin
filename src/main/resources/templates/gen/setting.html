@@ -438,11 +438,12 @@
             params.queryColumns = queryColumnArr;
             params.columns = columnSetArr;
 
+            // log('params=', JSON.stringify(params));
             log('params=', params);
 
             $.ajax({
                 type: req.type.post,
-                url: api.genCode,
+                url: api.gen.customGenerateCode,
                 data: JSON.stringify(params),
                 contentType: 'application/json',
                 success: function (r) {

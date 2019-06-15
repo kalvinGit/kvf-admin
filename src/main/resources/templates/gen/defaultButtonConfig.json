@@ -1,0 +1,38 @@
+{
+  "headButtons": [
+    {
+      "id": "1",
+      "name": "添加",
+      "key": "add",
+      "perId": "sys: user: add",
+      "colorScheme": "",
+      "icon": ""
+    },
+    {
+      "id": "2",
+      "name": "批量删除",
+      "key": "batchdel",
+      "perId": "sys: user: del",
+      "colorScheme": "layui-btn-danger",
+      "icon": ""
+    }
+  ],
+  "rowButtons": [
+    {
+      "id": "2",
+      "name": "编辑",
+      "key": "edit",
+      "perId": "sys: user: edit",
+      "colorScheme": "layui-btn-normal",
+      "icon": "layui-icon layui-icon-edit"
+    },
+    {
+      "id": "3",
+      "name": "删除",
+      "key": "del",
+      "perId": "sys: user: del",
+      "colorScheme": "layui-btn-danger",
+      "icon": "layui-icon layui-icon-delete"
+    }
+  ]
+}
