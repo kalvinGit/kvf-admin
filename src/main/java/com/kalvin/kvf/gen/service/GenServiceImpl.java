@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.kalvin.kvf.comm.utils.AuxiliaryKit;
+import com.kalvin.kvf.gen.utils.AuxiliaryKit;
 import com.kalvin.kvf.gen.comm.ConfigConstant;
 import com.kalvin.kvf.gen.dto.ButtonConfigDTO;
 import com.kalvin.kvf.gen.dto.TableColumnDTO;
@@ -52,8 +52,8 @@ public class GenServiceImpl implements IGenService {
         String buttonInfo = FileUtil.readString(
                 new File(ClassUtil.getClassPath() + ConfigConstant.BUTTON_JSON_REL_PATH), "UTF-8");
         JSONObject jsonObject = JSONUtil.parseObj(buttonInfo);
-        JSONArray headButtons = JSONUtil.parseArray(jsonObject.get("headButtons"));
-        JSONArray rowButtons = JSONUtil.parseArray(jsonObject.get("rowButtons"));
+        JSONArray headButtons = JSONUtil.parseArray(jsonObject.get(ConfigConstant.HEAD_BUTTON_KEY));
+        JSONArray rowButtons = JSONUtil.parseArray(jsonObject.get(ConfigConstant.ROW_BUTTON_KEY));
         genConfig.setHeadButtons(JSONUtil.toList(headButtons, ButtonConfigDTO.class));
         genConfig.setRowButtons(JSONUtil.toList(rowButtons, ButtonConfigDTO.class));
         genConfig.setQueryColumns(new ArrayList<>());

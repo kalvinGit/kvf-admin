@@ -1,7 +1,7 @@
 package com.kalvin.kvf.gen.controller;
 
 
-import com.kalvin.kvf.comm.utils.AuxiliaryKit;
+import com.kalvin.kvf.gen.utils.AuxiliaryKit;
 import com.kalvin.kvf.controller.BaseController;
 import com.kalvin.kvf.dto.R;
 import com.kalvin.kvf.gen.dto.TableColumnDTO;
@@ -64,13 +64,11 @@ public class GenController extends BaseController {
 
         VelocityContext ctx = VelocityKit.getContext();
         ctx.put("config", genConfigVO);
-//        ctx.put("columnsValueRelations", columnsValueRelationsList);
         Template t = VelocityKit.getTemplate(tplName);
 
         StringWriter sw = new StringWriter();
         t.merge(ctx, sw);
 
-//        LOGGER.info("html={}", sw.toString());
         return R.ok(sw.toString());
     }
 

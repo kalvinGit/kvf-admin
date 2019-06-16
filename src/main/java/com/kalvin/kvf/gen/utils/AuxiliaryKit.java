@@ -1,4 +1,4 @@
-package com.kalvin.kvf.comm.utils;
+package com.kalvin.kvf.gen.utils;
 
 import cn.hutool.core.util.StrUtil;
 import com.kalvin.kvf.gen.dto.ColumnCommentValueRelationDTO;

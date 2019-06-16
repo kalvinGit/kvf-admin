@@ -31,11 +31,26 @@
                     </div>
 
                     <div class="layui-card-body">
-                        <table id="kContentTable" lay-filter="kContentTable"></table>
+                        <table id="kTable" lay-filter="kTable"></table>
                     </div>
                 </div>
 
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="layui-container" style="display: none; width: 100%;" id="tableTypeTpl">
+    <div class="layui-form" lay-filter="tableTypeForm" style="margin-top: 15px">
+        <div class="layui-form-item">
+            <label class="layui-form-label">表格类型</label>
+            <div class="layui-input-block">
+                <input type="radio" name="tableType" value="table" title="普通表格(layui table)" autocomplete="off" class="layui-input" checked>
+                <input type="radio" name="tableType" value="treegrid" title="树形表格(treegrid)" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-hide">
+            <input type="button" lay-submit="" lay-filter="kTableTypeFormSubmit" id="kTableTypeFormSubmit" value="确认添加">
         </div>
     </div>
 </div>
@@ -60,7 +75,7 @@
 <script type="text/javascript" th:inline="javascript">
     layui.use(['element', 'form', 'layer', 'table'], function () {
         var elemet = layui.element, form = layui.form, layer = layui.layer, table = layui.table;
-        var tableId = 'kContentTable';
+        var tableId = 'kTable';
 
         // 实例化table
         var tableIns = table.render($.extend(config.layui.table, {
@@ -115,13 +130,26 @@
         });
 
         // 表格行按钮 监听事件
+        var tOpenId, tableName;
         table.on('tool(' + tableId + ')', function (obj) {
             var data = obj.data; //获得当前行数据
             var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
             var tr = obj.tr; //获得当前行 tr 的DOM对象
 
             if (layEvent === 'fastGen') {
-                layer.confirm('确定一键生成代码吗？', function(index) {
+                tableName = data.tableName;
+                tOpenId = layer.open({
+                    type: 1
+                    ,title: '选择模板'
+                    ,content: $('#tableTypeTpl')
+                    ,maxmin: true
+                    ,area: ['553px', '176px']   // 宽高
+                    ,btn: ['确定', '取消']
+                    ,yes: function(index, layero) {
+                        $('#kTableTypeFormSubmit').click();
+                    }
+                });
+                /*layer.confirm('确定一键生成代码吗？', function(index) {
                     //执行 Ajax 后重载
                     $.ajax({
                         type: req.type.post,
@@ -143,7 +171,7 @@
                             }
                         }
                     });
-                });
+                });*/
             }
             if (layEvent === 'customGen') {
                 var idx = layer.open({
@@ -162,6 +190,34 @@
                 layer.full(idx);
             }
 
+        });
+
+        form.on('submit(kTableTypeFormSubmit)', function (obj) {
+            var field = obj.field;
+            field.tableName = tableName;
+            log('field=', field);
+            $.ajax({
+                type: req.type.post,
+                url: api.gen.quicklyGenerateCode,
+                data: field,
+                // async: false,
+                success: function (r) {
+                    if (r.code === req.status.ok) {
+                        kvfKit.sucessMsg('代码生成成功');
+                        log('quickly=', r.data);
+                        var oidx = layer.open({
+                            type: 1
+                            ,title: '页面预览'
+                            ,content: r.data
+                            ,maxmin: false
+                        });
+                        layer.full(oidx);
+                    } else {
+                        kvfKit.errorMsg(r.msg);
+                    }
+                }
+            });
+            layer.close(tOpenId);
         });
 
         // 监听查询
