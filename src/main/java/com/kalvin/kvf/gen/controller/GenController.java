@@ -73,9 +73,9 @@ public class GenController extends BaseController {
     }
 
     @PostMapping(value = "quickly/generate/code")
-    public R quicklyGenerateCode(String tableName, String tableType) {
+    public R quicklyGenerateCode(String tableName, String tableType, String tableComment) {
         String tplName = tableType.equals("treegrid") ? "treegrid.vm" : "table.vm";
-        GenConfigVO config = genService.init(tableName, tableType);
+        GenConfigVO config = genService.init(tableName, tableType, tableComment);
         VelocityContext ctx = VelocityKit.getContext();
         ctx.put("config", config);
         Template t = VelocityKit.getTemplate(tplName);

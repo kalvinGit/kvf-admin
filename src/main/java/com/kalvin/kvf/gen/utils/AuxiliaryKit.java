@@ -80,11 +80,28 @@ public class AuxiliaryKit {
             columnConfig.setName(tc.getColumnName());
             columnConfig.setComment(tc.getColumnComment());
             columnConfig.set_comment(tc.getComment());
+            columnConfig.setDataType(tc.getDataType());
+            columnConfig.setIsNullable(tc.getIsNullable());
+            columnConfig.setVariableType(AuxiliaryKit.dataTypeConvertVariableType(tc.getDataType()));
             columnConfig.setSort(false);
             columnConfig.setFormat(tc.getColumnKey().equals("PRI"));
             columnConfigs.add(columnConfig);
         });
         return columnConfigs;
+    }
+
+    public static String dataTypeConvertVariableType(String dataType) {
+        if ("bigint".equals(dataType)) {
+            return "Long";
+        } else if ("int".equals(dataType) || "tinyint".equals(dataType)) {
+            return "Integer";
+        } else if ("varchar".equals(dataType) || "char".equals(dataType)) {
+            return "String";
+        } else if ("timestamp".equals(dataType) || "date".equals(dataType)) {
+            return "Date";
+        } else {
+            throw new RuntimeException("字段类型转换失败，不支持的类型：" + dataType);
+        }
     }
 
 }

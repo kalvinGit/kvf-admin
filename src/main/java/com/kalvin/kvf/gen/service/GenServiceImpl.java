@@ -33,8 +33,8 @@ public class GenServiceImpl implements IGenService {
     private ITableService tableService;
 
     @Override
-    public GenConfigVO init(String tableName, String tableType) {
-        GenConfigVO genConfig = new GenConfigVO(tableName, tableType);
+    public GenConfigVO init(String tableName, String tableType, String tableComment) {
+        GenConfigVO genConfig = new GenConfigVO(tableName, tableType, tableComment);
         String moduleName = tableName.substring(0, tableName.indexOf("_"));
         String funName = StrUtil.toCamelCase(tableName.substring(tableName.indexOf("_") + 1));
         genConfig.setModuleName(moduleName).setFunName(funName);

@@ -71,7 +71,7 @@
                 <div class="layui-input-block">
                     <!-- 这里的xm-select属性是多选的ID, 如多处使用请保证全局唯一 -->
                     <select name="notShowCol" xm-select="notShowCol" xm-select-search>
-                        <option  th:each="tableColumn:${tableColumns}" th:value="${tableColumn.columnNameCamelCase}" th:data-type="${tableColumn.dataType}" th:data-comment="${tableColumn.comment}" th:text="${tableColumn.columnComment}" th:selected="${tableColumn.columnKey=='PRI'}"></option>
+                        <option  th:each="tableColumn:${tableColumns}" th:value="${tableColumn.columnNameCamelCase}" th:data-type="${tableColumn.dataType}" th:data-comment="${tableColumn.comment}" th:text="${tableColumn.columnComment}" th:data-isNullable="${tableColumn.isNullable}" th:data-columnKey="${tableColumn.columnKey}" th:selected="${tableColumn.columnKey=='PRI'}"></option>
                     </select>
                 </div>
             </div>
@@ -80,7 +80,7 @@
                 <div class="layui-input-block">
                     <!-- 这里的xm-select属性是多选的ID, 如多处使用请保证全局唯一 -->
                     <select name="onlyShowCol" xm-select="onlyShowCol" xm-select-search>
-                        <option  th:each="tableColumn:${tableColumns}" th:value="${tableColumn.columnNameCamelCase}" th:data-type="${tableColumn.dataType}" th:data-comment="${tableColumn.comment}" th:text="${tableColumn.columnComment}"></option>
+                        <option  th:each="tableColumn:${tableColumns}" th:value="${tableColumn.columnNameCamelCase}" th:data-type="${tableColumn.dataType}" th:data-comment="${tableColumn.comment}" th:text="${tableColumn.columnComment}" th:data-isNullable="${tableColumn.isNullable}" th:data-columnKey="${tableColumn.columnKey}"></option>
                     </select>
                 </div>
             </div>
@@ -177,6 +177,7 @@
         var $headBtnBoxEl = $('#headBtnBox');
         var $rowBtnBoxEl = $('#rowBtnBox');
         var tableName = $('input[name="tableName"]').val();
+        var tableComment = kvfKit.getUrlParam('tableComment');
         var moduleName = tableName.substring(0, tableName.indexOf('_'));
         var funName = kvfKit.underlineToHump(tableName.substring(tableName.indexOf('_') + 1));
         var tipsIdx, timer;
@@ -355,9 +356,12 @@
                 var id = $(item).data('id');
                 var comment = $(item).data('comment');
                 var _comment = $(item).data('_comment');
+                var dataType = $(item).data('type');
+                var isNullable = $(item).data('isNullable');
+                var columnKey = $(item).data('columnKey');
                 var sort = $('input[name="' + id + '_sort"]:checked').val();
                 var format = $('input[name="' + id + '_format"]:checked').val();
-                arr.push({name: id, comment: comment, _comment: _comment, sort: sort == 0, format: format == 0});
+                arr.push({name: id, comment: comment, _comment: _comment, dataType: dataType, isNullable: isNullable, sort: sort == 0, format: format == 0});
             });
             return arr;
         }
@@ -429,6 +433,7 @@
 
             var params = {};
             params.tableName = tableName;
+            params.tableComment = tableComment;
             params.primaryKey = primaryKey;
             params.moduleName = moduleName;
             params.funName = funName;

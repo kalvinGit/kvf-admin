@@ -24,6 +24,7 @@ public class GenConfigVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String tableName;
+    private String tableComment;
     private String primaryKey;  // 主键字段
     private String moduleName;   // 模块名称：如sys
     private String funName;     // 功能名称：如user
@@ -34,8 +35,9 @@ public class GenConfigVO implements Serializable {
     private List<ButtonConfigDTO> rowButtons;
     private List<ColumnsValueRelationDTO> columnsValueRelations;    // 列值对应说明关系列表数据
 
-    public GenConfigVO(String tableName, String tableType) {
+    public GenConfigVO(String tableName, String tableType, String tableComment) {
         this.tableName = tableName;
         this.tableType = tableType;
+        this.tableComment = tableComment;
     }
 }
