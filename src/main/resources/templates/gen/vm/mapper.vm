@@ -1,27 +1,24 @@
-package com.kalvin.kvf.mapper.sys;
+package com.kalvin.kvf.mapper.$config.moduleName;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.kalvin.kvf.entity.sys.User;
-import com.kalvin.kvf.vo.sys.UserQueryVO;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.kalvin.kvf.entity.sys.$config.firstCapFunName;
 
 import java.util.List;
 
 /**
  * <p>
- * 用户表 Mapper 接口
+ * $config.tableName Mapper 接口
  * </p>
- *
- * @author Kalvin
- * @since 2019-04-29
+ * @since $date
  */
-public interface UserMapper extends BaseMapper<User> {
+public interface ${config.firstCapFunName}Mapper extends BaseMapper<$config.firstCapFunName> {
 
     /**
-     * 查询用户列表
-     * @param queryVO 查询参数
-     * @return
+     * 查询列表
+     * @param ${config.funName} 查询参数
+     * @return list
      */
-    List<User> selectUserList(UserQueryVO queryVO, Page page);
+    List<$config.firstCapFunName> select${config.firstCapFunName}List($config.firstCapFunName $config.funName, IPage page);
 
 }

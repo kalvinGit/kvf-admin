@@ -1,27 +1,23 @@
-package com.kalvin.kvf.service.sys;
+package com.kalvin.kvf.service.${config.moduleName};
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.kalvin.kvf.entity.sys.User;
-import com.kalvin.kvf.vo.sys.UserQueryVO;
+import com.kalvin.kvf.entity.${config.moduleName}.${config.firstCapFunName};
 
 /**
  * <p>
- * 用户表 服务类
+ * $config.tableComment 服务类
  * </p>
  *
- * @author Kalvin
- * @since 2019-04-29
+ * @since $date
  */
-public interface service extends IService<User> {
+public interface I${config.firstCapFunName}Service extends IService<$config.firstCapFunName> {
 
     /**
-     * 获取用户列表。分页
-     * @param queryVO 查询参数
-     * @return
+     * 获取列表。分页
+     * @param ${config.funName} 查询参数
+     * @return page
      */
-    Page<User> listUserPage(UserQueryVO queryVO);
-
-    User getByUsername(String username);
+    Page<${config.firstCapFunName}> list${config.firstCapFunName}Page(${config.firstCapFunName} $config.funName);
 
 }

@@ -21,4 +21,6 @@ public class TableColumnDTO implements Serializable {
     private String dataType;
     private String isNullable;  // YES/NO
     private String columnKey;   // PRI(主键)
+    private String variableType;   // 成员变量类型
+
 }

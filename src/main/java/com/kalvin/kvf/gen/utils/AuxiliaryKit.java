@@ -69,6 +69,7 @@ public class AuxiliaryKit {
                     tc.setComment(tc.getColumnComment());
                     tc.setColumnComment(AuxiliaryKit.parseTableColumnCommentName(tc.getColumnComment()));
                     tc.setColumnNameCamelCase(StrUtil.toCamelCase(tc.getColumnName()));
+                    tc.setVariableType(AuxiliaryKit.dataTypeConvertVariableType(tc.getDataType()));
                 })
                 .collect(Collectors.toList());
     }
@@ -82,7 +83,6 @@ public class AuxiliaryKit {
             columnConfig.set_comment(tc.getComment());
             columnConfig.setDataType(tc.getDataType());
             columnConfig.setIsNullable(tc.getIsNullable());
-            columnConfig.setVariableType(AuxiliaryKit.dataTypeConvertVariableType(tc.getDataType()));
             columnConfig.setSort(false);
             columnConfig.setFormat(tc.getColumnKey().equals("PRI"));
             columnConfigs.add(columnConfig);
@@ -91,6 +91,7 @@ public class AuxiliaryKit {
     }
 
     public static String dataTypeConvertVariableType(String dataType) {
+        // todo 现在只是简单处理一下，以后再针对不同数据库处理
         if ("bigint".equals(dataType)) {
             return "Long";
         } else if ("int".equals(dataType) || "tinyint".equals(dataType)) {

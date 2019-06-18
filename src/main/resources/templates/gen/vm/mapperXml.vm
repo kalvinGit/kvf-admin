@@ -1,56 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kalvin.kvf.mapper.sys.UserMapper">
+<mapper namespace="com.kalvin.kvf.mapper.${config.moduleName}.${config.firstCapFunName}Mapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.kalvin.kvf.entity.sys.User">
-        <id column="id" property="id" />
-        <result column="dept_id" property="deptId" />
-        <result column="username" property="username" />
-        <result column="password" property="password" />
-        <result column="realname" property="realname" />
-        <result column="sex" property="sex" />
-        <result column="phone" property="phone" />
-        <result column="tel" property="tel" />
-        <result column="email" property="email" />
-        <result column="avatar" property="avatar" />
-        <result column="job_title" property="jobTitle" />
-        <result column="status" property="status" />
-        <result column="sort" property="sort" />
-        <result column="del_flag" property="delFlag" />
-        <result column="create_by" property="createBy" />
-        <result column="update_time" property="updateTime" />
-        <result column="create_time" property="createTime" />
+    <resultMap id="BaseResultMap" type="com.kalvin.kvf.entity.${config.moduleName}.${config.firstCapFunName}">
+        #foreach($column in $config.allColumns)
+        #if($column.columnName == $config.primaryKey)
+        <id column="$column.columnName" property="$column.columnNameCamelCase" />
+        #else
+        <result column="$column.columnName" property="$column.columnNameCamelCase" />
+        #end
+        #end
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, dept_id, username, password, realname, sex, phone, tel, email, avatar, job_title, status, sort, del_flag, create_by, update_time, create_time
+        #foreach($column in $config.allColumns) #if($foreach.count > 1),#end $column.columnName #end
     </sql>
 
-    <select id="selectUserList" resultType="com.kalvin.kvf.entity.sys.User">
-        select <include refid="Base_Column_List" /> from sys_user
+    <select id="select${config.firstCapFunName}List" resultType="com.kalvin.kvf.entity.${config.moduleName}.${config.firstCapFunName}">
+        select <include refid="Base_Column_List" /> from $config.tableName
         <trim prefix="where" prefixOverrides="and">
-            <if test="queryVO.username != null and queryVO.username != ''">
-                AND username LIKE concat("%", #{queryVO.username, jdbcType=VARCHAR}, "%")
+            #foreach($column in $config.allColumns)
+            #if($column.coumnName != $config.primaryKey)
+            #set($valExp = ${config.funName} + '.' + $column.columnNameCamelCase)
+            #if($column.dataType == 'varchar' || $column.dataType == 'char')
+            <if test="$valExp != null and $valExp != ''">
+                and $column.columnName like concat(#{$valExp, "%")
             </if>
-            <if test="queryVO.realname != null and queryVO.realname != ''">
-                AND realname LIKE concat("%", #{queryVO.realname, jdbcType=VARCHAR}, "%")
+            #else
+            <if test="$valExp != null">
+                and $column.columnName = #{$valExp}
             </if>
-            <!--<if test="phone != null">
-                AND phone LIKE concat("%", #{phone, jdbcType=BIGINT}, "%")
-            </if>-->
-            <if test="queryVO.status != null">
-                AND status = #{queryVO.status, jdbcType=INTEGER}
-            </if>
-            <if test="queryVO.depts != null">
-                AND dept_id IN
-                <foreach collection="queryVO.depts" item="item" index="index" open="(" close=")" separator=",">
-                    #{item.id, jdbcType=BIGINT}
-                </foreach>
-            </if>
+            #end
+            #end
+            #end
         </trim>
-        order by sort asc
+##        order by sort asc
     </select>
 
 </mapper>

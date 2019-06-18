@@ -1,35 +1,29 @@
-package com.kalvin.kvf.service.sys;
+package com.kalvin.kvf.service.${config.moduleName};
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.kalvin.kvf.entity.sys.User;
-import com.kalvin.kvf.mapper.sys.UserMapper;
-import com.kalvin.kvf.vo.sys.UserQueryVO;
+import com.kalvin.kvf.entity.${config.moduleName}.${config.firstCapFunName};
+import com.kalvin.kvf.mapper.${config.moduleName}.${config.firstCapFunName}Mapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * <p>
- * 用户表 服务实现类
+ * $config.tableComment 服务实现类
  * </p>
  *
- * @author Kalvin
- * @since 2019-04-29
+ * @since $date
  */
 @Service
-public class serviceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
+public class ${config.firstCapFunName}ServiceImpl extends ServiceImpl<${config.firstCapFunName}Mapper, ${config.firstCapFunName}> implements I${config.firstCapFunName}Service {
 
     @Override
-    public Page<User> listUserPage(UserQueryVO queryVO) {
-        Page<User> page = new Page<>(queryVO.getCurrent(), queryVO.getSize());
-        List<User> users = baseMapper.selectUserList(queryVO, page);
-        return page.setRecords(users);
+    public Page<${config.firstCapFunName}> listUserPage(${config.firstCapFunName} ${config.funName}) {
+        Page<${config.firstCapFunName}> page = new Page<>(${config.funName}.getCurrent(), ${config.funName}.getSize());
+        List<${config.firstCapFunName}> ${config.funName}s = baseMapper.select${config.firstCapFunName}List(${config.funName}, page);
+        return page.setRecords(${config.funName}s);
     }
 
-    @Override
-    public User getByUsername(String username) {
-        return super.getOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
-    }
 }

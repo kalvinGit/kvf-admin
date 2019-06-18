@@ -1,4 +1,4 @@
-package com.kalvin.kvf.entity.sys;
+package com.kalvin.kvf.entity.$config.moduleName;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
-#foreach($column in $config.columns)
+#foreach($column in $config.allColumns)
 #if($column.variableType == 'Date')
 import java.util.Date;
     #break
@@ -25,23 +25,23 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName("$config.tableName")
-public class User extends BaseEntity {
+public class $config.firstCapFunName extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
-    #foreach($column in $config.columns)
-    #if($column.name == $config.primaryKey)
+    #foreach($column in $config.allColumns)
+    #if($column.columnNameCamelCase == $config.primaryKey)
     /**
-     * $column._comment
+     * $column.comment
      */
     @TableId(value = "$config.primaryKey", type = IdType.AUTO)
-    private $column.variableType $column.name;
+    private $column.variableType $column.columnNameCamelCase;
     #else
 
     /**
-     * $column._comment
+     * $column.comment
      */
-    private $column.variableType $column.name;
+    private $column.variableType $column.columnNameCamelCase;
     #end
     #end
 

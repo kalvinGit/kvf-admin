@@ -23,7 +23,6 @@ public class ColumnConfigDTO implements Serializable {
     private String _comment;    // 备注（全）
     private String dataType;
     private String isNullable;  // YES/NO
-    private String variableType;   // 成员变量类型
     private boolean sort;
     private boolean format;
 }

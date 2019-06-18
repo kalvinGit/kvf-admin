@@ -1,6 +1,7 @@
 package com.kalvin.kvf.gen.controller;
 
 
+import cn.hutool.core.util.StrUtil;
 import com.kalvin.kvf.gen.utils.AuxiliaryKit;
 import com.kalvin.kvf.controller.BaseController;
 import com.kalvin.kvf.dto.R;
@@ -61,6 +62,8 @@ public class GenController extends BaseController {
         String tableType = genConfigVO.getTableType();
         String tplName = tableType.equals("treegrid") ? "treegrid.vm" : "table.vm";
         genConfigVO.setColumnsValueRelations(AuxiliaryKit.getColumnsValueRelations(genConfigVO.getColumns()));
+
+        genConfigVO.setFirstCapFunName(StrUtil.upperFirst(genConfigVO.getFunName()));
 
         VelocityContext ctx = VelocityKit.getContext();
         ctx.put("config", genConfigVO);

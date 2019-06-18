@@ -37,10 +37,11 @@ public class GenServiceImpl implements IGenService {
         GenConfigVO genConfig = new GenConfigVO(tableName, tableType, tableComment);
         String moduleName = tableName.substring(0, tableName.indexOf("_"));
         String funName = StrUtil.toCamelCase(tableName.substring(tableName.indexOf("_") + 1));
-        genConfig.setModuleName(moduleName).setFunName(funName);
+        genConfig.setModuleName(moduleName).setFunName(funName).setFirstCapFunName(StrUtil.upperFirst(funName));
 
         List<TableColumnDTO> tableColumnDTOS = tableService.listTableColumn(tableName);
         tableColumnDTOS = AuxiliaryKit.handleTableColumns(tableColumnDTOS);
+        genConfig.setAllColumns(tableColumnDTOS);
 
         Optional<TableColumnDTO> tOptional = tableColumnDTOS
                 .stream().filter(tc -> tc.getColumnKey().equals("PRI")).findFirst();
