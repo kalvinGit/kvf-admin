@@ -1,32 +1,25 @@
-package com.kalvin.kvf.controller.sys;
-
+#set($m = ${config.moduleName})
+#set($f = ${config.funName})
+#set($pk = ${config.pkCamelCase})
+#set($service = $f + 'Service')
+#set($class = ${config.firstCapFunName})
+package com.kalvin.kvf.controller.$m;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.kalvin.kvf.comm.utils.CryptionKit;
-import com.kalvin.kvf.comm.utils.ShiroKit;
 import com.kalvin.kvf.controller.BaseController;
 import com.kalvin.kvf.dto.R;
-import com.kalvin.kvf.dto.sys.UserEditDTO;
-import com.kalvin.kvf.dto.sys.UserRoleGroupDTO;
-import com.kalvin.kvf.entity.sys.Dept;
-import com.kalvin.kvf.entity.sys.User;
-import com.kalvin.kvf.service.sys.IDeptService;
-import com.kalvin.kvf.service.sys.IUserRoleService;
-import com.kalvin.kvf.service.sys.IUserService;
-import com.kalvin.kvf.vo.sys.UserQueryVO;
+import com.kalvin.kvf.entity.$m.$class;
+import com.kalvin.kvf.service.$m.I${class}Service;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
-#set($service = ${config.funName} + 'Service')
-#set($class = ${config.firstCapFunName})
 
 /**
  * <p>
@@ -35,16 +28,16 @@ import java.util.List;
  * @since $date
  */
 @RestController
-@RequestMapping("${config.moduleName}/${config.funName}")
-public class $classController extends BaseController {
+@RequestMapping("$m/$f")
+public class ${class}Controller extends BaseController {
 
     @Autowired
-    private I$classService $service;
+    private I${class}Service $service;
 
     @RequiresPermissions("sys:user:index")
     @GetMapping("index")
     public ModelAndView index() {
-        return new ModelAndView("${config.moduleName}/${config.funName}");
+        return new ModelAndView("$m/$f");
     }
 
     #set($addEditViewFlg = false)
@@ -59,87 +52,71 @@ public class $classController extends BaseController {
         #end
     #end
     #if($addEditViewFlg)
-    @GetMapping(value = "$headButton.key")
-    public ModelAndView $headButton.key(Long id) {
-        ModelAndView mv = new ModelAndView("${config.moduleName}/${config.funName}_edit");
-        $class ${config.funName};
+    @GetMapping(value = "edit")
+    public ModelAndView edit(Long $pk) {
+        ModelAndView mv = new ModelAndView("${m}/${f}_edit");
+        $class $f;
         if (id == null) {
-            ${config.funName} = new $class();
+            $f = new $class();
         } else {
-            ${config.funName} = $service.getById(id);
+            $f = $service.getById($pk);
         }
-        mv.addObject("editInfo", ${config.funName});
+        mv.addObject("editInfo", $f);
         return mv;
     }
     #end
 
     @GetMapping(value = "list/data")
-    public R listData($class ${config.funName}) {
-        Page<$class> page = $service.list$classPage(${config.funName});
+    public R listData($class $f) {
+        Page<$class> page = $service.list${class}Page($f);
         return R.ok(page);
     }
+    #foreach($h in $config.headButtons)
 
-    #foreach($headButton in $config.headButtons)
-    @RequiresPermissions("$headButton.perId")
-    @PostMapping(value = "$headButton.key")
-    #if($headButton.id == 1)
-    public R $headButton.key($class ${config.funName}) {
-        $service.save(${config.funName});
+    @RequiresPermissions("$h.perId")
+    @PostMapping(value = "$h.key")
+    #if($h.id == 1)
+    public R $h.key($class $f) {
+        $service.save($f);
         return R.ok();
+    }
+    #elseif($h.id == 2)
+    public R $h.key(@RequestParam("${pk}s") List<Long> ${pk}s}) {
+        $service.removeByIds(${pk}s);
+        return R.ok();
+    }
+    #else
+    public R $h.key() {
+        return R.ok("该功能未实现");
+    }
+    #end
+    #end
+    #foreach($r in $config.rowButtons)
+
+    @RequiresPermissions("$r.perId")
+    #if($r.id == 2)
+    @PostMapping(value = "$r.key")
+    public R $r.key($class $f) {
+        $service.updateById($f);
+        return R.ok();
+    }
+    #elseif($r.id == 3)
+    @PostMapping(value = "$r.key/{$pk}")
+    public R $r.key(@PathVariable Long $pk) {
+        $service.removeById($pk);
+        return R.ok();
+    }
+    #else
+    @PostMapping(value = "$r.key")
+    public R $r.key() {
+        return R.ok("该功能未实现");
     }
     #end
     #end
 
-    @RequiresPermissions("sys:user:edit")
-    @Transactional
-    @PostMapping(value = "edit")
-    public R edit(User user, @RequestParam("roleIds") List<Long> roleIds) {
-        user.setDeptId(user.getDeptId() == null ? 0 : user.getDeptId());
-        userService.updateById(user);
-        userRoleService.saveOrUpdateBatchUserRole(roleIds, user.getId());
-        return R.ok();
-    }
-
-    @RequiresPermissions("sys:user:del")
-    @PostMapping(value = "remove/{id}")
-    public R remove(@PathVariable Long id) {
-        userService.removeById(id);
-        return R.ok();
-    }
-
-    @RequiresPermissions("sys:user:del")
-    @PostMapping(value = "removeBatch")
-    public R removeBatch(@RequestParam("ids") List<Long> ids) {
-        userService.removeByIds(ids);
-        return R.ok();
-    }
-
-    @RequiresPermissions("sys:user:reset")
-    @PostMapping(value = "resetPwd")
-    public R resetPwd() {
-        return this.changePwd(null, null);
-    }
-
-    @PostMapping(value = "changePwd")
-    public R changePwd(String oldPassword, String password) {
-        if (StrUtil.isBlank(oldPassword) && StrUtil.isBlank(password)) {
-            password = CryptionKit.genUserPwd();
-        } else {
-            User user = userService.getById(ShiroKit.getUserId());
-            oldPassword = CryptionKit.genUserPwd(oldPassword);
-            if (user.getPassword().equals(oldPassword)) {
-                password = CryptionKit.genUserPwd(password);
-                if (user.getPassword().equals(password)) {
-                    return R.fail("新密码不能与旧密码相同");
-                }
-            } else {
-                return R.fail("旧密码不正确");
-            }
-        }
-        userService.update(new LambdaUpdateWrapper<User>()
-                .set(User::getPassword, password)
-                .eq(User::getId, ShiroKit.getUserId()));
-        return R.ok();
+    @GetMapping(value = "get/{$pk}")
+    public R get(@PathVariable Long $pk) {
+        return R.ok($service.getById($pk));
     }
 
 }

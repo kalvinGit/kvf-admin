@@ -5,6 +5,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 表格列配置
@@ -25,4 +26,5 @@ public class ColumnConfigDTO implements Serializable {
     private String isNullable;  // YES/NO
     private boolean sort;
     private boolean format;
+    private List<ColumnCommentValueRelationDTO> columnCommentValueRelations;    // 列值对应说明关系列表数据
 }

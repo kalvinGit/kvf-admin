@@ -30,7 +30,7 @@ public class $config.firstCapFunName extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     #foreach($column in $config.allColumns)
-    #if($column.columnNameCamelCase == $config.primaryKey)
+    #if($column.columnName == $config.primaryKey)
     /**
      * $column.comment
      */

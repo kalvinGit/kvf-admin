@@ -39,17 +39,22 @@ public class GenServiceImpl implements IGenService {
         String funName = StrUtil.toCamelCase(tableName.substring(tableName.indexOf("_") + 1));
         genConfig.setModuleName(moduleName).setFunName(funName).setFirstCapFunName(StrUtil.upperFirst(funName));
 
+        // 处理表列数据
         List<TableColumnDTO> tableColumnDTOS = tableService.listTableColumn(tableName);
         tableColumnDTOS = AuxiliaryKit.handleTableColumns(tableColumnDTOS);
+        AuxiliaryKit.handleAndSetAllColumnsValueRelations(tableColumnDTOS);
         genConfig.setAllColumns(tableColumnDTOS);
 
+        // 设置主键
         Optional<TableColumnDTO> tOptional = tableColumnDTOS
                 .stream().filter(tc -> tc.getColumnKey().equals("PRI")).findFirst();
         TableColumnDTO tableColumn = tOptional.get();
         genConfig.setPrimaryKey(tableColumn.getColumnName());
+        genConfig.setPkCamelCase(StrUtil.toCamelCase(tableColumn.getColumnName()));
 
         genConfig.setColumns(AuxiliaryKit.tableColumnsToColumnConfigs(tableColumnDTOS));
 
+        // 读取半设置按钮配置信息
         String buttonInfo = FileUtil.readString(
                 new File(ClassUtil.getClassPath() + ConfigConstant.BUTTON_JSON_REL_PATH), "UTF-8");
         JSONObject jsonObject = JSONUtil.parseObj(buttonInfo);

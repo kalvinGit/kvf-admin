@@ -22,7 +22,7 @@
         select <include refid="Base_Column_List" /> from $config.tableName
         <trim prefix="where" prefixOverrides="and">
             #foreach($column in $config.allColumns)
-            #if($column.coumnName != $config.primaryKey)
+            #if($column.columnName != $config.primaryKey)
             #set($valExp = ${config.funName} + '.' + $column.columnNameCamelCase)
             #if($column.dataType == 'varchar' || $column.dataType == 'char')
             <if test="$valExp != null and $valExp != ''">

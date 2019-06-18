@@ -48,8 +48,11 @@ public class AuxiliaryKit {
         return list;
     }
 
-    public static List<ColumnsValueRelationDTO> getColumnsValueRelations(List<ColumnConfigDTO> columns) {
-        List<ColumnsValueRelationDTO> columnsValueRelationsList = new ArrayList<>();    // 列备注的值对应说明关系列表
+    /**
+     * 处理并设置列备注的值对应说明关系
+     * @param columns 列数据
+     */
+    public static void handleAndSetColumnsValueRelations(List<ColumnConfigDTO> columns) {
         columns.forEach(column -> {
             if (column.isFormat()) {
                 List<ColumnCommentValueRelationDTO> columnValueRelations = AuxiliaryKit
@@ -57,10 +60,26 @@ public class AuxiliaryKit {
                 ColumnsValueRelationDTO columnsValueRelations = new ColumnsValueRelationDTO();
                 columnsValueRelations.setColumn(column.getName());
                 columnsValueRelations.setColumnCommentValueRelations(columnValueRelations);
-                columnsValueRelationsList.add(columnsValueRelations);
+                column.setColumnCommentValueRelations(columnValueRelations);
             }
         });
-        return columnsValueRelationsList;
+    }
+
+    /**
+     * 处理并设置所有列备注的值对应说明关系
+     * @param columns 列数据
+     */
+    public static void handleAndSetAllColumnsValueRelations(List<TableColumnDTO> columns) {
+        columns.forEach(column -> {
+            if (column.getDataType().equals("tinyint")) {
+                List<ColumnCommentValueRelationDTO> columnValueRelations = AuxiliaryKit
+                        .parseTableColumnCommentValueRelation(column.getComment());
+                ColumnsValueRelationDTO columnsValueRelations = new ColumnsValueRelationDTO();
+                columnsValueRelations.setColumn(column.getColumnNameCamelCase());
+                columnsValueRelations.setColumnCommentValueRelations(columnValueRelations);
+                column.setColumnCommentValueRelations(columnValueRelations);
+            }
+        });
     }
 
     public static List<TableColumnDTO> handleTableColumns(List<TableColumnDTO> tableColumns) {

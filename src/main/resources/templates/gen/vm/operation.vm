@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="comm/base::pagetitle"></title>
+    <link th:replace="comm/base::static"/>
+</head>
+<body>
+<div class="layui-form" style="padding: 20px 30px 0 0;">
+    #foreach($column in $config.allColumns)
+    #set($name = $column.columnNameCamelCase)
+    #if($column.dataType == 'timestamp' || $column.dataType == 'date')
+    <div class="layui-form-item">
+        <label class="layui-form-label">$column.columnComment</label>
+        <div class="layui-input-inline">
+            <input type="text" name="$name" id="$name" th:value="$#{editInfo.${name}}"#if($column.isNullable == 'YES') lay-verify="required"#end placeholder="请输入$column.columnComment" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    #elseif($column.dataType == 'tinyint')
+    <div class="layui-form-item">
+        <label class="layui-form-label">$column.columnComment</label>
+        <div class="layui-input-block">
+            #foreach($cvrl in $column.columnCommentValueRelations)
+            <input type="radio" name="$name" value="$cvrl.key" title="$cvrl.name" autocomplete="off" class="layui-input" th:checked="$#{editInfo.${name}==${cvrl.key}}">
+            #end
+        </div>
+    </div>
+    #else
+    <div class="layui-form-item">
+        <label class="layui-form-label">$column.columnComment</label>
+        <div class="layui-input-inline">
+            <input type="text" name="$name" th:value="$#{editInfo.${name}}"#if($column.isNullable == 'YES') lay-verify="required"#end placeholder="请输入$column.columnComment" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    #end
+    #end
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit="" lay-filter="kFormSubmit" id="kFormSubmit" value="确认添加">
+        <input type="text" name="id" th:value="$#{editInfo.${config.pkCamelCase}}" placeholder="保存ID" autocomplete="off" class="layui-input">
+    </div>
+</div>
+
+<script th:replace="comm/base::context"></script>
+<script th:replace="comm/base::mainjs"></script>
+<script>
+    layui.use(['form'], function () {
+        var $ = layui.$, form = layui.form;
+
+        #if($config.tableType == 'treegrid')
+        var parentId = kvfKit.getUrlParam('parentId');
+        #end
+
+        //监听提交
+        form.on('submit(kFormSubmit)', function(data){
+            var field = data.field; //获取提交的字段
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+
+            #if($config.tableType == 'treegrid')
+            field.parentId = parentId;
+            #end
+            var url = field.$config.pkCamelCase ? '$config.moduleName/$config.funName/edit' : '$config.moduleName/$config.funName/add'
+            //提交 Ajax 成功后，关闭当前弹层并重载表格
+            $.ajax({
+                type: req.type.post,
+                url: BASE_WEB + url,
+                data: field,
+                async: false,
+                success: function (r) {
+                    if (r.code === req.status.ok) {
+                        // 重载表格
+                        #if($config.tableType == 'table')
+                        parent.layui.table.reload('kContentTable');
+                        #else
+                        parent.$('#kTreeGrid').treegrid('reload', {$config.pkCamelCase: Number(parentId)});
+                        #end
+                        parent.layer.close(index); //再执行关闭
+                    } else {
+                        kvfKit.errorMsg(r.msg);
+                    }
+                }
+            });
+
+        });
+    })
+</script>
+</body>
+</html>

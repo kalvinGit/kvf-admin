@@ -61,25 +61,27 @@
 </script>
 
 <!--表格列格式化模板 start-->
-#foreach($columnValueRelations in $config.columnsValueRelations)
-<script type="text/html" id="${columnValueRelations.column}Tpl">
-    #if($columnValueRelations.columnCommentValueRelations.size() == 0)
-    <!--todo由于注释不统一规范，无法为你生成格式化代码，请自行处理-->
-    <span>{{d.$columnValueRelations.column}}</span>
-    #end
-    #foreach($columnValueRelation in $columnValueRelations.columnCommentValueRelations)
+#foreach($column in $config.columns)
+#if($column.columnCommentValueRelations != $null)
+<script type="text/html" id="${column.name}Tpl">
+#if($column.columnCommentValueRelations.size() == 0)
+<!--todo由于注释不统一规范，无法为你生成格式化代码，请自行处理-->
+<span>{{d.$column.name}}</span>
+#end
+#foreach($columnValueRelation in $column.columnCommentValueRelations)
     #if($foreach.count == 1)
-    {{#  if(d.$columnValueRelations.column == $columnValueRelation.key){ }}
+    {{#  if(d.$column.name == $columnValueRelation.key){ }}
     <span class="layui-badge layui-bg-blue">$columnValueRelation.name</span>
     #else
-    {{# } else if(d.$columnValueRelations.column == $columnValueRelation.key) { }}
+    {{# } else if(d.$column.name == $columnValueRelation.key) { }}
     <span class="layui-badge layui-bg-blue">$columnValueRelation.name</span>
     #end
-    #if($foreach.count == $columnValueRelations.columnCommentValueRelations.size())
+    #if($foreach.count == $column.columnCommentValueRelations.size())
     {{# } }}
     #end
-    #end
+#end
 </script>
+#end
 #end
 <!--表格列格式化模板 end-->
 
@@ -133,7 +135,7 @@
                     layer.confirm('确定删除吗？', function(index) {
                         var ids = [];
                         $.each(checkData, function(i, n){
-                            ids[i] = n.$config.primaryKey;
+                            ids[i] = n.$config.pkCamelCase;
                         });
 
                         //执行 Ajax 后重载
@@ -181,7 +183,7 @@
                 layer.open({
                     type: 2
                     ,title: '$rowButton.name'
-                    ,content: BASE_WEB + '$config.moduleName/$config.funName/edit?$config.primaryKey=' + data.$config.primaryKey
+                    ,content: BASE_WEB + '$config.moduleName/$config.funName/edit?$config.pkCamelCase=' + data.$config.primaryKey
                     ,maxmin: true
                     ,area: area   // 宽高
                     ,btn: ['确定', '取消']
@@ -196,7 +198,7 @@
                     //执行 Ajax 后重载
                     $.ajax({
                         type: req.type.post,
-                        url: BASE_WEB + '$config.moduleName/$config.funName/remove/' + data.$config.primaryKey,
+                        url: BASE_WEB + '$config.moduleName/$config.funName/remove/' + data.$config.pkCamelCase,
                         async: false,
                         success: function (r) {
                             if (r.code === req.status.ok) {

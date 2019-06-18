@@ -177,6 +177,7 @@
         var $headBtnBoxEl = $('#headBtnBox');
         var $rowBtnBoxEl = $('#rowBtnBox');
         var tableName = $('input[name="tableName"]').val();
+        log(decodeURI(kvfKit.getUrlParam('tableComment')));
         var tableComment = kvfKit.getUrlParam('tableComment');
         var moduleName = tableName.substring(0, tableName.indexOf('_'));
         var funName = kvfKit.underlineToHump(tableName.substring(tableName.indexOf('_') + 1));

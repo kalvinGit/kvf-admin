@@ -61,9 +61,17 @@ public class GenController extends BaseController {
         LOGGER.info("genConfig={}", genConfigVO);
         String tableType = genConfigVO.getTableType();
         String tplName = tableType.equals("treegrid") ? "treegrid.vm" : "table.vm";
-        genConfigVO.setColumnsValueRelations(AuxiliaryKit.getColumnsValueRelations(genConfigVO.getColumns()));
+//        genConfigVO.setColumnsValueRelations(AuxiliaryKit.handleAndSetColumnsValueRelations(genConfigVO.getColumns()));
 
+        // 处理表列值说明关系
+        AuxiliaryKit.handleAndSetColumnsValueRelations(genConfigVO.getColumns());
+        // 设置处理所有表列数据
+        List<TableColumnDTO> tableColumnDTOS = tableService.listTableColumn(genConfigVO.getTableName());
+        tableColumnDTOS = AuxiliaryKit.handleTableColumns(tableColumnDTOS);
+        AuxiliaryKit.handleAndSetAllColumnsValueRelations(tableColumnDTOS);
+        genConfigVO.setAllColumns(AuxiliaryKit.handleTableColumns(tableColumnDTOS));
         genConfigVO.setFirstCapFunName(StrUtil.upperFirst(genConfigVO.getFunName()));
+        genConfigVO.setPkCamelCase(StrUtil.toCamelCase(genConfigVO.getPrimaryKey()));
 
         VelocityContext ctx = VelocityKit.getContext();
         ctx.put("config", genConfigVO);
@@ -82,8 +90,12 @@ public class GenController extends BaseController {
         VelocityContext ctx = VelocityKit.getContext();
         ctx.put("config", config);
         Template t = VelocityKit.getTemplate(tplName);
+        Template t2 = VelocityKit.getTemplate("operation.vm");
         StringWriter sw = new StringWriter();
+        StringWriter sw2 = new StringWriter();
         t.merge(ctx, sw);
+        t2.merge(ctx, sw2);
+        LOGGER.info("e sw={}", sw2.toString());
         return R.ok(sw.toString());
     }
 

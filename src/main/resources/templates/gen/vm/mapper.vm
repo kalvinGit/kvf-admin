@@ -8,14 +8,14 @@ import java.util.List;
 
 /**
  * <p>
- * $config.tableName Mapper 接口
+ * $config.tableComment Mapper 接口
  * </p>
- * @since $date
+ * @since
  */
 public interface ${config.firstCapFunName}Mapper extends BaseMapper<$config.firstCapFunName> {
 
     /**
-     * 查询列表
+     * 查询列表(分页)
      * @param ${config.funName} 查询参数
      * @return list
      */

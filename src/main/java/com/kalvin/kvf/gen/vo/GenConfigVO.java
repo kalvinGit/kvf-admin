@@ -23,6 +23,7 @@ public class GenConfigVO implements Serializable {
     private String tableName;
     private String tableComment;
     private String primaryKey;  // 主键字段
+    private String pkCamelCase;  // 主键字段(驼峰)
     private String moduleName;   // 模块名称：如sys
     private String funName;     // 功能名称：如user
     private String firstCapFunName;     // 功能名称(首字母大写)：如User

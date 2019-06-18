@@ -22,6 +22,9 @@ public class ${config.firstCapFunName}ServiceImpl extends ServiceImpl<${config.f
     @Override
     public Page<${config.firstCapFunName}> listUserPage(${config.firstCapFunName} ${config.funName}) {
         Page<${config.firstCapFunName}> page = new Page<>(${config.funName}.getCurrent(), ${config.funName}.getSize());
+        #if($config.tableType == 'treegrid')
+        ${config.funName}.setParentId(dept.getId() == null ? 0L : dept.getId()); // treegrid默认传的id作为parentId
+        #end
         List<${config.firstCapFunName}> ${config.funName}s = baseMapper.select${config.firstCapFunName}List(${config.funName}, page);
         return page.setRecords(${config.funName}s);
     }

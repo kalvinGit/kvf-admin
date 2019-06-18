@@ -155,7 +155,7 @@
                 var idx = layer.open({
                     type: 2
                     ,title: '自义定生成设置'
-                    ,content: api.gen.customGenerateSetting + data.tableName + "?tableComment=" + data.tableComment
+                    ,content: api.gen.customGenerateSetting + data.tableName + "?tableComment=" + encodeURI(data.tableComment)
                     ,maxmin: true
                     ,area: area   // 宽高
                     ,btn: ['生成代码', '取消']

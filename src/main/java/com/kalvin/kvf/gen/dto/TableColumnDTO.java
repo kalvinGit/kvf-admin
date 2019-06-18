@@ -5,6 +5,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Accessors(chain = true)
@@ -22,5 +23,6 @@ public class TableColumnDTO implements Serializable {
     private String isNullable;  // YES/NO
     private String columnKey;   // PRI(主键)
     private String variableType;   // 成员变量类型
+    private List<ColumnCommentValueRelationDTO> columnCommentValueRelations;    // 列值对应说明关系列表数据
 
 }
