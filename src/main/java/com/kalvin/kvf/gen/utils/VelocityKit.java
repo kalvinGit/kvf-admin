@@ -1,5 +1,9 @@
 package com.kalvin.kvf.gen.utils;
 
+import cn.hutool.core.date.DateUtil;
+import com.kalvin.kvf.gen.comm.ConfigConstant;
+import com.kalvin.kvf.gen.comm.TemplateTypeEnum;
+import com.kalvin.kvf.gen.vo.GenConfigVO;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -41,7 +45,8 @@ public class VelocityKit {
     public static void toFile(String templateName, VelocityContext ctx, String destPath) {
         try {
             File file = new File(destPath);
-            if (file.getParentFile() != null && !file.getParentFile().exists()) {
+            File parentFile = file.getParentFile();
+            if (parentFile != null && (!parentFile.exists() || (parentFile.exists() && !parentFile.isDirectory()))) {
                 file.getParentFile().mkdirs();
             }
             Template template = VelocityKit.getTemplate(templateName);
@@ -50,6 +55,29 @@ public class VelocityKit {
             fw.flush();
         } catch (Exception e) {
             throw new RuntimeException("生成代码模板时出错：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 所有模板统一生成
+     * @param config 代码生成配置数据
+     */
+    public static void allToFile(GenConfigVO config) {
+        VelocityContext ctx = VelocityKit.getContext();
+        ctx.put("config", config);
+        ctx.put("pack", new ConfigConstant.PackageConfig());
+        ctx.put("createTime", DateUtil.now());
+        ctx.put("author", ConfigConstant.AUTHOR);
+        for (TemplateTypeEnum typeEnum : TemplateTypeEnum.values()) {
+            if ("TABLE".equals(typeEnum.getType()) || "TREE_GRID".equals(typeEnum.getType())) {
+                if (config.getTableType().equalsIgnoreCase(typeEnum.getType())) {
+                    VelocityKit.toFile(typeEnum.getName(), ctx,
+                            AuxiliaryKit.getGenerateCodePath(typeEnum, config.getModuleName(), config.getFunName()));
+                }
+            } else {
+                VelocityKit.toFile(typeEnum.getName(), ctx,
+                        AuxiliaryKit.getGenerateCodePath(typeEnum, config.getModuleName(), config.getFunName()));
+            }
         }
     }
 }

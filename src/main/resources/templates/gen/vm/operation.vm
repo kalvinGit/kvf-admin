@@ -9,11 +9,13 @@
 <div class="layui-form" style="padding: 20px 30px 0 0;">
     #foreach($column in $config.allColumns)
     #set($name = $column.columnNameCamelCase)
+    #set($thValue = '${editInfo.' + $name + '}')
+    #if($column.columnName != $config.primaryKey)
     #if($column.dataType == 'timestamp' || $column.dataType == 'date')
     <div class="layui-form-item">
         <label class="layui-form-label">$column.columnComment</label>
         <div class="layui-input-inline">
-            <input type="text" name="$name" id="$name" th:value="$#{editInfo.${name}}"#if($column.isNullable == 'YES') lay-verify="required"#end placeholder="请输入$column.columnComment" autocomplete="off" class="layui-input">
+            <input type="text" name="$name" id="$name" th:value="$thValue"#if($column.isNullable == 'YES') lay-verify="required"#end placeholder="请输入$column.columnComment" autocomplete="off" class="layui-input">
         </div>
     </div>
     #elseif($column.dataType == 'tinyint')
@@ -21,7 +23,8 @@
         <label class="layui-form-label">$column.columnComment</label>
         <div class="layui-input-block">
             #foreach($cvrl in $column.columnCommentValueRelations)
-            <input type="radio" name="$name" value="$cvrl.key" title="$cvrl.name" autocomplete="off" class="layui-input" th:checked="$#{editInfo.${name}==${cvrl.key}}">
+            #set($thChecked = '${editInfo.' + $name + '==' + $cvrl.key + '}')
+            <input type="radio" name="$name" value="$cvrl.key" title="$cvrl.name" autocomplete="off" class="layui-input" th:checked="$thChecked">
             #end
         </div>
     </div>
@@ -29,15 +32,17 @@
     <div class="layui-form-item">
         <label class="layui-form-label">$column.columnComment</label>
         <div class="layui-input-inline">
-            <input type="text" name="$name" th:value="$#{editInfo.${name}}"#if($column.isNullable == 'YES') lay-verify="required"#end placeholder="请输入$column.columnComment" autocomplete="off" class="layui-input">
+            <input type="text" name="$name" th:value="$thValue"#if($column.isNullable == 'YES') lay-verify="required"#end placeholder="请输入$column.columnComment" autocomplete="off" class="layui-input">
         </div>
     </div>
     #end
     #end
+    #end
 
+    #set($pkValue = '${editInfo.' + $config.pkCamelCase + '}')
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit="" lay-filter="kFormSubmit" id="kFormSubmit" value="确认添加">
-        <input type="text" name="id" th:value="$#{editInfo.${config.pkCamelCase}}" placeholder="保存ID" autocomplete="off" class="layui-input">
+        <input type="text" name="id" th:value="$pkValue" placeholder="保存ID" autocomplete="off" class="layui-input">
     </div>
 </div>
 
@@ -47,7 +52,7 @@
     layui.use(['form'], function () {
         var $ = layui.$, form = layui.form;
 
-        #if($config.tableType == 'treegrid')
+        #if($config.tableType == 'tree_grid')
         var parentId = kvfKit.getUrlParam('parentId');
         #end
 
@@ -56,7 +61,7 @@
             var field = data.field; //获取提交的字段
             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
 
-            #if($config.tableType == 'treegrid')
+            #if($config.tableType == 'tree_grid')
             field.parentId = parentId;
             #end
             var url = field.$config.pkCamelCase ? '$config.moduleName/$config.funName/edit' : '$config.moduleName/$config.funName/add'

@@ -1,12 +1,18 @@
-package com.kalvin.kvf.entity.$config.moduleName;
+#set($base = $pack.BASE_PACKAGE)
+#set($entityPK = $pack.ENTITY_PACKAGE)
+#set($mapperPK = $pack.MAPPER_PACKAGE)
+#set($servicePK = $pack.SERVICE_PACKAGE)
+#set($serviceImplPK = $pack.SERVICE_IMPL_PACKAGE)
+#set($controllerPK = $pack.CONTROLLER_PACKAGE)
+package ${base}.${entityPK}.${config.moduleName};
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.kalvin.kvf.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import ${base}.${entityPK}.BaseEntity;
 
 #foreach($column in $config.allColumns)
 #if($column.variableType == 'Date')
@@ -19,7 +25,10 @@ import java.util.Date;
  * <p>
  * $config.tableComment
  * </p>
- * @since $date.now()
+ #if($author)
+ * @author $author
+ #end
+ * @since $createTime
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

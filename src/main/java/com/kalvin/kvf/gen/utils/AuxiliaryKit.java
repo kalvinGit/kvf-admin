@@ -1,6 +1,8 @@
 package com.kalvin.kvf.gen.utils;
 
 import cn.hutool.core.util.StrUtil;
+import com.kalvin.kvf.gen.comm.ConfigConstant;
+import com.kalvin.kvf.gen.comm.TemplateTypeEnum;
 import com.kalvin.kvf.gen.dto.ColumnCommentValueRelationDTO;
 import com.kalvin.kvf.gen.dto.ColumnConfigDTO;
 import com.kalvin.kvf.gen.dto.ColumnsValueRelationDTO;
@@ -96,15 +98,17 @@ public class AuxiliaryKit {
     public static List<ColumnConfigDTO> tableColumnsToColumnConfigs(List<TableColumnDTO> tableColumns) {
         List<ColumnConfigDTO> columnConfigs = new ArrayList<>();
         tableColumns.forEach(tc -> {
-            ColumnConfigDTO columnConfig = new ColumnConfigDTO();
-            columnConfig.setName(tc.getColumnName());
-            columnConfig.setComment(tc.getColumnComment());
-            columnConfig.set_comment(tc.getComment());
-            columnConfig.setDataType(tc.getDataType());
-            columnConfig.setIsNullable(tc.getIsNullable());
-            columnConfig.setSort(false);
-            columnConfig.setFormat(tc.getColumnKey().equals("PRI"));
-            columnConfigs.add(columnConfig);
+            if (!"PRI".equals(tc.getColumnKey())) {
+                ColumnConfigDTO columnConfig = new ColumnConfigDTO();
+                columnConfig.setName(tc.getColumnNameCamelCase());
+                columnConfig.setComment(tc.getColumnComment());
+                columnConfig.set_comment(tc.getComment());
+                columnConfig.setDataType(tc.getDataType());
+                columnConfig.setIsNullable(tc.getIsNullable());
+                columnConfig.setSort(false);
+                columnConfig.setFormat(tc.getDataType().equals("tinyint"));
+                columnConfigs.add(columnConfig);
+            }
         });
         return columnConfigs;
     }
@@ -122,6 +126,60 @@ public class AuxiliaryKit {
         } else {
             throw new RuntimeException("字段类型转换失败，不支持的类型：" + dataType);
         }
+    }
+
+    public static String getGenerateCodePath(TemplateTypeEnum typeEnum, String moduleName, String funName) {
+        ConfigConstant.PackageConfig packageConfig = new ConfigConstant.PackageConfig();
+        String pack = "", fileName = "", path = "";
+        switch (typeEnum.getType()) {
+            case "ENTITY":
+                pack = packageConfig.ENTITY_PACKAGE;
+                fileName = StrUtil.upperFirst(funName) + ".java";
+                break;
+            case "MAPPER":
+                pack = packageConfig.MAPPER_PACKAGE;
+                fileName = StrUtil.upperFirst(funName) + "Mapper.java";
+                break;
+            case "SERVICE":
+                pack = packageConfig.SERVICE_PACKAGE;
+                fileName = "I" + StrUtil.upperFirst(funName) + "Service.java";
+                break;
+            case "SERVICE_IMPL":
+                pack = packageConfig.SERVICE_IMPL_PACKAGE;
+                fileName = StrUtil.upperFirst(funName) + "ServiceImpl.java";
+                break;
+            case "CONTROLLER":
+                pack = packageConfig.CONTROLLER_PACKAGE;
+                fileName = StrUtil.upperFirst(funName) + "Controller.java";
+                break;
+            case "XML":
+                pack = packageConfig.XML_PACKAGE;
+                fileName = StrUtil.upperFirst(funName) + "Mapper.xml";
+                break;
+            default:
+                if (typeEnum.getType().equals("TABLE") || typeEnum.getType().equals("TREE_GRID")) {
+                    path = "templates/" + moduleName;
+                    fileName = funName + "_list.html";
+                } else if (typeEnum.getType().equals("OPERATION")) {
+                    path = "templates/" + moduleName;
+                    fileName = funName + "_edit.html";
+                }
+        }
+        if (!"".equals(pack)) {
+            pack = packageConfig.BASE_PACKAGE + "." + pack;
+            path = StrUtil.replace(pack, ".", "/") + "/" + moduleName;
+        }
+
+        if ("".equals(path)) {
+            throw new RuntimeException("无法获取代码生成路径，请检查模板是否存在");
+        }
+
+        if (ConfigConstant.CODE_GEN_PATH.endsWith("/") || ConfigConstant.CODE_GEN_PATH.endsWith("\\")) {
+            path = ConfigConstant.CODE_GEN_PATH + path;
+        } else {
+            path = ConfigConstant.CODE_GEN_PATH + "/" + path;
+        } 
+        return path + "/" + fileName;
     }
 
 }

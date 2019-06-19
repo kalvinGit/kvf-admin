@@ -1,15 +1,23 @@
-package com.kalvin.kvf.service.${config.moduleName};
+#set($base = $pack.BASE_PACKAGE)
+#set($entityPK = $pack.ENTITY_PACKAGE)
+#set($mapperPK = $pack.MAPPER_PACKAGE)
+#set($servicePK = $pack.SERVICE_PACKAGE)
+#set($serviceImplPK = $pack.SERVICE_IMPL_PACKAGE)
+#set($controllerPK = $pack.CONTROLLER_PACKAGE)
+package ${base}.${servicePK}.${config.moduleName};
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.kalvin.kvf.entity.${config.moduleName}.${config.firstCapFunName};
+import ${base}.${entityPK}.${config.moduleName}.${config.firstCapFunName};
 
 /**
  * <p>
  * $config.tableComment 服务类
  * </p>
- *
- * @since $date
+ #if($author)
+ * @author $author
+ #end
+ * @since $createTime
  */
 public interface I${config.firstCapFunName}Service extends IService<$config.firstCapFunName> {
 

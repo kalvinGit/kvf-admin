@@ -15,7 +15,7 @@
                 <label class="layui-form-label">表格类型</label>
                 <div class="layui-input-block">
                     <input type="radio" name="type" value="table" title="普通表格(layui table)" autocomplete="off" class="layui-input" checked>
-                    <input type="radio" name="type" value="treegrid" title="树形表格(treegrid)" autocomplete="off" class="layui-input">
+                    <input type="radio" name="type" value="tree_grid" title="树形表格(treegrid)" autocomplete="off" class="layui-input">
                 </div>
             </div>
         </div>
@@ -177,7 +177,6 @@
         var $headBtnBoxEl = $('#headBtnBox');
         var $rowBtnBoxEl = $('#rowBtnBox');
         var tableName = $('input[name="tableName"]').val();
-        log(decodeURI(kvfKit.getUrlParam('tableComment')));
         var tableComment = kvfKit.getUrlParam('tableComment');
         var moduleName = tableName.substring(0, tableName.indexOf('_'));
         var funName = kvfKit.underlineToHump(tableName.substring(tableName.indexOf('_') + 1));
@@ -354,7 +353,7 @@
             var arr = [];
             var $columnSetItemEl = $('#columnSetBox').find('.layui-form-item');
             $.each($columnSetItemEl, function (i, item) {
-                var id = $(item).data('id');
+                var id = kvfKit.underlineToHump($(item).data('id'));
                 var comment = $(item).data('comment');
                 var _comment = $(item).data('_comment');
                 var dataType = $(item).data('type');

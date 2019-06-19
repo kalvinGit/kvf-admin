@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.kalvin.kvf.gen.dto.ColumnConfigDTO;
 import com.kalvin.kvf.gen.utils.AuxiliaryKit;
 import com.kalvin.kvf.gen.comm.ConfigConstant;
 import com.kalvin.kvf.gen.dto.ButtonConfigDTO;
@@ -52,7 +53,10 @@ public class GenServiceImpl implements IGenService {
         genConfig.setPrimaryKey(tableColumn.getColumnName());
         genConfig.setPkCamelCase(StrUtil.toCamelCase(tableColumn.getColumnName()));
 
-        genConfig.setColumns(AuxiliaryKit.tableColumnsToColumnConfigs(tableColumnDTOS));
+        // 处理表列值说明关系
+        List<ColumnConfigDTO> columnConfigDTOS = AuxiliaryKit.tableColumnsToColumnConfigs(tableColumnDTOS);
+        AuxiliaryKit.handleAndSetColumnsValueRelations(columnConfigDTOS);
+        genConfig.setColumns(columnConfigDTOS);
 
         // 读取半设置按钮配置信息
         String buttonInfo = FileUtil.readString(

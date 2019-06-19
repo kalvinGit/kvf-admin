@@ -1,9 +1,15 @@
+#set($base = $pack.BASE_PACKAGE)
+#set($entityPK = $pack.ENTITY_PACKAGE)
+#set($mapperPK = $pack.MAPPER_PACKAGE)
+#set($servicePK = $pack.SERVICE_PACKAGE)
+#set($serviceImplPK = $pack.SERVICE_IMPL_PACKAGE)
+#set($controllerPK = $pack.CONTROLLER_PACKAGE)
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kalvin.kvf.mapper.${config.moduleName}.${config.firstCapFunName}Mapper">
+<mapper namespace="${base}.${mapperPK}.${config.moduleName}.${config.firstCapFunName}Mapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.kalvin.kvf.entity.${config.moduleName}.${config.firstCapFunName}">
+    <resultMap id="BaseResultMap" type="${base}.${entityPK}.${config.moduleName}.${config.firstCapFunName}">
         #foreach($column in $config.allColumns)
         #if($column.columnName == $config.primaryKey)
         <id column="$column.columnName" property="$column.columnNameCamelCase" />
@@ -15,10 +21,11 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        #foreach($column in $config.allColumns) #if($foreach.count > 1),#end $column.columnName #end
+        #foreach($column in $config.allColumns)#if($foreach.count > 1),#end#if($foreach.count == 1)      #end $column.columnName#end
+
     </sql>
 
-    <select id="select${config.firstCapFunName}List" resultType="com.kalvin.kvf.entity.${config.moduleName}.${config.firstCapFunName}">
+    <select id="select${config.firstCapFunName}List" resultType="${base}.${entityPK}.${config.moduleName}.${config.firstCapFunName}">
         select <include refid="Base_Column_List" /> from $config.tableName
         <trim prefix="where" prefixOverrides="and">
             #foreach($column in $config.allColumns)

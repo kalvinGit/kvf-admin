@@ -1,7 +1,10 @@
 package com.kalvin.kvf.gen.controller;
 
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import com.kalvin.kvf.gen.comm.ConfigConstant;
+import com.kalvin.kvf.gen.comm.TemplateTypeEnum;
 import com.kalvin.kvf.gen.utils.AuxiliaryKit;
 import com.kalvin.kvf.controller.BaseController;
 import com.kalvin.kvf.dto.R;
@@ -60,8 +63,7 @@ public class GenController extends BaseController {
     public R customGenerateCode(@RequestBody GenConfigVO genConfigVO) {
         LOGGER.info("genConfig={}", genConfigVO);
         String tableType = genConfigVO.getTableType();
-        String tplName = tableType.equals("treegrid") ? "treegrid.vm" : "table.vm";
-//        genConfigVO.setColumnsValueRelations(AuxiliaryKit.handleAndSetColumnsValueRelations(genConfigVO.getColumns()));
+        String tableTplName = tableType.equals("tree_grid") ? "treegrid.vm" : "table.vm";
 
         // 处理表列值说明关系
         AuxiliaryKit.handleAndSetColumnsValueRelations(genConfigVO.getColumns());
@@ -75,27 +77,29 @@ public class GenController extends BaseController {
 
         VelocityContext ctx = VelocityKit.getContext();
         ctx.put("config", genConfigVO);
-        Template t = VelocityKit.getTemplate(tplName);
-
+        Template t = VelocityKit.getTemplate(tableTplName);
         StringWriter sw = new StringWriter();
         t.merge(ctx, sw);
 
+        // 生成所有模板代码
+        VelocityKit.allToFile(genConfigVO);
         return R.ok(sw.toString());
     }
 
     @PostMapping(value = "quickly/generate/code")
     public R quicklyGenerateCode(String tableName, String tableType, String tableComment) {
-        String tplName = tableType.equals("treegrid") ? "treegrid.vm" : "table.vm";
+        String tableTplName = tableType.equals("tree_grid") ? "treegrid.vm" : "table.vm";
         GenConfigVO config = genService.init(tableName, tableType, tableComment);
         VelocityContext ctx = VelocityKit.getContext();
         ctx.put("config", config);
-        Template t = VelocityKit.getTemplate(tplName);
-        Template t2 = VelocityKit.getTemplate("operation.vm");
+        Template t = VelocityKit.getTemplate(tableTplName);
+//        String destPath = AuxiliaryKit.getGenerateCodePath(TemplateTypeEnum.ENTITY, config.getModuleName(), config.getFunName());
+//        LOGGER.info("destPath={}", destPath);
         StringWriter sw = new StringWriter();
-        StringWriter sw2 = new StringWriter();
         t.merge(ctx, sw);
-        t2.merge(ctx, sw2);
-        LOGGER.info("e sw={}", sw2.toString());
+
+        // 生成所有模板代码
+        VelocityKit.allToFile(config);
         return R.ok(sw.toString());
     }
 

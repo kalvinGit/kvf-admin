@@ -46,7 +46,7 @@
             <label class="layui-form-label">表格类型</label>
             <div class="layui-input-block">
                 <input type="radio" name="tableType" value="table" title="普通表格(layui table)" autocomplete="off" class="layui-input" checked>
-                <input type="radio" name="tableType" value="treegrid" title="树形表格(treegrid)" autocomplete="off" class="layui-input">
+                <input type="radio" name="tableType" value="tree_grid" title="树形表格(treegrid)" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item layui-hide">
@@ -155,7 +155,7 @@
                 var idx = layer.open({
                     type: 2
                     ,title: '自义定生成设置'
-                    ,content: api.gen.customGenerateSetting + data.tableName + "?tableComment=" + encodeURI(data.tableComment)
+                    ,content: api.gen.customGenerateSetting + data.tableName + "?tableComment=" + data.tableComment
                     ,maxmin: true
                     ,area: area   // 宽高
                     ,btn: ['生成代码', '取消']

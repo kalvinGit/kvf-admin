@@ -1,22 +1,28 @@
+#set($base = $pack.BASE_PACKAGE)
+#set($entityPK = $pack.ENTITY_PACKAGE)
+#set($mapperPK = $pack.MAPPER_PACKAGE)
+#set($servicePK = $pack.SERVICE_PACKAGE)
+#set($serviceImplPK = $pack.SERVICE_IMPL_PACKAGE)
+#set($controllerPK = $pack.CONTROLLER_PACKAGE)
 #set($m = ${config.moduleName})
 #set($f = ${config.funName})
 #set($pk = ${config.pkCamelCase})
 #set($service = $f + 'Service')
 #set($class = ${config.firstCapFunName})
-package com.kalvin.kvf.controller.$m;
+package ${base}.${controllerPK}.$m;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.kalvin.kvf.controller.BaseController;
-import com.kalvin.kvf.dto.R;
-import com.kalvin.kvf.entity.$m.$class;
-import com.kalvin.kvf.service.$m.I${class}Service;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import ${base}.${controllerPK}.BaseController;
+import ${base}.dto.R;
+import ${base}.${entityPK}.$m.$class;
+import ${base}.${servicePK}.$m.I${class}Service;
 
 import java.util.List;
 
@@ -25,7 +31,10 @@ import java.util.List;
  * <p>
  * $config.tableComment 前端控制器
  * </p>
- * @since $date
+ #if($author)
+ * @author $author
+ #end
+ * @since $createTime
  */
 @RestController
 @RequestMapping("$m/$f")
@@ -59,7 +68,7 @@ public class ${class}Controller extends BaseController {
         if (id == null) {
             $f = new $class();
         } else {
-            $f = $service.getById($pk);
+            $f = ${service}.getById($pk);
         }
         mv.addObject("editInfo", $f);
         return mv;
@@ -68,7 +77,7 @@ public class ${class}Controller extends BaseController {
 
     @GetMapping(value = "list/data")
     public R listData($class $f) {
-        Page<$class> page = $service.list${class}Page($f);
+        Page<$class> page = ${service}.list${class}Page($f);
         return R.ok(page);
     }
     #foreach($h in $config.headButtons)
@@ -76,17 +85,17 @@ public class ${class}Controller extends BaseController {
     @RequiresPermissions("$h.perId")
     @PostMapping(value = "$h.key")
     #if($h.id == 1)
-    public R $h.key($class $f) {
-        $service.save($f);
+    public R ${h.key}($class $f) {
+        ${service}.save($f);
         return R.ok();
     }
     #elseif($h.id == 2)
-    public R $h.key(@RequestParam("${pk}s") List<Long> ${pk}s}) {
-        $service.removeByIds(${pk}s);
+    public R ${h.key}(@RequestParam("${pk}s") List<Long> ${pk}s) {
+        ${service}.removeByIds(${pk}s);
         return R.ok();
     }
     #else
-    public R $h.key() {
+    public R ${h.key}() {
         return R.ok("该功能未实现");
     }
     #end
@@ -96,19 +105,19 @@ public class ${class}Controller extends BaseController {
     @RequiresPermissions("$r.perId")
     #if($r.id == 2)
     @PostMapping(value = "$r.key")
-    public R $r.key($class $f) {
-        $service.updateById($f);
+    public R ${r.key}($class $f) {
+        ${service}.updateById($f);
         return R.ok();
     }
     #elseif($r.id == 3)
     @PostMapping(value = "$r.key/{$pk}")
-    public R $r.key(@PathVariable Long $pk) {
-        $service.removeById($pk);
+    public R ${r.key}(@PathVariable Long $pk) {
+        ${service}.removeById($pk);
         return R.ok();
     }
     #else
     @PostMapping(value = "$r.key")
-    public R $r.key() {
+    public R ${r.key}() {
         return R.ok("该功能未实现");
     }
     #end
@@ -116,7 +125,7 @@ public class ${class}Controller extends BaseController {
 
     @GetMapping(value = "get/{$pk}")
     public R get(@PathVariable Long $pk) {
-        return R.ok($service.getById($pk));
+        return R.ok(${service}.getById($pk));
     }
 
 }

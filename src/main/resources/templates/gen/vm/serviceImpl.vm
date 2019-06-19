@@ -1,11 +1,17 @@
-package com.kalvin.kvf.service.${config.moduleName};
+#set($base = $pack.BASE_PACKAGE)
+#set($entityPK = $pack.ENTITY_PACKAGE)
+#set($mapperPK = $pack.MAPPER_PACKAGE)
+#set($servicePK = $pack.SERVICE_PACKAGE)
+#set($serviceImplPK = $pack.SERVICE_IMPL_PACKAGE)
+#set($controllerPK = $pack.CONTROLLER_PACKAGE)
+package ${base}.${serviceImplPK}.${config.moduleName};
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.kalvin.kvf.entity.${config.moduleName}.${config.firstCapFunName};
-import com.kalvin.kvf.mapper.${config.moduleName}.${config.firstCapFunName}Mapper;
 import org.springframework.stereotype.Service;
+import ${base}.${entityPK}.${config.moduleName}.${config.firstCapFunName};
+import ${base}.${mapperPK}.${config.moduleName}.${config.firstCapFunName}Mapper;
 
 import java.util.List;
 
@@ -13,8 +19,10 @@ import java.util.List;
  * <p>
  * $config.tableComment 服务实现类
  * </p>
- *
- * @since $date
+ #if($author)
+ * @author $author
+ #end
+ * @since $createTime
  */
 @Service
 public class ${config.firstCapFunName}ServiceImpl extends ServiceImpl<${config.firstCapFunName}Mapper, ${config.firstCapFunName}> implements I${config.firstCapFunName}Service {
@@ -22,8 +30,8 @@ public class ${config.firstCapFunName}ServiceImpl extends ServiceImpl<${config.f
     @Override
     public Page<${config.firstCapFunName}> listUserPage(${config.firstCapFunName} ${config.funName}) {
         Page<${config.firstCapFunName}> page = new Page<>(${config.funName}.getCurrent(), ${config.funName}.getSize());
-        #if($config.tableType == 'treegrid')
-        ${config.funName}.setParentId(dept.getId() == null ? 0L : dept.getId()); // treegrid默认传的id作为parentId
+        #if($config.tableType == 'tree_grid')
+        ${config.funName}.setParentId(${config.funName}.get${config.pkCamelCase}() == null ? 0 : ${config.funName}.get${config.pkCamelCase}()); // treegrid默认传的id作为parentId
         #end
         List<${config.firstCapFunName}> ${config.funName}s = baseMapper.select${config.firstCapFunName}List(${config.funName}, page);
         return page.setRecords(${config.funName}s);

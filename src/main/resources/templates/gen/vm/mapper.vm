@@ -1,8 +1,14 @@
-package com.kalvin.kvf.mapper.$config.moduleName;
+#set($base = $pack.BASE_PACKAGE)
+#set($entityPK = $pack.ENTITY_PACKAGE)
+#set($mapperPK = $pack.MAPPER_PACKAGE)
+#set($servicePK = $pack.SERVICE_PACKAGE)
+#set($serviceImplPK = $pack.SERVICE_IMPL_PACKAGE)
+#set($controllerPK = $pack.CONTROLLER_PACKAGE)
+package ${base}.${config.moduleName};
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.kalvin.kvf.entity.sys.$config.firstCapFunName;
+import ${base}.${entityPK}.${config.moduleName}.${config.firstCapFunName};
 
 import java.util.List;
 
@@ -10,7 +16,10 @@ import java.util.List;
  * <p>
  * $config.tableComment Mapper 接口
  * </p>
- * @since
+ #if($author)
+ * @author $author
+ #end
+ * @since $createTime
  */
 public interface ${config.firstCapFunName}Mapper extends BaseMapper<$config.firstCapFunName> {
 
