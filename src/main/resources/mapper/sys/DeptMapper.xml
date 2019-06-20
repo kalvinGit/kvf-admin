@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kalvin.kvf.mapper.sys.DeptMapper">
+<mapper namespace="com.kalvin.kvf.modules.sys.mapper.DeptMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.kalvin.kvf.entity.sys.Dept">
+    <resultMap id="BaseResultMap" type="com.kalvin.kvf.modules.sys.entity.Dept">
         <id column="id" property="id" />
         <result column="parent_id" property="parentId" />
         <result column="name" property="name" />
@@ -21,7 +21,7 @@
         id, parent_id, name, type, area_id, sort, status, update_time, create_by, create_time
     </sql>
 
-    <select id="selectDeptList" resultType="com.kalvin.kvf.entity.sys.Dept">
+    <select id="selectDeptList" resultType="com.kalvin.kvf.modules.sys.entity.Dept">
         select <include refid="Base_Column_List" /> from sys_dept
         <trim prefix="where" prefixOverrides="and">
             <if test="dept.parentId != null">

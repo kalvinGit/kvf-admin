@@ -19,7 +19,7 @@ import javax.sql.DataSource;
  * @Date 2019年04月08日 16:47
  */
 @Configuration
-@MapperScan("com.kalvin.kvf.mapper.*")
+@MapperScan("com.kalvin.kvf.modules.*.mapper")
 @EnableTransactionManagement
 public class MybatisPlusConfig {
 

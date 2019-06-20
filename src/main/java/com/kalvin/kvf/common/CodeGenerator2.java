@@ -122,7 +122,7 @@ public class CodeGenerator2 {
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
-        strategy.setSuperEntityClass("com.kalvin.kvf.entity.BaseEntity");
+        strategy.setSuperEntityClass("com.kalvin.kvf.common.entity.BaseEntity");
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
         strategy.setSuperControllerClass("com.kalvin.kvf.common.controller.BaseController");

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kalvin.kvf.mapper.sys.UserMapper">
+<mapper namespace="com.kalvin.kvf.modules.sys.mapper.UserMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.kalvin.kvf.entity.sys.User">
+    <resultMap id="BaseResultMap" type="com.kalvin.kvf.modules.sys.entity.User">
         <id column="id" property="id" />
         <result column="dept_id" property="deptId" />
         <result column="username" property="username" />
@@ -28,7 +28,7 @@
         id, dept_id, username, password, realname, sex, phone, tel, email, avatar, job_title, status, sort, del_flag, create_by, update_time, create_time
     </sql>
 
-    <select id="selectUserList" resultType="com.kalvin.kvf.entity.sys.User">
+    <select id="selectUserList" resultType="com.kalvin.kvf.modules.sys.entity.User">
         select <include refid="Base_Column_List" /> from sys_user
         <trim prefix="where" prefixOverrides="and">
             <if test="queryVO.username != null and queryVO.username != ''">

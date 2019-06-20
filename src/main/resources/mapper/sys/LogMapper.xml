@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kalvin.kvf.mapper.sys.LogMapper">
+<mapper namespace="com.kalvin.kvf.modules.sys.mapper.LogMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.kalvin.kvf.entity.sys.Log">
+    <resultMap id="BaseResultMap" type="com.kalvin.kvf.modules.sys.entity.Log">
         <id column="id" property="id" />
         <result column="user_id" property="userId" />
         <result column="username" property="username" />
@@ -21,7 +21,7 @@
         id, user_id, username, operation, forward_action, ip, browser, os, time, create_time
     </sql>
 
-    <select id="selectLogList" resultType="com.kalvin.kvf.entity.sys.Log">
+    <select id="selectLogList" resultType="com.kalvin.kvf.modules.sys.entity.Log">
         select <include refid="Base_Column_List" /> from sys_log
         <trim prefix="where" prefixOverrides="and">
             <if test="log.username != null and log.username != ''">

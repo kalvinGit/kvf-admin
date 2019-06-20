@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kalvin.kvf.mapper.sys.RoleTreeMapper">
+<mapper namespace="com.kalvin.kvf.modules.sys.mapper.RoleTreeMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.kalvin.kvf.entity.sys.RoleTree">
+    <resultMap id="BaseResultMap" type="com.kalvin.kvf.modules.sys.entity.RoleTree">
         <id column="id" property="id" />
         <result column="parent_id" property="parentId" />
         <result column="name" property="name" />
@@ -15,7 +15,7 @@
         id, parent_id, name, sort
     </sql>
 
-    <select id="selectRoleTreeList" resultType="com.kalvin.kvf.entity.sys.RoleTree">
+    <select id="selectRoleTreeList" resultType="com.kalvin.kvf.modules.sys.entity.RoleTree">
         select <include refid="Base_Column_List" /> from sys_role_tree
         <trim prefix="where" prefixOverrides="and">
             <if test="roleTree.parentId != null">
