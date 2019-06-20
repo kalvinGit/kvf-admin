@@ -9,7 +9,7 @@ kvf-admin
 │ pom.xml maven依赖管理pom文件
 │  
 ├─sql
-│      kvf_sys.sql  项目初始化数据表及基础数据
+│      kvf_sys.sql  项目初始化数据表及基础数据sql脚本
 │      
 └─src
     ├─main
