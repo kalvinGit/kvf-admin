@@ -4,14 +4,14 @@
 #set($servicePK = $pack.SERVICE_PACKAGE)
 #set($serviceImplPK = $pack.SERVICE_IMPL_PACKAGE)
 #set($controllerPK = $pack.CONTROLLER_PACKAGE)
-package ${base}.${serviceImplPK}.${config.moduleName};
+package ${base}.modules.${config.moduleName}.${serviceImplPK};
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
-import ${base}.${entityPK}.${config.moduleName}.${config.firstCapFunName};
-import ${base}.${mapperPK}.${config.moduleName}.${config.firstCapFunName}Mapper;
+import ${base}.modules.${config.moduleName}.${entityPK}.${config.firstCapFunName};
+import ${base}.modules.${config.moduleName}.${mapperPK}.${config.firstCapFunName}Mapper;
 
 import java.util.List;
 

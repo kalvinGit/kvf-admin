@@ -93,39 +93,18 @@
 
         var area = ['449px', '730px'];
 
+        var cds = [];
         // 监听表格头部事件
         table.on('toolbar(' + tableId + ')', function(obj){
             var checkStatus = table.checkStatus(obj.config.id);
             var checkData = checkStatus.data; // 得到选中的数据
-            switch(obj.event) {
-                case 'batchGen':
-                    if(checkData.length === 0){
-                        return kvfKit.warningMsg('请选择数据');
-                    }
-                    layer.confirm('确定删除吗？', function(index) {
 
-                        var ids = [];
-                        $.each(checkData, function(i, n){
-                            ids[i] = n.id;
-                        });
-
-                        //执行 Ajax 后重载
-                        $.ajax({
-                            type: req.type.post,
-                            url: api.sys.userRmBatch,
-                            data: {ids: ids.toString()},
-                            success: function (r) {
-                                if (r.code === req.status.ok) {
-                                    table.reload(tableId);
-                                    kvfKit.sucessMsg('已删除');
-                                } else {
-                                    kvfKit.errorMsg(r.msg);
-                                }
-                            }
-                        });
-
-                    });
-                    break;
+            if (checkData.length === 0) {
+                return kvfKit.warningMsg('请选择要生成代码的表数据');
+            }
+            if (obj.event === 'batchGen') {
+                cds = checkData;
+                tOpenId = choiceTpl();
             }
         });
 
@@ -139,17 +118,7 @@
             if (layEvent === 'fastGen') {
                 tableName = data.tableName;
                 tableComment = data.tableComment;
-                tOpenId = layer.open({
-                    type: 1
-                    ,title: '选择模板'
-                    ,content: $('#tableTypeTpl')
-                    ,maxmin: true
-                    ,area: ['553px', '176px']   // 宽高
-                    ,btn: ['确定', '取消']
-                    ,yes: function(index, layero) {
-                        $('#kTableTypeFormSubmit').click();
-                    }
-                });
+                tOpenId = choiceTpl();
             }
             if (layEvent === 'customGen') {
                 var idx = layer.open({
@@ -170,27 +139,48 @@
 
         });
 
+        function choiceTpl() {
+            return layer.open({
+                type: 1
+                , title: '选择模板'
+                , content: $('#tableTypeTpl')
+                , maxmin: true
+                , area: ['553px', '176px']   // 宽高
+                , btn: ['确定', '取消']
+                , yes: function (index, layero) {
+                    $('#kTableTypeFormSubmit').click();
+                }
+            });
+        }
+
         form.on('submit(kTableTypeFormSubmit)', function (obj) {
             var field = obj.field;
-            field.tableName = tableName;
-            field.tableComment = tableComment;
-            log('field=', field);
+            var url, data, contentType;
+            if (cds.length === 0) {
+                data = {};
+                data.tableType = field.tableType;
+                data.tableName = tableName;
+                data.tableComment = tableComment;
+                url = api.gen.quicklyGenerateCode;
+                contentType = 'application/x-www-form-urlencoded;charset=utf-8';
+            } else {
+                data = cds;
+                $.each(data, function (i, item) {
+                    item.tableType = field.tableType;
+                });
+                data = JSON.stringify(data);
+                url = api.gen.quicklyGenerateCodeBatch;
+                contentType = 'application/json';
+            }
+
             $.ajax({
                 type: req.type.post,
-                url: api.gen.quicklyGenerateCode,
-                data: field,
-                // async: false,
+                url: url,
+                data: data,
+                contentType: contentType,
                 success: function (r) {
                     if (r.code === req.status.ok) {
                         kvfKit.sucessMsg('代码生成成功');
-                        log('quickly=', r.data);
-                        /*var oidx = layer.open({
-                            type: 1
-                            ,title: '页面预览'
-                            ,content: r.data
-                            ,maxmin: false
-                        });
-                        layer.full(oidx);*/
                     } else {
                         kvfKit.errorMsg(r.msg);
                     }

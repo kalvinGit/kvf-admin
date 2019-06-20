@@ -4,11 +4,11 @@
 #set($servicePK = $pack.SERVICE_PACKAGE)
 #set($serviceImplPK = $pack.SERVICE_IMPL_PACKAGE)
 #set($controllerPK = $pack.CONTROLLER_PACKAGE)
-package ${base}.${servicePK}.${config.moduleName};
+package ${base}.modules.${config.moduleName}.${servicePK};
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import ${base}.${entityPK}.${config.moduleName}.${config.firstCapFunName};
+import ${base}.modules.${config.moduleName}.${entityPK}.${config.firstCapFunName};
 
 /**
  * <p>

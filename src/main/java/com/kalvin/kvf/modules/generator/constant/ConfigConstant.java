@@ -8,7 +8,7 @@ import lombok.Data;
 public class ConfigConstant {
 
     public final static String CODE_GEN_PATH = "D://genCode";  //  代码生成的路径目录，可根据实际情况修改
-    public final static String BUTTON_JSON_REL_PATH = "templates/gen/defaultButtonConfig.json"; // 生成按钮配置文件相对路径
+    public final static String BUTTON_JSON_REL_PATH = "templates/generator/defaultButtonConfig.json"; // 生成按钮配置文件相对路径
     public final static String AUTHOR = ""; // 作者（用于代码注释。可不填）
 
     public final static String HEAD_BUTTON_KEY = "headButtons";
@@ -19,7 +19,7 @@ public class ConfigConstant {
      */
     @Data
     public static class PackageConfig {
-        public final String BASE_PACKAGE = "com.kalvin.kvf";   // 项目基包路径，可根据实际情况修改
+        public final String BASE_PACKAGE = "com.kalvin.kvf.modules";   // 项目基包路径，可根据实际情况修改
         public final String ENTITY_PACKAGE = "entity";   // 实体类包，可根据实际情况修改
         public final String MAPPER_PACKAGE = "mapper";   // mapper/dao类包，可根据实际情况修改
         public final String SERVICE_PACKAGE = "service";   // 服务类接口包，可根据实际情况修改

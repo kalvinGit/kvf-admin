@@ -166,8 +166,7 @@ public class AuxiliaryKit {
                 }
         }
         if (!"".equals(pack)) {
-            pack = packageConfig.BASE_PACKAGE + "." + pack;
-            path = StrUtil.replace(pack, ".", "/") + "/" + moduleName;
+            path = StrUtil.replace(packageConfig.BASE_PACKAGE, ".", "/") + "/" + moduleName + "/" + pack;
         }
 
         if ("".equals(path)) {

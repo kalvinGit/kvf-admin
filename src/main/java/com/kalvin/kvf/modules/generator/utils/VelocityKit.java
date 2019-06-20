@@ -18,7 +18,7 @@ import java.io.FileWriter;
  */
 public class VelocityKit {
 
-    private final static String PRE_TEMP_PATH = "templates/gen/vm/";
+    private final static String PRE_TEMP_PATH = "templates/generator/vm/";
 
     private static VelocityEngine velocityEngine = null;
 

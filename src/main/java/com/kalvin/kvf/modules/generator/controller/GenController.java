@@ -10,6 +10,7 @@ import com.kalvin.kvf.modules.generator.service.ITableService;
 import com.kalvin.kvf.modules.generator.utils.AuxiliaryKit;
 import com.kalvin.kvf.modules.generator.utils.VelocityKit;
 import com.kalvin.kvf.modules.generator.vo.GenConfigVO;
+import com.kalvin.kvf.modules.generator.vo.QuicklyGenParamsVO;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,12 +40,12 @@ public class GenController extends BaseController {
 
     @GetMapping(value = "table/index")
     public ModelAndView table() {
-        return new ModelAndView("gen/table");
+        return new ModelAndView("generator/table");
     }
 
     @GetMapping(value = "setting/{tableName}")
     public ModelAndView setting(@PathVariable String tableName) {
-        ModelAndView mv = new ModelAndView("gen/setting");
+        ModelAndView mv = new ModelAndView("generator/setting");
         List<TableColumnDTO> tableColumnDTOS = tableService.listTableColumn(tableName);
         mv.addObject("tableName", tableName);
         mv.addObject("tableColumns", AuxiliaryKit.handleTableColumns(tableColumnDTOS));
@@ -84,11 +85,18 @@ public class GenController extends BaseController {
     }
 
     @PostMapping(value = "quickly/generate/code")
-    public R quicklyGenerateCode(String tableName, String tableType, String tableComment) {
-        GenConfigVO config = genService.init(tableName, tableType, tableComment);
+    public R quicklyGenerateCode(QuicklyGenParamsVO quicklyGenParamsVO) {
+        GenConfigVO config = genService.init(
+                quicklyGenParamsVO.getTableName(), quicklyGenParamsVO.getTableType(), quicklyGenParamsVO.getTableComment());
 
         // 生成所有模板代码
         VelocityKit.allToFile(config);
+        return R.ok();
+    }
+
+    @PostMapping(value = "quickly/generate/code/batch")
+    public R quicklyGenerateCodeBatch(@RequestBody List<QuicklyGenParamsVO> quicklyGenParamsVOS) {
+        quicklyGenParamsVOS.forEach(this::quicklyGenerateCode);
         return R.ok();
     }
 

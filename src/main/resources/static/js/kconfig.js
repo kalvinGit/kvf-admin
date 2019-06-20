@@ -118,7 +118,8 @@ var api = {
         tableListData: BASE_WEB + 'generator/list/tableData',
         customGenerateSetting: BASE_WEB + 'generator/setting/',
         customGenerateCode: BASE_WEB + 'generator/custom/generate/code',
-        quicklyGenerateCode: BASE_WEB + 'generator/quickly/generate/code'
+        quicklyGenerateCode: BASE_WEB + 'generator/quickly/generate/code',
+        quicklyGenerateCodeBatch: BASE_WEB + 'generator/quickly/generate/code/batch'
     }
 
 };

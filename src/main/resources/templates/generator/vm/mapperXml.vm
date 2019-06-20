@@ -6,10 +6,10 @@
 #set($controllerPK = $pack.CONTROLLER_PACKAGE)
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="${base}.${mapperPK}.${config.moduleName}.${config.firstCapFunName}Mapper">
+<mapper namespace="${base}.modules.${config.moduleName}.${mapperPK}.${config.firstCapFunName}Mapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="${base}.${entityPK}.${config.moduleName}.${config.firstCapFunName}">
+    <resultMap id="BaseResultMap" type="${base}.modules.${config.moduleName}.${entityPK}.${config.firstCapFunName}">
         #foreach($column in $config.allColumns)
         #if($column.columnName == $config.primaryKey)
         <id column="$column.columnName" property="$column.columnNameCamelCase" />
@@ -25,7 +25,7 @@
 
     </sql>
 
-    <select id="select${config.firstCapFunName}List" resultType="${base}.${entityPK}.${config.moduleName}.${config.firstCapFunName}">
+    <select id="select${config.firstCapFunName}List" resultType="${base}.modules.${config.moduleName}.${entityPK}.${config.firstCapFunName}">
         select <include refid="Base_Column_List" /> from $config.tableName
         <trim prefix="where" prefixOverrides="and">
             #foreach($column in $config.allColumns)

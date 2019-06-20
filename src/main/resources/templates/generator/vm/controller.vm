@@ -9,20 +9,18 @@
 #set($pk = ${config.pkCamelCase})
 #set($service = $f + 'Service')
 #set($class = ${config.firstCapFunName})
-package ${base}.${controllerPK}.$m;
+package ${base}.modules.$m.${controllerPK};
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import ${base}.${controllerPK}.BaseController;
-import ${base}.dto.R;
-import ${base}.${entityPK}.$m.$class;
-import ${base}.${servicePK}.${m}.I${class}Service;
+import ${base}.common.BaseController;
+import ${base}.common.dto.R;
+import ${base}.modules.$m.${entityPK}.$class;
+import ${base}.modules.${m}.${servicePK}.I${class}Service;
 
 import java.util.List;
 
