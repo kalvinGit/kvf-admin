@@ -1,4 +1,4 @@
-package com.kalvin.kvf.gen.service;
+package com.kalvin.kvf.generator.service;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ClassUtil;
@@ -6,12 +6,12 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.kalvin.kvf.gen.dto.ColumnConfigDTO;
-import com.kalvin.kvf.gen.utils.AuxiliaryKit;
-import com.kalvin.kvf.gen.comm.ConfigConstant;
-import com.kalvin.kvf.gen.dto.ButtonConfigDTO;
-import com.kalvin.kvf.gen.dto.TableColumnDTO;
-import com.kalvin.kvf.gen.vo.GenConfigVO;
+import com.kalvin.kvf.generator.dto.ColumnConfigDTO;
+import com.kalvin.kvf.generator.utils.AuxiliaryKit;
+import com.kalvin.kvf.generator.constant.ConfigConstant;
+import com.kalvin.kvf.generator.dto.ButtonConfigDTO;
+import com.kalvin.kvf.generator.dto.TableColumnDTO;
+import com.kalvin.kvf.generator.vo.GenConfigVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.kalvin.kvf.gen.comm;
+package com.kalvin.kvf.generator.constant;
 
 import lombok.Data;
 

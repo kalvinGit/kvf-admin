@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(exclude = {
         org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class})
-@MapperScan(value = "com.kalvin.kvf.gen.mapper")
+@MapperScan(value = "com.kalvin.kvf.generator.mapper")
 public class KvfAdminApplication {
 
     public static void main(String[] args) {

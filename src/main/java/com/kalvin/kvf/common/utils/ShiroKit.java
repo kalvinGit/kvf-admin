@@ -1,7 +1,7 @@
 package com.kalvin.kvf.common.utils;
 
 import com.kalvin.kvf.entity.sys.User;
-import com.kalvin.kvf.exception.KvfException;
+import com.kalvin.kvf.common.exception.KvfException;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.session.Session;

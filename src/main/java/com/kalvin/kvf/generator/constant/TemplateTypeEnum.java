@@ -1,4 +1,4 @@
-package com.kalvin.kvf.gen.comm;
+package com.kalvin.kvf.generator.constant;
 
 /**
  * 代码模板类型 枚举

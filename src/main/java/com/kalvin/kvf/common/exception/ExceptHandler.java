@@ -1,4 +1,4 @@
-package com.kalvin.kvf.exception;
+package com.kalvin.kvf.common.exception;
 
 import com.kalvin.kvf.common.constant.Constants;
 import com.kalvin.kvf.dto.R;

@@ -2,7 +2,7 @@ package com.kalvin.kvf.controller;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.kalvin.kvf.dto.R;
-import com.kalvin.kvf.exception.KvfException;
+import com.kalvin.kvf.common.exception.KvfException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

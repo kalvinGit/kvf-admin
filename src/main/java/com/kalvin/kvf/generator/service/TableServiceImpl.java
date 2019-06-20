@@ -1,11 +1,11 @@
-package com.kalvin.kvf.gen.service;
+package com.kalvin.kvf.generator.service;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.kalvin.kvf.gen.dto.TableColumnDTO;
-import com.kalvin.kvf.gen.dto.TableDTO;
-import com.kalvin.kvf.gen.mapper.TableMapper;
+import com.kalvin.kvf.generator.dto.TableColumnDTO;
+import com.kalvin.kvf.generator.dto.TableDTO;
+import com.kalvin.kvf.generator.mapper.TableMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

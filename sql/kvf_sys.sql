@@ -121,7 +121,7 @@ INSERT INTO `sys_menu` VALUES (22, 5, '删除', NULL, 'sys:dept:del', 2, NULL, 0
 INSERT INTO `sys_menu` VALUES (23, 2, '重置密码', NULL, 'sys:user:reset', 2, NULL, 0, 3, NULL, '2019-05-12 18:01:10');
 INSERT INTO `sys_menu` VALUES (24, 0, 'Druid监控', 'druid/index.html', NULL, 3, 'fa fa-eye', 0, 0, NULL, '2019-05-20 22:43:09');
 INSERT INTO `sys_menu` VALUES (25, 0, '代码生成', '', NULL, 0, 'fa fa-bolt', 0, 2, NULL, '2019-06-10 22:47:31');
-INSERT INTO `sys_menu` VALUES (26, 25, '生成管理', 'gen/table/index', 'gen:table:index', 1, NULL, 0, 0, NULL, '2019-06-10 22:50:09');
+INSERT INTO `sys_menu` VALUES (26, 25, '生成管理', 'generator/table/index', 'generator:table:index', 1, NULL, 0, 0, NULL, '2019-06-10 22:50:09');
 
 
 

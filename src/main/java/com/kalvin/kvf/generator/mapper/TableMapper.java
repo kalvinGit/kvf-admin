@@ -1,8 +1,8 @@
-package com.kalvin.kvf.gen.mapper;
+package com.kalvin.kvf.generator.mapper;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.kalvin.kvf.gen.dto.TableColumnDTO;
-import com.kalvin.kvf.gen.dto.TableDTO;
+import com.kalvin.kvf.generator.dto.TableColumnDTO;
+import com.kalvin.kvf.generator.dto.TableDTO;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;

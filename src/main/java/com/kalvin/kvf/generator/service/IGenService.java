@@ -1,6 +1,6 @@
-package com.kalvin.kvf.gen.service;
+package com.kalvin.kvf.generator.service;
 
-import com.kalvin.kvf.gen.vo.GenConfigVO;
+import com.kalvin.kvf.generator.vo.GenConfigVO;
 
 public interface IGenService {
 

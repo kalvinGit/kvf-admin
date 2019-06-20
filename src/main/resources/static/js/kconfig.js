@@ -115,10 +115,10 @@ var api = {
 
     },
     gen: {
-        tableListData: BASE_WEB + 'gen/list/tableData',
-        customGenerateSetting: BASE_WEB + 'gen/setting/',
-        customGenerateCode: BASE_WEB + 'gen/custom/generate/code',
-        quicklyGenerateCode: BASE_WEB + 'gen/quickly/generate/code'
+        tableListData: BASE_WEB + 'generator/list/tableData',
+        customGenerateSetting: BASE_WEB + 'generator/setting/',
+        customGenerateCode: BASE_WEB + 'generator/custom/generate/code',
+        quicklyGenerateCode: BASE_WEB + 'generator/quickly/generate/code'
     }
 
 };

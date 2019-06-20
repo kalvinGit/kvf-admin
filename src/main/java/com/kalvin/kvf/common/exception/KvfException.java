@@ -1,4 +1,4 @@
-package com.kalvin.kvf.exception;
+package com.kalvin.kvf.common.exception;
 
 /**
  * 自定义异常类

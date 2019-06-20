@@ -4,7 +4,7 @@ import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
 import com.kalvin.kvf.common.constant.UploadPathEnum;
 import com.kalvin.kvf.dto.sys.UploadFileInfo;
-import com.kalvin.kvf.exception.KvfException;
+import com.kalvin.kvf.common.exception.KvfException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;

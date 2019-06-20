@@ -1,18 +1,15 @@
-package com.kalvin.kvf.gen.controller;
+package com.kalvin.kvf.generator.controller;
 
 
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
-import com.kalvin.kvf.gen.comm.ConfigConstant;
-import com.kalvin.kvf.gen.comm.TemplateTypeEnum;
-import com.kalvin.kvf.gen.utils.AuxiliaryKit;
 import com.kalvin.kvf.controller.BaseController;
 import com.kalvin.kvf.dto.R;
-import com.kalvin.kvf.gen.dto.TableColumnDTO;
-import com.kalvin.kvf.gen.service.IGenService;
-import com.kalvin.kvf.gen.service.ITableService;
-import com.kalvin.kvf.gen.utils.VelocityKit;
-import com.kalvin.kvf.gen.vo.GenConfigVO;
+import com.kalvin.kvf.generator.dto.TableColumnDTO;
+import com.kalvin.kvf.generator.service.IGenService;
+import com.kalvin.kvf.generator.service.ITableService;
+import com.kalvin.kvf.generator.utils.AuxiliaryKit;
+import com.kalvin.kvf.generator.utils.VelocityKit;
+import com.kalvin.kvf.generator.vo.GenConfigVO;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +28,7 @@ import java.util.List;
  * @since 2019-05-10
  */
 @RestController
-@RequestMapping("gen")
+@RequestMapping("generator")
 public class GenController extends BaseController {
 
     @Autowired
@@ -88,19 +85,11 @@ public class GenController extends BaseController {
 
     @PostMapping(value = "quickly/generate/code")
     public R quicklyGenerateCode(String tableName, String tableType, String tableComment) {
-        String tableTplName = tableType.equals("tree_grid") ? "treegrid.vm" : "table.vm";
         GenConfigVO config = genService.init(tableName, tableType, tableComment);
-        VelocityContext ctx = VelocityKit.getContext();
-        ctx.put("config", config);
-        Template t = VelocityKit.getTemplate(tableTplName);
-//        String destPath = AuxiliaryKit.getGenerateCodePath(TemplateTypeEnum.ENTITY, config.getModuleName(), config.getFunName());
-//        LOGGER.info("destPath={}", destPath);
-        StringWriter sw = new StringWriter();
-        t.merge(ctx, sw);
 
         // 生成所有模板代码
         VelocityKit.allToFile(config);
-        return R.ok(sw.toString());
+        return R.ok();
     }
 
 }

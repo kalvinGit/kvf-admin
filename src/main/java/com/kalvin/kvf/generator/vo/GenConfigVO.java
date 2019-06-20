@@ -1,6 +1,6 @@
-package com.kalvin.kvf.gen.vo;
+package com.kalvin.kvf.generator.vo;
 
-import com.kalvin.kvf.gen.dto.*;
+import com.kalvin.kvf.generator.dto.*;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;

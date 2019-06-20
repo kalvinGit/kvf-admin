@@ -1,4 +1,4 @@
-package com.kalvin.kvf.gen.dto;
+package com.kalvin.kvf.generator.dto;
 
 import lombok.Data;
 import lombok.ToString;

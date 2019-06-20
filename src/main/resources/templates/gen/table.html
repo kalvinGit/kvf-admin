@@ -184,13 +184,13 @@
                     if (r.code === req.status.ok) {
                         kvfKit.sucessMsg('代码生成成功');
                         log('quickly=', r.data);
-                        var oidx = layer.open({
+                        /*var oidx = layer.open({
                             type: 1
                             ,title: '页面预览'
                             ,content: r.data
                             ,maxmin: false
                         });
-                        layer.full(oidx);
+                        layer.full(oidx);*/
                     } else {
                         kvfKit.errorMsg(r.msg);
                     }

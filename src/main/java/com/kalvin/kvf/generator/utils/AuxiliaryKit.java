@@ -1,12 +1,12 @@
-package com.kalvin.kvf.gen.utils;
+package com.kalvin.kvf.generator.utils;
 
 import cn.hutool.core.util.StrUtil;
-import com.kalvin.kvf.gen.comm.ConfigConstant;
-import com.kalvin.kvf.gen.comm.TemplateTypeEnum;
-import com.kalvin.kvf.gen.dto.ColumnCommentValueRelationDTO;
-import com.kalvin.kvf.gen.dto.ColumnConfigDTO;
-import com.kalvin.kvf.gen.dto.ColumnsValueRelationDTO;
-import com.kalvin.kvf.gen.dto.TableColumnDTO;
+import com.kalvin.kvf.generator.constant.ConfigConstant;
+import com.kalvin.kvf.generator.constant.TemplateTypeEnum;
+import com.kalvin.kvf.generator.dto.ColumnCommentValueRelationDTO;
+import com.kalvin.kvf.generator.dto.ColumnConfigDTO;
+import com.kalvin.kvf.generator.dto.ColumnsValueRelationDTO;
+import com.kalvin.kvf.generator.dto.TableColumnDTO;
 
 import java.util.ArrayList;
 import java.util.List;

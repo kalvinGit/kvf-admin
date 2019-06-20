@@ -1,9 +1,9 @@
-package com.kalvin.kvf.gen.utils;
+package com.kalvin.kvf.generator.utils;
 
 import cn.hutool.core.date.DateUtil;
-import com.kalvin.kvf.gen.comm.ConfigConstant;
-import com.kalvin.kvf.gen.comm.TemplateTypeEnum;
-import com.kalvin.kvf.gen.vo.GenConfigVO;
+import com.kalvin.kvf.generator.constant.ConfigConstant;
+import com.kalvin.kvf.generator.constant.TemplateTypeEnum;
+import com.kalvin.kvf.generator.vo.GenConfigVO;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;

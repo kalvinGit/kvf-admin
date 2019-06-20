@@ -1,8 +1,6 @@
 package com.kalvin.kvf;
 
-import com.kalvin.kvf.gen.comm.TemplateTypeEnum;
-import com.kalvin.kvf.gen.utils.AuxiliaryKit;
-import com.kalvin.kvf.gen.utils.VelocityKit;
+import com.kalvin.kvf.generator.utils.VelocityKit;
 import org.apache.velocity.VelocityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
