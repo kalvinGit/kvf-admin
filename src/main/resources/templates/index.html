@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title th:replace="comm/base::pagetitle"></title>
-    <link th:replace="comm/base::static"/>
+    <title th:replace="common/base::pagetitle"></title>
+    <link th:replace="common/base::static"/>
     <link rel="stylesheet" th:href="@{/static/css/kvf-theme.css}">
     <style>
         /*由于项目中并未引用layui admin.css这个样式，所以把主页需要用到的一部分样式复制到这里使用*/
@@ -447,10 +447,10 @@
 </div>
 
 
-<script th:replace="comm/base::context"></script>
-<script th:replace="comm/base::mainjs"></script>
-<script th:include="comm/sys_tpl::headNavTpl" type="text/html" id="headNavTpl"></script>
-<script th:include="comm/sys_tpl::leftNavTpl" type="text/html" id="leftNavTpl"></script>
+<script th:replace="common/base::context"></script>
+<script th:replace="common/base::mainjs"></script>
+<script th:include="common/sys_tpl::headNavTpl" type="text/html" id="headNavTpl"></script>
+<script th:include="common/sys_tpl::leftNavTpl" type="text/html" id="leftNavTpl"></script>
 <script>
     //JavaScript代码区域
     layui.use(['element', 'layer', 'laytpl'], function(){

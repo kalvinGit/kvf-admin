@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title th:replace="comm/base::pagetitle"></title>
-    <link th:replace="comm/base::static"/>
+    <title th:replace="common/base::pagetitle"></title>
+    <link th:replace="common/base::static"/>
     <style>
     </style>
 </head>
@@ -41,8 +41,8 @@
     </div>
 </div>
 
-<script th:replace="comm/base::context"></script>
-<script th:replace="comm/base::mainjs"></script>
+<script th:replace="common/base::context"></script>
+<script th:replace="common/base::mainjs"></script>
 
 <script type="text/html" id="sexTpl">
     {{#  if(d.sex == 1){ }}

@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:replace="comm/base::pagetitle"></title>
-    <link th:replace="comm/base::static"/>
+    <title th:replace="common/base::pagetitle"></title>
+    <link th:replace="common/base::static"/>
 </head>
 <body>
 <div class="layui-form" style="padding: 20px 30px 0 0;">
@@ -46,8 +46,8 @@
     </div>
 </div>
 
-<script th:replace="comm/base::context"></script>
-<script th:replace="comm/base::mainjs"></script>
+<script th:replace="common/base::context"></script>
+<script th:replace="common/base::mainjs"></script>
 <script>
     layui.use(['form'], function () {
         var $ = layui.$, form = layui.form;
