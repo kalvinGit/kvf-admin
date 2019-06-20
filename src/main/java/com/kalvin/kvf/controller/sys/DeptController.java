@@ -2,8 +2,8 @@ package com.kalvin.kvf.controller.sys;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.kalvin.kvf.controller.BaseController;
-import com.kalvin.kvf.dto.R;
+import com.kalvin.kvf.common.controller.BaseController;
+import com.kalvin.kvf.common.dto.R;
 import com.kalvin.kvf.entity.sys.Dept;
 import com.kalvin.kvf.service.sys.IDeptService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;

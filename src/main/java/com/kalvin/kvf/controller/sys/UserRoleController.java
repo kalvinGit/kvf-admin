@@ -1,8 +1,8 @@
 package com.kalvin.kvf.controller.sys;
 
 
-import com.kalvin.kvf.controller.BaseController;
-import com.kalvin.kvf.dto.R;
+import com.kalvin.kvf.common.controller.BaseController;
+import com.kalvin.kvf.common.dto.R;
 import com.kalvin.kvf.entity.sys.UserRole;
 import com.kalvin.kvf.service.sys.IUserRoleService;
 import com.kalvin.kvf.vo.sys.UserRoleVO;

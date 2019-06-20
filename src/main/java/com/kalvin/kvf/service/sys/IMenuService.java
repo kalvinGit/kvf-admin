@@ -2,7 +2,7 @@ package com.kalvin.kvf.service.sys;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.kalvin.kvf.dto.ZTreeDTO;
+import com.kalvin.kvf.common.dto.ZTreeDTO;
 import com.kalvin.kvf.entity.sys.Menu;
 
 import java.util.List;

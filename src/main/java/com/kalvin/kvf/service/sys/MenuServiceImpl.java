@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kalvin.kvf.common.constant.Constants;
-import com.kalvin.kvf.dto.ZTreeDTO;
+import com.kalvin.kvf.common.dto.ZTreeDTO;
 import com.kalvin.kvf.entity.sys.Menu;
 import com.kalvin.kvf.mapper.sys.MenuMapper;
 import org.springframework.stereotype.Service;

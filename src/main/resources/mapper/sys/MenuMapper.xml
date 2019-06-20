@@ -53,7 +53,7 @@
         order by type, sort asc
     </select>
 
-    <select id="selectRoleMenu" resultType="com.kalvin.kvf.dto.ZTreeDTO">
+    <select id="selectRoleMenu" resultType="com.kalvin.kvf.common.dto.ZTreeDTO">
         <choose>
             <when test="roleId == null">
                 select id, parent_id, name, false as checked, if(type = 2, false, true) as isParent from sys_menu where status=0

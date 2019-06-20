@@ -1,7 +1,7 @@
 package com.kalvin.kvf.common.exception;
 
 import com.kalvin.kvf.common.constant.Constants;
-import com.kalvin.kvf.dto.R;
+import com.kalvin.kvf.common.dto.R;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -2,7 +2,7 @@ package com.kalvin.kvf.controller.sys;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.kalvin.kvf.dto.R;
+import com.kalvin.kvf.common.dto.R;
 import com.kalvin.kvf.entity.sys.Log;
 import com.kalvin.kvf.service.sys.ILogService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
-import com.kalvin.kvf.controller.BaseController;
+import com.kalvin.kvf.common.controller.BaseController;
 import org.springframework.web.servlet.ModelAndView;
 
 /**

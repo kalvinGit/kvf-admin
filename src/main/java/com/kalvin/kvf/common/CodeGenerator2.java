@@ -125,7 +125,7 @@ public class CodeGenerator2 {
         strategy.setSuperEntityClass("com.kalvin.kvf.entity.BaseEntity");
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
-        strategy.setSuperControllerClass("com.kalvin.kvf.controller.BaseController");
+        strategy.setSuperControllerClass("com.kalvin.kvf.common.controller.BaseController");
         strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
         strategy.setSuperEntityColumns("id");
         strategy.setControllerMappingHyphenStyle(true);

@@ -2,7 +2,7 @@ package com.kalvin.kvf.mapper.sys;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.kalvin.kvf.dto.ZTreeDTO;
+import com.kalvin.kvf.common.dto.ZTreeDTO;
 import com.kalvin.kvf.entity.sys.Menu;
 import org.apache.ibatis.annotations.Param;
 

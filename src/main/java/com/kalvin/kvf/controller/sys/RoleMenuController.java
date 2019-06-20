@@ -4,7 +4,7 @@ package com.kalvin.kvf.controller.sys;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
-import com.kalvin.kvf.controller.BaseController;
+import com.kalvin.kvf.common.controller.BaseController;
 
 /**
  * <p>
