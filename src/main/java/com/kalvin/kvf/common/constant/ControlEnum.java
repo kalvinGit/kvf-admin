@@ -1,4 +1,4 @@
-package com.kalvin.kvf.comm.constant;
+package com.kalvin.kvf.common.constant;
 
 /**
  * 【作用】表单控件类型 枚举类<br>

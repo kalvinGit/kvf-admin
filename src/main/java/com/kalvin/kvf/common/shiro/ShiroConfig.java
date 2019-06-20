@@ -1,4 +1,4 @@
-package com.kalvin.kvf.comm.shiro;
+package com.kalvin.kvf.common.shiro;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import org.apache.shiro.cache.ehcache.EhCacheManager;

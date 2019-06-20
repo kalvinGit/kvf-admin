@@ -1,4 +1,4 @@
-package com.kalvin.kvf.comm;
+package com.kalvin.kvf.common;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.generator.AutoGenerator;

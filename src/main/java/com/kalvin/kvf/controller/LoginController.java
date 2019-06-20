@@ -2,9 +2,9 @@ package com.kalvin.kvf.controller;
 
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
-import com.kalvin.kvf.comm.annotation.Action;
-import com.kalvin.kvf.comm.utils.HttpServletContextKit;
-import com.kalvin.kvf.comm.utils.ShiroKit;
+import com.kalvin.kvf.common.annotation.Action;
+import com.kalvin.kvf.common.utils.HttpServletContextKit;
+import com.kalvin.kvf.common.utils.ShiroKit;
 import com.kalvin.kvf.dto.R;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;

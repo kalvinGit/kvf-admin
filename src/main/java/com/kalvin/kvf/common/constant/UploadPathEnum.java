@@ -1,4 +1,4 @@
-package com.kalvin.kvf.comm.constant;
+package com.kalvin.kvf.common.constant;
 
 /**
  * 上传路径枚举

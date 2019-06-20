@@ -1,4 +1,4 @@
-package com.kalvin.kvf.comm.utils;
+package com.kalvin.kvf.common.utils;
 
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

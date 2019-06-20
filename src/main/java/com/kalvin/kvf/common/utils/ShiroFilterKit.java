@@ -1,4 +1,4 @@
-package com.kalvin.kvf.comm.utils;
+package com.kalvin.kvf.common.utils;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;

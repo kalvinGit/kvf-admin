@@ -1,8 +1,8 @@
-package com.kalvin.kvf.comm.utils;
+package com.kalvin.kvf.common.utils;
 
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
-import com.kalvin.kvf.comm.constant.UploadPathEnum;
+import com.kalvin.kvf.common.constant.UploadPathEnum;
 import com.kalvin.kvf.dto.sys.UploadFileInfo;
 import com.kalvin.kvf.exception.KvfException;
 import org.slf4j.Logger;

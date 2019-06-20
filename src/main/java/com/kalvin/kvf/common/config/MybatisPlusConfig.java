@@ -1,4 +1,4 @@
-package com.kalvin.kvf.comm.config;
+package com.kalvin.kvf.common.config;
 
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;

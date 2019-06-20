@@ -59,10 +59,10 @@ var api = {
     homeView: BASE_WEB + '', // loa主页地址
     login: BASE_WEB + 'login',
     comm: {
-        selUserView: BASE_WEB + 'comm/selUser',
+        selUserView: BASE_WEB + 'common/selUser',
         userMenus: BASE_WEB + 'index/menus',  // 用户目录菜单（左侧）
         userNavMenus: BASE_WEB + 'index/navMenus',  // 用户导航菜单（横向）
-        fileUpload: BASE_WEB + 'comm/fileUpload'
+        fileUpload: BASE_WEB + 'common/fileUpload'
     },
     sys: {  // 系统模块接口
         userListData: BASE_WEB + 'sys/user/list/data',

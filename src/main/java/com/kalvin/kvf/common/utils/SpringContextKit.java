@@ -1,4 +1,4 @@
-package com.kalvin.kvf.comm.utils;
+package com.kalvin.kvf.common.utils;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

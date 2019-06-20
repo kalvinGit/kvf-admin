@@ -1,8 +1,8 @@
-package com.kalvin.kvf.comm.utils;
+package com.kalvin.kvf.common.utils;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
-import com.kalvin.kvf.comm.constant.SysConstant;
+import com.kalvin.kvf.common.constant.SysConstant;
 
 /**
  * 作用：加密解密<br>

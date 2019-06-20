@@ -1,4 +1,4 @@
-package com.kalvin.kvf.comm;
+package com.kalvin.kvf.common;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.annotation.IdType;

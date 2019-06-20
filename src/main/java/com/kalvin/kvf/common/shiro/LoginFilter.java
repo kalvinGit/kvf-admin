@@ -1,7 +1,7 @@
-package com.kalvin.kvf.comm.shiro;
+package com.kalvin.kvf.common.shiro;
 
-import com.kalvin.kvf.comm.utils.ShiroFilterKit;
-import com.kalvin.kvf.comm.utils.ShiroKit;
+import com.kalvin.kvf.common.utils.ShiroFilterKit;
+import com.kalvin.kvf.common.utils.ShiroKit;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

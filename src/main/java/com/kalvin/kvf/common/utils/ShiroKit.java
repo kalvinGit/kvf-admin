@@ -1,4 +1,4 @@
-package com.kalvin.kvf.comm.utils;
+package com.kalvin.kvf.common.utils;
 
 import com.kalvin.kvf.entity.sys.User;
 import com.kalvin.kvf.exception.KvfException;

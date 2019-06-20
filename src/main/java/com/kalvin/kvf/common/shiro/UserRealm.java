@@ -1,9 +1,9 @@
-package com.kalvin.kvf.comm.shiro;
+package com.kalvin.kvf.common.shiro;
 
 import cn.hutool.core.util.StrUtil;
-import com.kalvin.kvf.comm.constant.SysConstant;
-import com.kalvin.kvf.comm.utils.CryptionKit;
-import com.kalvin.kvf.comm.utils.ShiroKit;
+import com.kalvin.kvf.common.constant.SysConstant;
+import com.kalvin.kvf.common.utils.CryptionKit;
+import com.kalvin.kvf.common.utils.ShiroKit;
 import com.kalvin.kvf.entity.sys.Menu;
 import com.kalvin.kvf.entity.sys.User;
 import com.kalvin.kvf.service.sys.IMenuService;

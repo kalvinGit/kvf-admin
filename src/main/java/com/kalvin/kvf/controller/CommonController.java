@@ -1,7 +1,7 @@
 package com.kalvin.kvf.controller;
 
-import com.kalvin.kvf.comm.constant.UploadPathEnum;
-import com.kalvin.kvf.comm.utils.FileUploadKit;
+import com.kalvin.kvf.common.constant.UploadPathEnum;
+import com.kalvin.kvf.common.utils.FileUploadKit;
 import com.kalvin.kvf.dto.R;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @Date 2019/5/9 20:20
  */
 @RestController
-@RequestMapping(value = "comm")
+@RequestMapping(value = "common")
 public class CommonController {
 
     @GetMapping(value = "selUser")

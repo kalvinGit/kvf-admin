@@ -1,4 +1,4 @@
-package com.kalvin.kvf.comm.config;
+package com.kalvin.kvf.common.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;

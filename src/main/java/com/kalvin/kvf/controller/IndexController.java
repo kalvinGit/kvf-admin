@@ -3,7 +3,7 @@ package com.kalvin.kvf.controller;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.kalvin.kvf.comm.utils.ShiroKit;
+import com.kalvin.kvf.common.utils.ShiroKit;
 import com.kalvin.kvf.dto.R;
 import com.kalvin.kvf.entity.sys.User;
 import com.kalvin.kvf.service.sys.IMenuService;

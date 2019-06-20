@@ -1,7 +1,7 @@
 package com.kalvin.kvf.dto;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.kalvin.kvf.comm.constant.Constants;
+import com.kalvin.kvf.common.constant.Constants;
 
 import java.io.Serializable;
 

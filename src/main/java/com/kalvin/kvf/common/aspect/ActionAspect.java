@@ -1,12 +1,12 @@
-package com.kalvin.kvf.aspect;
+package com.kalvin.kvf.common.aspect;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.useragent.Browser;
 import cn.hutool.http.useragent.Platform;
 import cn.hutool.http.useragent.UserAgentUtil;
-import com.kalvin.kvf.comm.annotation.Action;
-import com.kalvin.kvf.comm.utils.HttpServletContextKit;
+import com.kalvin.kvf.common.annotation.Action;
+import com.kalvin.kvf.common.utils.HttpServletContextKit;
 import com.kalvin.kvf.entity.sys.Log;
 import com.kalvin.kvf.entity.sys.User;
 import com.kalvin.kvf.service.sys.ILogService;
@@ -39,7 +39,7 @@ public class ActionAspect {
 	@Autowired
 	private ILogService logService;
 	
-	@Pointcut("@annotation(com.kalvin.kvf.comm.annotation.Action)")
+	@Pointcut("@annotation(com.kalvin.kvf.common.annotation.Action)")
 	public void logPointCut() { 
 		
 	}

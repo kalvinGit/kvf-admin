@@ -1,4 +1,4 @@
-package com.kalvin.kvf.comm.constant;
+package com.kalvin.kvf.common.constant;
 
 /**
  * 作用：OA系统常量<br>

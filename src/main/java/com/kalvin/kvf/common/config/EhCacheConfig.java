@@ -1,4 +1,4 @@
-package com.kalvin.kvf.comm.config;
+package com.kalvin.kvf.common.config;
 
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.ehcache.EhCacheCacheManager;

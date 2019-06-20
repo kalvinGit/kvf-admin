@@ -1,4 +1,4 @@
-package com.kalvin.kvf.comm.annotation;
+package com.kalvin.kvf.common.annotation;
 
 import java.lang.annotation.*;
 

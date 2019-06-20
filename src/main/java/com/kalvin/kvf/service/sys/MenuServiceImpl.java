@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.kalvin.kvf.comm.constant.Constants;
+import com.kalvin.kvf.common.constant.Constants;
 import com.kalvin.kvf.dto.ZTreeDTO;
 import com.kalvin.kvf.entity.sys.Menu;
 import com.kalvin.kvf.mapper.sys.MenuMapper;

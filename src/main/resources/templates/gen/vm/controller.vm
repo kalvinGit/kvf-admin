@@ -22,7 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import ${base}.${controllerPK}.BaseController;
 import ${base}.dto.R;
 import ${base}.${entityPK}.$m.$class;
-import ${base}.${servicePK}.$m.I${class}Service;
+import ${base}.${servicePK}.${m}.I${class}Service;
 
 import java.util.List;
 

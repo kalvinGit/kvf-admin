@@ -1,4 +1,4 @@
-package com.kalvin.kvf.comm.config;
+package com.kalvin.kvf.common.config;
 
 import com.google.code.kaptcha.Producer;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
