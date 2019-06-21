@@ -82,5 +82,5 @@ kvf-admin
 ### 捐赠支持
 项目的发展离不开你的支持，感谢！<br>
 
-![微信支付码](http://cloud.kalvinbg.cn/image/my_wxpay2.png)
-![支付宝支付码](http://cloud.kalvinbg.cn/image/my_alipay.jpg)
+<img src="http://cloud.kalvinbg.cn/image/my_wxpay2.png" width="300" alt="微信收款码">
+<img src="http://cloud.kalvinbg.cn/image/my_alipay.jpg" width="300" alt="支付宝收款码">
