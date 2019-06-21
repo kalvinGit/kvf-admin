@@ -50,6 +50,10 @@ kvf-admin
 
 ````
 
+### 软件需求
+* jdk8+
+* mysql5.5+
+
 ### 本地部署
 * 通过git下载源码
 * 创建数据库：kvf-admin【数据库编码为utf8mb4】，并执行sql/kvf-admin.sql创建表和初始化系统基础数据
@@ -76,3 +80,6 @@ kvf-admin
 
 
 ### 捐赠支持
+项目的发展离不开你的支持，感谢！<br>
+! [alt] (http://cloud.kalvinbg.cn/image/my_wxpay.png)<br>
+! [alt] (http://cloud.kalvinbg.cn/image/my_alipay.png)
