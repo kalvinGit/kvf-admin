@@ -71,6 +71,7 @@ kvf-admin
 ### 系统效果图展示
 
 ![系统效果图](http://cloud.kalvinbg.cn/image/kvf-admin.png)
+![系统效果图](http://cloud.kalvinbg.cn/image/kvf-admin1.png)
 
 ### 交流反馈
 * github仓库：https://github.com/kalvinGit/kvf-admin
