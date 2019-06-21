@@ -82,7 +82,7 @@ kvf-admin
 
 
 ### 捐赠支持
-项目的发展离不开您的支持，请作者晚餐加个鸡蛋吧！<br>
+项目的发展离不开您的支持，请作者晚餐加个鸡腿吧！<br>
 
 <img src="http://cloud.kalvinbg.cn/image/my_wxpay2.png" width="300" alt="微信收款码">
 <img src="http://cloud.kalvinbg.cn/image/my_alipay.jpg" width="300" alt="支付宝收款码">
