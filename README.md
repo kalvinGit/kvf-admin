@@ -69,7 +69,8 @@ kvf-admin
 * 账号密码：admin/123456
 
 ### 系统效果图展示
-<img src="http://cloud.kalvinbg.cn/image/kvf-admin.png" width="800" alt="系统效果图展示">
+
+![系统效果图](http://cloud.kalvinbg.cn/image/kvf-admin.png)
 
 ### 交流反馈
 * github仓库：https://github.com/kalvinGit/kvf-admin
