@@ -81,5 +81,4 @@ kvf-admin
 
 ### 捐赠支持
 项目的发展离不开你的支持，感谢！<br>
-![微信支付码](http://cloud.kalvinbg.cn/image/my_wxpay.png)
-![支付宝支付码](http://cloud.kalvinbg.cn/image/my_alipay.png)
+
