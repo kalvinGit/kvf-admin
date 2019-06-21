@@ -1,6 +1,6 @@
 package com.kalvin.kvf.modules.generator.constant;
 
-import lombok.Data;
+import lombok.Getter;
 
 /**
  * Create by Kalvin on 2019/6/15
@@ -17,7 +17,7 @@ public class ConfigConstant {
     /**
      * 包信息配置
      */
-    @Data
+    @Getter
     public static class PackageConfig {
         public final String BASE_PACKAGE = "com.kalvin.kvf.modules";   // 项目基包路径，可根据实际情况修改
         public final String ENTITY_PACKAGE = "entity";   // 实体类包，可根据实际情况修改

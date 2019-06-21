@@ -9,7 +9,7 @@
 #set($pk = ${config.pkCamelCase})
 #set($service = $f + 'Service')
 #set($class = ${config.firstCapFunName})
-package ${base}.modules.$m.${controllerPK};
+package ${base}.$m.${controllerPK};
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ${base}.common.BaseController;
 import ${base}.common.dto.R;
-import ${base}.modules.$m.${entityPK}.$class;
-import ${base}.modules.${m}.${servicePK}.I${class}Service;
+import ${base}.$m.${entityPK}.$class;
+import ${base}.${m}.${servicePK}.I${class}Service;
 
 import java.util.List;
 

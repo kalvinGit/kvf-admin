@@ -4,7 +4,7 @@
 #set($servicePK = $pack.SERVICE_PACKAGE)
 #set($serviceImplPK = $pack.SERVICE_IMPL_PACKAGE)
 #set($controllerPK = $pack.CONTROLLER_PACKAGE)
-package ${base}.modules.${config.moduleName}.${entityPK};
+package ${base}.${config.moduleName}.${entityPK};
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
