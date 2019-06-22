@@ -1,13 +1,16 @@
 package com.kalvin.kvf.common.shiro;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
+import cn.hutool.core.codec.Base64;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
@@ -35,8 +38,8 @@ public class ShiroConfig {
     @Bean("sessionManager")
     public SessionManager sessionManager() {
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
-        //设置session过期时间(单位：毫秒)，默认为30分钟
-        sessionManager.setGlobalSessionTimeout(-1);
+        //设置session过期时间(单位：毫秒)，默认为15分钟
+        sessionManager.setGlobalSessionTimeout(1000 * 60 * 15);
         sessionManager.setSessionValidationSchedulerEnabled(true);
         sessionManager.setSessionIdUrlRewritingEnabled(false);
 
@@ -51,6 +54,9 @@ public class ShiroConfig {
         securityManager.setCacheManager(ehCacheManager());
         securityManager.setSessionManager(sessionManager);
 
+        // 设置cookie管理
+        securityManager.setRememberMeManager(rememberMeManager());
+
         return securityManager;
     }
 
@@ -63,6 +69,29 @@ public class ShiroConfig {
         EhCacheManager cacheManager = new EhCacheManager();
         cacheManager.setCacheManagerConfigFile("classpath:ehcache.xml");
         return cacheManager;
+    }
+
+    /**
+     * Cookie对象
+     * @return simpleCookie
+     */
+    private SimpleCookie rememberMeCookie() {
+        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+        // 记住时间，单位秒，默认15天
+        simpleCookie.setMaxAge(60 * 60 * 24 * 10);
+        return simpleCookie;
+    }
+
+    /**
+     * cookie管理对象;
+     * @return cookieRememberMeManager
+     */
+    private CookieRememberMeManager rememberMeManager() {
+        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+        cookieRememberMeManager.setCookie(rememberMeCookie());
+        // rememberMe cookie加密的密钥 建议每个项目都不一样 默认AES算法 密钥长度(128 256 512 位)
+        cookieRememberMeManager.setCipherKey(Base64.decode("2AvVhdsgUs0FSA3SDFAdag=="));
+        return cookieRememberMeManager;
     }
 
     @Bean("shiroFilter")
@@ -87,6 +116,7 @@ public class ShiroConfig {
 //        filterMap.put("/logout", "logout");   // 暂不使用Shiro自带的登出
         filterMap.put("/druid/**", "anon");
         filterMap.put("/captcha.jpg", "anon");
+//        filterMap.put("/", "user");
 
         filterMap.put("/**", "myFilter,authc");
         shiroFilter.setFilterChainDefinitionMap(filterMap);

@@ -21,6 +21,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 作用：LayOA系统登录<br>
@@ -46,7 +48,7 @@ public class LoginController extends BaseController {
 
     @Action("登录")
     @PostMapping(value = "login")
-    public R login(@RequestParam("username") String username, @RequestParam("password") String password, String vercode) {
+    public R login(@RequestParam("username") String username, @RequestParam("password") String password, boolean rememberMe, String vercode) {
         // todo 先不要验证码
         /*String kaptcha = ShiroKit.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
         if (!vercode.equalsIgnoreCase(kaptcha)) {
@@ -55,14 +57,15 @@ public class LoginController extends BaseController {
 
         try {
             Subject subject = ShiroKit.getSubject();
-            UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+            UsernamePasswordToken token = new UsernamePasswordToken(username, password, rememberMe);
             subject.login(token);
+
+            ShiroKit.setSessionAttribute("user", username);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             return R.fail(e.getMessage());
         }
 
-        LOGGER.info("{}登陆", username);
         return R.ok();
     }
 
