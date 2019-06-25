@@ -3,13 +3,14 @@ package com.kalvin.kvf.common.config;
 import org.springframework.boot.web.server.ErrorPage;
 import org.springframework.boot.web.server.ErrorPageRegistrar;
 import org.springframework.boot.web.server.ErrorPageRegistry;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 
 /**
- * 错误页面配置 暂时使用不到
+ * 错误页面配置
  * @author Kalvin
  */
-//@Configuration
+@Configuration
 public class ErrorPageConfig implements ErrorPageRegistrar {
 
     @Override

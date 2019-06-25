@@ -18,7 +18,7 @@ public class ExceptHandler {
 
     @ExceptionHandler(KvfException.class)
     public R handleKvfException(KvfException e) {
-        LOGGER.error("kvf异常：", e);
+        LOGGER.error("kvf-admin error:", e);
         if (e.getErrorCode() == null) {
             return R.fail(e.getMsg());
         }
@@ -27,7 +27,13 @@ public class ExceptHandler {
 
     @ExceptionHandler(UnauthorizedException.class)
     public R handleUnauthorizedExceptionException(UnauthorizedException e) {
-        LOGGER.error("kvf异常：{}", e.getMessage());
+        LOGGER.error("kvf-admin error:{}", e.getMessage());
         return R.fail(Constants.OTHER_FAIL_CODE, "权限不足，请联系管理员。");
+    }
+
+    @ExceptionHandler(Exception.class)
+    public R handleException(Exception e) {
+        LOGGER.error("kvf-admin error:", e);
+        return R.fail(Constants.OTHER_FAIL_CODE, e.getMessage());
     }
 }

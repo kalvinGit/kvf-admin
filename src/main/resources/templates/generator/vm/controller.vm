@@ -41,7 +41,7 @@ public class ${class}Controller extends BaseController {
     @Autowired
     private I${class}Service $service;
 
-    @RequiresPermissions("sys:user:index")
+    @RequiresPermissions("$m:$f:index")
     @GetMapping("index")
     public ModelAndView index() {
         return new ModelAndView("$m/$f");

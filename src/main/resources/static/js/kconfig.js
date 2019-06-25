@@ -99,12 +99,6 @@ var api = {
         roleAdd: BASE_WEB + 'sys/role/add',
         roleEdit: BASE_WEB + 'sys/role/edit',
         roleSetPermission: BASE_WEB + 'sys/role/set/permission',
-        /*roleTreeListData: BASE_WEB + 'sys/roleTree/list/data',
-        roleTreeRm: BASE_WEB + 'sys/roleTree/remove/',
-        roleTreeRmBatch: BASE_WEB + 'sys/roleTree/removeBatch',
-        roleTreeEditView: BASE_WEB + 'sys/roleTree/edit',
-        roleTreeSave: BASE_WEB + 'sys/roleTree/save',
-        roleTreeListTree: BASE_WEB + 'sys/roleTree/list/tree',*/
         userRoleView: BASE_WEB + 'sys/userRole/index',
         userRoleListData: BASE_WEB + 'sys/userRole/list/data',
         userRoleSave: BASE_WEB + 'sys/userRole/save',
@@ -150,7 +144,7 @@ $.ajaxSetup({
         // 通过XMLHttpRequest取得响应头，sessionstatus，
         var sessionStatus = xhr.getResponseHeader("session-status");
         // log('sessionStatus=', sessionStatus);
-        if(sessionStatus === "timeout"){
+        if(sessionStatus === "timeout") {
             // 如果超时就处理 ，指定要跳转的页面(比如登陆页)
             layer.confirm('未登录或登录超时，是否重新登录?', function () {
                 parent.window.location.replace(api.login);

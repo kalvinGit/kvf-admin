@@ -23,7 +23,6 @@ public class VelocityKit {
     private static VelocityEngine velocityEngine = null;
 
     private static void newEngine() {
-        System.out.println("newEngine");
         VelocityEngine ve = new VelocityEngine();
         ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
         ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
