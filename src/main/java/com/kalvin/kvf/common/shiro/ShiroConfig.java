@@ -78,7 +78,7 @@ public class ShiroConfig {
     private SimpleCookie rememberMeCookie() {
         SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
         // 记住时间，单位秒，默认15天
-        simpleCookie.setMaxAge(60 * 60 * 24 * 10);
+        simpleCookie.setMaxAge(60 * 60 * 24 * 15);
         return simpleCookie;
     }
 

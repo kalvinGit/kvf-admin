@@ -4,9 +4,9 @@ import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 import com.kalvin.kvf.common.annotation.Action;
 import com.kalvin.kvf.common.controller.BaseController;
+import com.kalvin.kvf.common.dto.R;
 import com.kalvin.kvf.common.utils.HttpServletContextKit;
 import com.kalvin.kvf.common.utils.ShiroKit;
-import com.kalvin.kvf.common.dto.R;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +21,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 作用：LayOA系统登录<br>
@@ -80,7 +78,6 @@ public class LoginController extends BaseController {
 
     /**
      * 获取图片验证码
-     * @throws IOException
      */
     @GetMapping("captcha.jpg")
     public void captcha() throws IOException {

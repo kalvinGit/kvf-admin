@@ -20,6 +20,7 @@
         <spring-boot.version>2.1.4.RELEASE</spring-boot.version>
         <mybatis-plus.version>3.1.0</mybatis-plus.version>
         <druid.version>1.1.10</druid.version>
+        <redis.version>2.1.5.RELEASE</redis.version>
         <shiro.version>1.4.0</shiro.version>
         <hutool.version>4.5.1</hutool.version>
     </properties>
@@ -94,11 +95,21 @@
             <version>${druid.version}</version>
         </dependency>
 
+        <!-- redis依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <version>${redis.version}</version>
+        </dependency>
+
+        <!-- get set -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <!-- 单元测试 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -137,16 +148,6 @@
             <version>${hutool.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.11.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eweb4j</groupId>
-            <artifactId>fel</artifactId>
-            <version>0.8</version>
-        </dependency>
-        <dependency>
             <groupId>com.github.axet</groupId>
             <artifactId>kaptcha</artifactId>
             <version>0.0.9</version>
@@ -154,6 +155,7 @@
     </dependencies>
 
     <build>
+        <finalName>kvf-admin</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
