@@ -53,13 +53,7 @@
     </div>
 
     <div class="layui-trans kvf-user-login-footer">
-
-        <p>© 2019 <a href="http://www.layui.com/" target="_blank">kvf.com</a></p>
-        <!--<p>
-            <span><a href="http://www.layui.com/admin/#get" target="_blank">获取授权</a></span>
-            <span><a href="http://www.layui.com/admin/pro/" target="_blank">在线演示</a></span>
-            <span><a href="http://www.layui.com/admin/" target="_blank">前往官网</a></span>
-        </p>-->
+        <p>© 2019 <a href="https://tools.kalvinbg.cn" target="_blank">kvf.com</a></p>
     </div>
 
 </div>
@@ -86,13 +80,13 @@
                         ,icon: 1
                         ,time: 500
                     }, function(){
-                        location.href = api.homeView; // loa首页
+                        location.href = api.homeView; // kvf-admin首页
                     });
 
                 } else {
                     if (r.msg.indexOf('验证码') !== -1) {
                         kvfKit.errorMsg(r.msg + '，请重试。');
-                        $('#kUserGetVerCode').attr('src', '/captcha.jpg');
+                        $('#kUserGetVerCode').attr('src', api.captchaUrl);
                     } else {
                         kvfKit.errorMsg(r.msg);
                     }
@@ -105,7 +99,7 @@
 
         // 刷新图片验证码
         $('#kUserGetVerCode').on('click', function () {
-            $(this).attr('src', '/captcha.jpg');
+            $(this).attr('src', api.captchaUrl);
         });
 
     })

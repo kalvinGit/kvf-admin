@@ -58,6 +58,7 @@ var req = {
 var api = {
     homeView: BASE_WEB + '', // loa主页地址
     login: BASE_WEB + 'login',
+    captchaUrl: BASE_WEB + 'captcha.jpg',
     comm: {
         selUserView: BASE_WEB + 'common/selUser',
         userMenus: BASE_WEB + 'index/menus',  // 用户目录菜单（左侧）

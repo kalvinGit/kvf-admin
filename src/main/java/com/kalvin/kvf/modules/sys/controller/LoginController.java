@@ -49,7 +49,7 @@ public class LoginController extends BaseController {
     public R login(@RequestParam("username") String username, @RequestParam("password") String password, boolean rememberMe, String vercode) {
         // 验证码校验
         String kaptcha = ShiroKit.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
-        if (!vercode.equalsIgnoreCase(kaptcha)) {
+        if (!kaptcha.equalsIgnoreCase(vercode)) {
             return R.fail("验证码不正确");
         }
 
