@@ -47,11 +47,11 @@ public class LoginController extends BaseController {
     @Action("登录")
     @PostMapping(value = "login")
     public R login(@RequestParam("username") String username, @RequestParam("password") String password, boolean rememberMe, String vercode) {
-        // todo 先不要验证码
-        /*String kaptcha = ShiroKit.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
+        // 验证码校验
+        String kaptcha = ShiroKit.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
         if (!vercode.equalsIgnoreCase(kaptcha)) {
             return R.fail("验证码不正确");
-        }*/
+        }
 
         try {
             Subject subject = ShiroKit.getSubject();
