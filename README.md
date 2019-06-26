@@ -55,7 +55,7 @@ kvf-admin
 * mysql5.5+
 
 ### 本地部署
-* 通过git下载源码
+* 通过git/gitee下载源码(推荐使用git，因为gitee不是实时更新的)
 * 创建数据库：kvf-admin【数据库编码为utf8mb4】，并执行sql/kvf-admin.sql创建表和初始化系统基础数据
 * 修改开发环境配置文件application-dev.yml，配置数据库账号和密码
 * 开发工具idea或eclipse还需要安装lombok插件，否则会提示找不到实体类的的get/set方法
@@ -65,8 +65,8 @@ kvf-admin
 * 账号密码：admin/123456
 
 ### 项目演示
-* 演示地址：晚点会放上来，请稍候...
-* 账号密码：admin/123456
+* 演示地址：http://kvfadmin.kalvinbg.cn/kvf-admin
+* 账号密码：test/123456
 
 ### 系统效果图展示
 

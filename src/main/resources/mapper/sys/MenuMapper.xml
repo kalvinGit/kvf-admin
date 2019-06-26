@@ -28,7 +28,7 @@
 
     <select id="selectPermission" resultType="java.lang.String">
         SELECT DISTINCT
-            b.permission
+            b.permission, b.sort
         FROM
             sys_menu AS b
             INNER JOIN sys_role_menu AS c ON b.id = c.menu_id
