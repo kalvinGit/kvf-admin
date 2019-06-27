@@ -2,8 +2,11 @@ package com.kalvin.kvf.modules.generator.controller;
 
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.servlet.ServletUtil;
 import com.kalvin.kvf.common.controller.BaseController;
 import com.kalvin.kvf.common.dto.R;
+import com.kalvin.kvf.common.utils.HttpServletContextKit;
+import com.kalvin.kvf.modules.generator.constant.ConfigConstant;
 import com.kalvin.kvf.modules.generator.dto.TableColumnDTO;
 import com.kalvin.kvf.modules.generator.service.IGenService;
 import com.kalvin.kvf.modules.generator.service.ITableService;
@@ -17,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.File;
 import java.io.StringWriter;
 import java.util.List;
 
@@ -98,6 +102,23 @@ public class GenController extends BaseController {
     public R quicklyGenerateCodeBatch(@RequestBody List<QuicklyGenParamsVO> quicklyGenParamsVOS) {
         quicklyGenParamsVOS.forEach(this::quicklyGenerateCode);
         return R.ok();
+    }
+
+    @GetMapping(value = "check/codeZip/isExists")
+    public R checkCodeZipIsExists() {
+        String fileUrl = ConfigConstant.CODE_GEN_PATH + "/" + ConfigConstant.CODE_ZIP_FILENAME;
+        File file = new File(fileUrl);
+        if (!file.exists()) {
+            return R.fail("未找到生成的代码包，请生成代码后再下载。");
+        }
+        return R.ok();
+    }
+
+    @GetMapping(value = "download/codeZip")
+    public void downloadCodeZip() {
+        String fileUrl = ConfigConstant.CODE_GEN_PATH + "/" + ConfigConstant.CODE_ZIP_FILENAME;
+        File file = new File(fileUrl);
+        ServletUtil.write(HttpServletContextKit.getHttpServletResponse(), file);
     }
 
 }

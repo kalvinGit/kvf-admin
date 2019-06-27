@@ -1,6 +1,7 @@
 package com.kalvin.kvf.modules.generator.utils;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ZipUtil;
 import com.kalvin.kvf.modules.generator.constant.ConfigConstant;
 import com.kalvin.kvf.modules.generator.constant.TemplateTypeEnum;
 import com.kalvin.kvf.modules.generator.vo.GenConfigVO;
@@ -14,11 +15,10 @@ import java.io.File;
 import java.io.FileWriter;
 
 /**
+ * 模板工具
  * create by Kalvin on 2019/06/13 21:41
  */
 public class VelocityKit {
-
-    private final static String PRE_TEMP_PATH = "templates/generator/vm/";
 
     private static VelocityEngine velocityEngine = null;
 
@@ -34,7 +34,7 @@ public class VelocityKit {
         if (velocityEngine == null) {
             VelocityKit.newEngine();
         }
-        return velocityEngine.getTemplate(PRE_TEMP_PATH + templateName);
+        return velocityEngine.getTemplate(ConfigConstant.PRE_TEMP_PATH + templateName);
     }
 
     public static VelocityContext getContext() {
@@ -78,5 +78,9 @@ public class VelocityKit {
                         AuxiliaryKit.getGenerateCodePath(typeEnum, config.getModuleName(), config.getFunName()));
             }
         }
+
+        // 所有代码文件打包zip压缩包
+        final String srcPath = ConfigConstant.CODE_GEN_PATH + "/" + ConfigConstant.CODE_FOLDER_NAME;
+        ZipUtil.zip(srcPath, ConfigConstant.CODE_GEN_PATH + "/" + ConfigConstant.CODE_ZIP_FILENAME);
     }
 }

@@ -173,11 +173,8 @@ public class AuxiliaryKit {
             throw new RuntimeException("无法获取代码生成路径，请检查模板是否存在");
         }
 
-        if (ConfigConstant.CODE_GEN_PATH.endsWith("/") || ConfigConstant.CODE_GEN_PATH.endsWith("\\")) {
-            path = ConfigConstant.CODE_GEN_PATH + path;
-        } else {
-            path = ConfigConstant.CODE_GEN_PATH + "/" + path;
-        } 
+        path = ConfigConstant.CODE_GEN_PATH + "/" + ConfigConstant.CODE_FOLDER_NAME + "/" + path;
+
         return path + "/" + fileName;
     }
 

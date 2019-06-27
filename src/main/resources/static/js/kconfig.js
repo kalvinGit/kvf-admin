@@ -114,7 +114,9 @@ var api = {
         customGenerateSetting: BASE_WEB + 'generator/setting/',
         customGenerateCode: BASE_WEB + 'generator/custom/generate/code',
         quicklyGenerateCode: BASE_WEB + 'generator/quickly/generate/code',
-        quicklyGenerateCodeBatch: BASE_WEB + 'generator/quickly/generate/code/batch'
+        quicklyGenerateCodeBatch: BASE_WEB + 'generator/quickly/generate/code/batch',
+        checkCodeZipIsExists: BASE_WEB + 'generator/check/codeZip/isExists',
+        downloadCodeZip: BASE_WEB + 'generator/download/codeZip'
     }
 
 };

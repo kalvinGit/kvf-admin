@@ -7,7 +7,10 @@ import lombok.Getter;
  */
 public class ConfigConstant {
 
-    public final static String CODE_GEN_PATH = "D://genCode";  //  代码生成的路径目录，可根据实际情况修改
+    public final static String CODE_GEN_PATH = "D://genCode";  //  代码生成的路径目录，可根据实际情况修改，不要直接放根目录
+    public final static String CODE_FOLDER_NAME = "code";
+    public final static String CODE_ZIP_FILENAME = "code.zip";
+    public final static String PRE_TEMP_PATH = "templates/generator/vm/";   // 模板文件路径
     public final static String BUTTON_JSON_REL_PATH = "templates/generator/defaultButtonConfig.json"; // 生成按钮配置文件相对路径
     public final static String AUTHOR = ""; // 作者（用于代码注释。可不填）
 
