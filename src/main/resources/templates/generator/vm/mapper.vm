@@ -26,6 +26,7 @@ public interface ${config.firstCapFunName}Mapper extends BaseMapper<$config.firs
     /**
      * 查询列表(分页)
      * @param ${config.funName} 查询参数
+     * @param page 分页参数
      * @return list
      */
     List<$config.firstCapFunName> select${config.firstCapFunName}List($config.firstCapFunName $config.funName, IPage page);

@@ -119,9 +119,9 @@ public class AuxiliaryKit {
             return "Long";
         } else if ("int".equals(dataType) || "tinyint".equals(dataType)) {
             return "Integer";
-        } else if ("varchar".equals(dataType) || "char".equals(dataType)) {
+        } else if ("varchar".equals(dataType) || "char".equals(dataType) || "text".equals(dataType)) {
             return "String";
-        } else if ("timestamp".equals(dataType) || "date".equals(dataType)) {
+        } else if ("timestamp".equals(dataType) || dataType.contains("date")) {
             return "Date";
         } else {
             throw new RuntimeException("字段类型转换失败，不支持的类型：" + dataType);

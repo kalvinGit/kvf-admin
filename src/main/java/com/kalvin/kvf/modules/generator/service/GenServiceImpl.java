@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Create by Kalvin on 2019/6/15
@@ -58,14 +59,22 @@ public class GenServiceImpl implements IGenService {
         AuxiliaryKit.handleAndSetColumnsValueRelations(columnConfigDTOS);
         genConfig.setColumns(columnConfigDTOS);
 
-        // 读取半设置按钮配置信息
+        // 读取半设置按钮配置信息并处理
         String buttonInfo = FileUtil.readString(
                 new File(ClassUtil.getClassPath() + ConfigConstant.BUTTON_JSON_REL_PATH), "UTF-8");
         JSONObject jsonObject = JSONUtil.parseObj(buttonInfo);
         JSONArray headButtons = JSONUtil.parseArray(jsonObject.get(ConfigConstant.HEAD_BUTTON_KEY));
         JSONArray rowButtons = JSONUtil.parseArray(jsonObject.get(ConfigConstant.ROW_BUTTON_KEY));
-        genConfig.setHeadButtons(JSONUtil.toList(headButtons, ButtonConfigDTO.class));
-        genConfig.setRowButtons(JSONUtil.toList(rowButtons, ButtonConfigDTO.class));
+        List<ButtonConfigDTO> headBtnConfigs = JSONUtil.toList(headButtons, ButtonConfigDTO.class);
+        List<ButtonConfigDTO> rowBtnConfigs = JSONUtil.toList(rowButtons, ButtonConfigDTO.class);
+        List<ButtonConfigDTO> headCollect = headBtnConfigs.stream()
+                .peek(hc -> hc.setPerId(hc.getPerId().replace("{m}", moduleName).replace("{f}", funName)))
+                .collect(Collectors.toList());
+        List<ButtonConfigDTO> rowCollect = rowBtnConfigs.stream()
+                .peek(hc -> hc.setPerId(hc.getPerId().replace("{m}", moduleName).replace("{f}", funName)))
+                .collect(Collectors.toList());
+        genConfig.setHeadButtons(headCollect);
+        genConfig.setRowButtons(rowCollect);
         genConfig.setQueryColumns(new ArrayList<>());
 
         return genConfig;

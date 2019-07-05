@@ -28,7 +28,7 @@ import java.util.List;
 public class ${config.firstCapFunName}ServiceImpl extends ServiceImpl<${config.firstCapFunName}Mapper, ${config.firstCapFunName}> implements I${config.firstCapFunName}Service {
 
     @Override
-    public Page<${config.firstCapFunName}> listUserPage(${config.firstCapFunName} ${config.funName}) {
+    public Page<${config.firstCapFunName}> list${config.firstCapFunName}Page(${config.firstCapFunName} ${config.funName}) {
         Page<${config.firstCapFunName}> page = new Page<>(${config.funName}.getCurrent(), ${config.funName}.getSize());
         #if($config.tableType == 'tree_grid')
         ${config.funName}.setParentId(${config.funName}.get${config.pkCamelCase}() == null ? 0 : ${config.funName}.get${config.pkCamelCase}()); // treegrid默认传的id作为parentId

@@ -4,7 +4,7 @@
       "id": "1",
       "name": "添加",
       "key": "add",
-      "perId": "sys:user:add",
+      "perId": "{m}:{f}:add",
       "colorScheme": "",
       "icon": ""
     },
@@ -12,7 +12,7 @@
       "id": "2",
       "name": "批量删除",
       "key": "batchdel",
-      "perId": "sys:user:del",
+      "perId": "{m}:{f}:del",
       "colorScheme": "layui-btn-danger",
       "icon": ""
     }
@@ -22,7 +22,7 @@
       "id": "2",
       "name": "编辑",
       "key": "edit",
-      "perId": "sys:user:edit",
+      "perId": "{m}:{f}:edit",
       "colorScheme": "layui-btn-normal",
       "icon": "layui-icon layui-icon-edit"
     },
@@ -30,7 +30,7 @@
       "id": "3",
       "name": "删除",
       "key": "del",
-      "perId": "sys:user:del",
+      "perId": "{m}:{f}:del",
       "colorScheme": "layui-btn-danger",
       "icon": "layui-icon layui-icon-delete"
     }
