@@ -33,7 +33,7 @@
             #set($valExp = ${config.funName} + '.' + $column.columnNameCamelCase)
             #if($column.dataType == 'varchar' || $column.dataType == 'char')
             <if test="$valExp != null and $valExp != ''">
-                and $column.columnName like concat(#{$valExp, "%")
+                and $column.columnName like concat(#{$valExp}, "%")
             </if>
             #else
             <if test="$valExp != null">

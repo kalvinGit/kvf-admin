@@ -136,7 +136,7 @@
             //提交 Ajax 成功后，关闭当前弹层并重载表格
             $.ajax({
                 type: req.type.post,
-                url: api.sys.userSave,
+                url: api.sys.userUpdateInfo,
                 data: field,
                 async: false,
                 success: function (r) {

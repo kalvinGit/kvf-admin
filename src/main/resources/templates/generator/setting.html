@@ -29,7 +29,7 @@
                 <div class="layui-input-block">
                     <!-- 这里的xm-select属性是多选的ID, 如多处使用请保证全局唯一 -->
                     <select name="queryCol" xm-select="queryCol" xm-select-search>
-                        <option  th:each="tableColumn:${tableColumns}" th:value="${tableColumn.columnName}" th:text="${tableColumn.columnComment}"></option>
+                        <option  th:each="tableColumn:${tableColumns}" th:value="${tableColumn.columnName}" th:data-type="${tableColumn.dataType}" th:text="${tableColumn.columnComment}"></option>
                     </select>
                 </div>
             </div>
@@ -369,8 +369,10 @@
         function getQueryColumnParams() {
             var arr = [];
             var queryColVals = formSelects.value('queryCol');
+            var $xsEl = $('select[xm-select="queryCol"]');
             $.each(queryColVals, function (i, item) {
-                arr.push({name: item.value, comment: item.name});
+                var dataType = $xsEl.find('option[value="' + item.value + '"]').data('type');
+                arr.push({name: item.value, comment: item.name, dataType: dataType});
             });
             return arr;
         }

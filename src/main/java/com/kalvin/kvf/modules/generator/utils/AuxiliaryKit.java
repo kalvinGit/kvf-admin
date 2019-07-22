@@ -142,7 +142,7 @@ public class AuxiliaryKit {
                 break;
             case "SERVICE":
                 pack = packageConfig.SERVICE_PACKAGE;
-                fileName = "I" + StrUtil.upperFirst(funName) + "Service.java";
+                fileName = StrUtil.upperFirst(funName) + "Service.java";
                 break;
             case "SERVICE_IMPL":
                 pack = packageConfig.SERVICE_IMPL_PACKAGE;
@@ -159,7 +159,7 @@ public class AuxiliaryKit {
             default:
                 if (typeEnum.getType().equals("TABLE") || typeEnum.getType().equals("TREE_GRID")) {
                     path = "templates/" + moduleName;
-                    fileName = funName + "_list.html";
+                    fileName = funName + ".html";
                 } else if (typeEnum.getType().equals("OPERATION")) {
                     path = "templates/" + moduleName;
                     fileName = funName + "_edit.html";

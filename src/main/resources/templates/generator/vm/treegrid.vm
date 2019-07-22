@@ -19,16 +19,29 @@
                     <div class="layui-form layui-card-header kvf-card-header-auto">
                         <div class="layui-form-item">
                             #foreach($queryColumn in $config.queryColumns)
+                            #if($queryColumn.dataType == 'timestamp' || $queryColumn.dataType == 'date' || $queryColumn.dataType == 'datetime')
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">$queryColumn.comment</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="$queryColumn.nameCamelCase" id="$queryColumn.nameCamelCase" placeholder="请输入$queryColumn.comment" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            #else
                             <div class="layui-inline">
                                 <label class="layui-form-label">$queryColumn.comment</label>
                                 <div class="layui-input-inline">
                                     <input type="text" name="$queryColumn.name" placeholder="请输入$queryColumn.comment" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
+                            #end
+
                             #if($config.queryColumns.size() == $foreach.count)
                             <div class="layui-inline">
                                 <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
                                     <i class="layui-icon layui-icon-search"></i>
+                                </button>
+                                <button class="layui-btn " type="reset">
+                                    <i class="layui-icon layui-icon-refresh-1"></i>
                                 </button>
                             </div>
                             #end
@@ -92,8 +105,8 @@
 
 <script type="text/javascript" th:inline="none">
     var active;
-    layui.use(['element', 'form', 'layer', 'table'], function () {
-        var elemet = layui.element, form = layui.form, layer = layui.layer;
+    layui.use(['element', 'form', 'layer', 'table', 'laydate'], function () {
+        var elemet = layui.element, form = layui.form, layer = layui.layer, laydate = layui.laydate;
         var treeGridId = 'kTreeGrid';
         var area = ['550px', '90%'];
 
@@ -298,6 +311,15 @@
             },
             #end
         };
+
+        #foreach($column in $config.queryColumns)
+        #set($name = $column.nameCamelCase)
+        #if($column.dataType == 'timestamp' || $column.dataType == 'date' || $column.dataType == 'datetime')
+        laydate.render({
+            elem: '#$name' // 指定元素
+        });
+        #end
+        #end
 
         // 监听查询
         form.on('submit(kTableSearchFilter)', function (obj) {

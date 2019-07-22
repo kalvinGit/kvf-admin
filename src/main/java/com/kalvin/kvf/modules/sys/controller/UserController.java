@@ -110,6 +110,12 @@ public class UserController extends BaseController {
         return R.ok();
     }
 
+    @PostMapping(value = "updateInfo")
+    public R updateInfo(User user) {
+        userService.updateById(user);
+        return R.ok();
+    }
+
     @RequiresPermissions("sys:user:del")
     @PostMapping(value = "remove/{id}")
     public R remove(@PathVariable Long id) {

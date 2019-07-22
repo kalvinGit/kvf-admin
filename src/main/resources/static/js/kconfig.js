@@ -72,6 +72,7 @@ var api = {
         userEditView: BASE_WEB + 'sys/user/edit',
         userAdd: BASE_WEB + 'sys/user/add',
         userEdit: BASE_WEB + 'sys/user/edit',
+        userUpdateInfo: BASE_WEB + 'sys/user/updateInfo',
         userResetPwd: BASE_WEB + 'sys/user/resetPwd',
         userChangePwd: BASE_WEB + 'sys/user/changePwd',
         menuListData: BASE_WEB + 'sys/menu/list/data',

@@ -13,25 +13,40 @@
         <div class="layui-col-md12" id="kMainContentCol">
             <div class="layui-fluid kvf-fluid-padding15">
                 <div class="layui-card">
-                    <div class="layui-form layui-card-header kvf-card-header-auto">
-                        <div class="layui-form-item">
-                        #foreach($queryColumn in $config.queryColumns)
-                        <div class="layui-inline">
-                            <label class="layui-form-label">$queryColumn.comment</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="$queryColumn.name" placeholder="请输入$queryColumn.comment" autocomplete="off" class="layui-input">
+                    <form>
+                        <div class="layui-form layui-card-header kvf-card-header-auto">
+                            <div class="layui-form-item">
+                            #foreach($queryColumn in $config.queryColumns)
+                            #if($queryColumn.dataType == 'timestamp' || $queryColumn.dataType == 'date' || $queryColumn.dataType == 'datetime')
+                            <div class="layui-inline">
+                                <label class="layui-form-label">$queryColumn.comment</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="$queryColumn.nameCamelCase" id="$queryColumn.nameCamelCase" placeholder="请输入$queryColumn.comment" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            #else
+                            <div class="layui-inline">
+                                <label class="layui-form-label">$queryColumn.comment</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="$queryColumn.nameCamelCase" placeholder="请输入$queryColumn.comment" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            #end
+
+                            #if($config.queryColumns.size() == $foreach.count)
+                            <div class="layui-inline">
+                                <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
+                                    <i class="layui-icon layui-icon-search"></i>
+                                </button>
+                                <button class="layui-btn " type="reset">
+                                    <i class="layui-icon layui-icon-refresh-1"></i>
+                                </button>
+                            </div>
+                            #end
+                            #end
                             </div>
                         </div>
-                        #if($config.queryColumns.size() == $foreach.count)
-                        <div class="layui-inline">
-                            <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
-                                <i class="layui-icon layui-icon-search"></i>
-                            </button>
-                        </div>
-                        #end
-                        #end
-                        </div>
-                    </div>
+                    </form>
 
                     <div class="layui-card-body">
                         <table id="kContentTable" lay-filter="kContentTable"></table>
@@ -86,8 +101,8 @@
 <!--表格列格式化模板 end-->
 
 <script type="text/javascript" th:inline="javascript">
-    layui.use(['element', 'form', 'layer', 'table'], function () {
-        var elemet = layui.element, form = layui.form, layer = layui.layer, table = layui.table;
+    layui.use(['element', 'form', 'layer', 'table', 'laydate'], function () {
+        var elemet = layui.element, form = layui.form, layer = layui.layer, table = layui.table, laydate = layui.laydate;
         var tableId = 'kContentTable';
         var area = ['550px', '90%'];
 
@@ -141,7 +156,7 @@
                         //执行 Ajax 后重载
                         $.ajax({
                             type: req.type.post,
-                            url: BASE_WEB + '$config.moduleName/$config.funName/removeBatch',
+                            url: BASE_WEB + '$config.moduleName/$config.funName/batchdel',
                             data: {ids: ids.toString()},
                             success: function (r) {
                                 if (r.code === req.status.ok) {
@@ -198,7 +213,7 @@
                     //执行 Ajax 后重载
                     $.ajax({
                         type: req.type.post,
-                        url: BASE_WEB + '$config.moduleName/$config.funName/remove/' + data.$config.pkCamelCase,
+                        url: BASE_WEB + '$config.moduleName/$config.funName/del/' + data.$config.pkCamelCase,
                         async: false,
                         success: function (r) {
                             if (r.code === req.status.ok) {
@@ -226,6 +241,15 @@
             }
             #end
         });
+
+        #foreach($column in $config.queryColumns)
+        #set($name = $column.nameCamelCase)
+        #if($column.dataType == 'timestamp' || $column.dataType == 'date' || $column.dataType == 'datetime')
+        laydate.render({
+            elem: '#$name' // 指定元素
+        });
+        #end
+        #end
 
         // 监听查询
         form.on('submit(kTableSearchFilter)', function (obj) {

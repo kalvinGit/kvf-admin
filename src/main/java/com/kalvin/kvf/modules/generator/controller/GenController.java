@@ -1,12 +1,14 @@
 package com.kalvin.kvf.modules.generator.controller;
 
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import com.kalvin.kvf.common.controller.BaseController;
 import com.kalvin.kvf.common.dto.R;
 import com.kalvin.kvf.common.utils.HttpServletContextKit;
 import com.kalvin.kvf.modules.generator.constant.ConfigConstant;
+import com.kalvin.kvf.modules.generator.dto.QueryColumnConfigDTO;
 import com.kalvin.kvf.modules.generator.dto.TableColumnDTO;
 import com.kalvin.kvf.modules.generator.service.IGenService;
 import com.kalvin.kvf.modules.generator.service.ITableService;
@@ -66,6 +68,12 @@ public class GenController extends BaseController {
         LOGGER.info("genConfig={}", genConfigVO);
         String tableType = genConfigVO.getTableType();
         String tableTplName = tableType.equals("tree_grid") ? "treegrid.vm" : "table.vm";
+
+        // 查询列参数设置坨峰字段
+        List<QueryColumnConfigDTO> queryColumns = genConfigVO.getQueryColumns();
+        if (CollUtil.isNotEmpty(queryColumns)) {
+            queryColumns.forEach(column -> column.setNameCamelCase(StrUtil.toCamelCase(column.getName())));
+        }
 
         // 处理表列值说明关系
         AuxiliaryKit.handleAndSetColumnsValueRelations(genConfigVO.getColumns());

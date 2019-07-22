@@ -11,7 +11,7 @@
     #set($name = $column.columnNameCamelCase)
     #set($thValue = '${editInfo.' + $name + '}')
     #if($column.columnName != $config.primaryKey)
-    #if($column.dataType == 'timestamp' || $column.dataType == 'date')
+    #if($column.dataType == 'timestamp' || $column.dataType == 'date' || $column.dataType == 'datetime')
     <div class="layui-form-item">
         <label class="layui-form-label">$column.columnComment</label>
         <div class="layui-input-inline">
@@ -49,11 +49,20 @@
 <script th:replace="common/base::context"></script>
 <script th:replace="common/base::mainjs"></script>
 <script>
-    layui.use(['form'], function () {
-        var $ = layui.$, form = layui.form;
+    layui.use(['form', 'laydate'], function () {
+        var $ = layui.$, form = layui.form, laydate = layui.laydate;
 
         #if($config.tableType == 'tree_grid')
         var parentId = kvfKit.getUrlParam('parentId');
+        #end
+
+        #foreach($column in $config.allColumns)
+        #set($name = $column.columnNameCamelCase)
+        #if($column.dataType == 'timestamp' || $column.dataType == 'date' || $column.dataType == 'datetime')
+        laydate.render({
+            elem: '#$name' // 指定元素
+        });
+        #end
         #end
 
         //监听提交
