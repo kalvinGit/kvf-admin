@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   说明：
+   1、日志级别及文件
+       日志记录采用分级记录，级别与日志文件名相对应，不同级别的日志信息记录到不同的日志文件中
+       例如：error级别记录到xxx-error-xxx.log（该文件为当前记录的日志文件），而xxx-error-xxx.x.log为归档日志，
+       日志文件按日期记录，同一天内，若日志文件大小等于或大于2M，则按0、1、2...顺序分别命名
+       例如xxx-error-2013-12-21.0.log
+       其它级别的日志也是如此。
+   2、文件路径
+       若本地开发，以绝对路径指定，如：/Users/zhangboqing/Downloads/logs。
+       若部署到服务器，则各个服务器约定一个固定的日志路径如/data/home/logs/【项目名】/
+   3、Appender
+       FILE-ALL对应所有级别，文件名以xxx-all-xxx.log形式命名
+       FILE-ERROR对应error级别，文件名以xxx-error-xxx.log形式命名
+       FILE-WARN对应warn级别，文件名以xxx-warn-xxx.log形式命名
+       FILE-INFO对应info级别，文件名以xxx-info-xxx.log形式命名
+       FILE-DEBUG对应debug级别，文件名以xxx-debug-xxx.log形式命名
+       STDOUT将日志信息输出到控制上，为方便开发测试使用
+-->
+
+
+<!-- 一、根节点<configuration>，包含下面三个属性-->
+<!--1.scan: 当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true-->
+<!--2.scanPeriod: 设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。-->
+<!--3.debug: 当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。-->
+<configuration
+        xmlns="http://ch.qos.logback/xml/ns/logback"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://ch.qos.logback/xml/ns/logback https://raw.githubusercontent.com/enricopulatzo/logback-XSD/master/src/main/xsd/logback.xsd"
+        scan="true">
+    <!--注册转换器，颜色转化器-->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex"
+                    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx"
+                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+
+    <!-- 二、子节点<contextName>：用来设置上下文名称，每个logger都关联到logger上下文，默认上下文名称为default。但可以使用<contextName>设置成其他名字，用于区分不同应用程序的记录。一旦设置，不能修改。-->
+    <contextName>kvf-admin</contextName>
+
+    <!-- 三、子节点<property> -->
+    <!--子节点<property name="" value=""> ：用来定义变量值，它有两个属性name和value，通过<property>定义的值会被插入到logger上下文中，可以使“${}”来使用变量。-->
+    <!--子节点<property resource=""/> ：用来引入外部属性文件，可以使“${}”来使用变量。-->
+    <!--<property resource="logback.properties"/>-->
+    <property name="LOG_FILE_NAME" value="kvf-admin"/>
+    <!-- 日志文件目录（按环境分） -->
+    <springProfile name="dev">
+        <property name="LOG_PATH" value="D://logs"/>
+    </springProfile>
+    <springProfile name="test">
+        <property name="LOG_PATH" value="/tmp/logs/kvf-admin"/>
+    </springProfile>
+    <springProfile name="prod">
+        <property name="LOG_PATH" value="/tmp/logs/kvf-admin"/>
+    </springProfile>
+
+    <!-- 文件的最大数量 -->
+    <property name="MAX_HISTORY" value="10"/>
+    <!-- 文件的最大文件大小 -->
+    <property name="MAX_FILE_SIZE" value="100MB"/>
+    <!-- 日志字符编码 -->
+    <property name="CHARSET" value="UTF-8"/>
+    <!-- 控制日志是否在控制台打印，默认打印 -->
+    <property name="IS_OPEN_CONSOLE" value="true"/>
+    <!--日志级别-->
+    <property name="LEVEL" value="INFO"/>
+
+    <!--日志输出格式-->
+    <!--控制台-彩色-->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(-){faint} %clr([%15.15t]){faint} %clr([%3L]){blue} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <!--文件-黑白-->
+    <property name="FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n" />
+
+    <!-- 四、子节点<appender>：负责写日志的组件，它有两个必要属性name和class。name指定appender名称，class指定appender的全限定名 -->
+    <!--4.1 class为ch.qos.logback.core.ConsoleAppender 把日志输出到控制台-->
+    <!--4.2 class为ch.qos.logback.core.FileAppender 把日志添加到文件-->
+    <!--4.3 class为ch.qos.logback.core.rolling.RollingFileAppender 滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件-->
+
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!--日志记录器，日期滚动记录-->
+    <!-- 按照每天生成日志文件 -->
+    <!-- INFO -->
+    <appender name="FILE-INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--日志文件的路径及文件名-->
+        <!--被写入的文件名，可以是相对目录，也可以是绝对目录，如果上级目录不存在会自动创建，没有默认值-->
+        <file>${LOG_PATH}/${LOG_FILE_NAME}_info.log</file>
+        <!-- 如果 true，事件被追加到现存文件尾部。如果 false，清空现存文件.默认为 true -->
+        <append>true</append>
+        <!--临界值过滤器，过滤掉低于指定临界值的日志。当日志级别等于或高于临界值时，过滤器返回NEUTRAL；当日志级别低于临界值时，日志会被拒绝-->
+        <!-- 此日志文件只记录INFO级别的 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <!--当发生滚动时，决定 RollingFileAppender 的行为-->
+        <!--日志记录器的滚动策略，按日期，按大小记录,涉及文件移动和重命名-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 归档的日志文件的路径，例如今天是2018-09-21日志，当前写的日志文件路径为file节点指定，可以将此文件与file指定文件路径设置为不同路径，从而将当前日志文件或归档日志文件置不同的目录。
+            而2018-09-21的归档日志文件在由fileNamePattern指定。%d{yyyy-MM-dd}指定日期格式，%i指定索引 -->
+            <!--即file和fileNamePattern同时制定，当天日志名由file决定，前一天的文件名将自动改为fileNamePattern的值-->
+            <!-- 若要加一层时间目录 <fileNamePattern>${logback.dir}/%d{yyyy-MM-dd,aux}/${logback.info.filename}.%i.log</fileNamePattern>-->
+            <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}_info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!--控制被保留的归档文件的最大数量，超出数量就删除旧文件-->
+            <!--日志文件保留天数 -->
+            <maxHistory>${MAX_HISTORY}</maxHistory>|
+            <!--指定文件的大小-->
+            <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+        </rollingPolicy>
+        <!--负责两件事，一是把日志信息转换成字节数组，二是把字节数组写入到输出流-->
+        <!-- 日志文件的格式 -->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <!--日志字符编码格式-->
+            <charset>${CHARSET}</charset>
+        </encoder>
+    </appender>
+
+    <!-- ALL -->
+    <appender name="FILE-ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${LOG_FILE_NAME}_all.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}_all.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>${CHARSET}</charset>
+        </encoder>
+    </appender>
+
+
+    <!-- ERROR -->
+    <appender name="FILE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${LOG_FILE_NAME}_error.log</file>
+        <append>true</append>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}_error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>${CHARSET}</charset>
+        </encoder>
+    </appender>
+
+
+    <!-- 五、子节点<logger>：用来设置某一个包或具体的某一个类的日志打印级别、以及指定<appender>。<loger>仅有一个name属性，一个可选的level和一个可选的addtivity属性。可以包含零个或多个<appender-ref>元素，标识这个appender将会添加到这个loger-->
+    <logger name="com.kalvin.kvf" level="DEBUG"/>
+    <!-- 六、子节点<root>:它也是<logger>元素，但是它是根logger,是所有<logger>的上级。只有一个level属性，因为name已经被命名为"root",且已经是最上级了。-->
+
+    <!-- 生产环境下，将此级别配置为适合的级别，以免日志文件太多或影响程序性能 -->
+    <!--这里改level-->
+    <root level="${LEVEL}">
+        <appender-ref ref="STDOUT"/>
+<!--        <appender-ref ref="FILE-ALL"/>-->
+        <appender-ref ref="FILE-INFO"/>
+<!--        <appender-ref ref="FILE-ERROR"/>-->
+    </root>
+
+</configuration>

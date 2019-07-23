@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -14,21 +15,26 @@
         <div class="layui-col-md12" id="kMainContentCol">
             <div class="layui-fluid kvf-fluid-padding15">
                 <div class="layui-card">
-                    <div class="layui-form layui-card-header kvf-card-header-auto">
-                        <div class="layui-form-item">
-                            <div class="layui-inline">
-                                <label class="layui-form-label">表名</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="tableName" placeholder="请输入表名" autocomplete="off" class="layui-input">
+                    <form>
+                        <div class="layui-form layui-card-header kvf-card-header-auto">
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">表名</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="tableName" placeholder="请输入表名" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
+                                        <i class="layui-icon layui-icon-search"></i>
+                                    </button>
+                                    <button class="layui-btn " type="reset">
+                                        <i class="layui-icon layui-icon-refresh-1"></i>
+                                    </button>
                                 </div>
                             </div>
-                            <div class="layui-inline">
-                                <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
-                                    <i class="layui-icon layui-icon-search"></i>
-                                </button>
-                            </div>
                         </div>
-                    </div>
+                    </form>
 
                     <div class="layui-card-body">
                         <table id="kTable" lay-filter="kTable"></table>

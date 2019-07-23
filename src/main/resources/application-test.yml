@@ -1,17 +1,61 @@
 server:
-  port: 80
+  port: 8081
 
 spring:
-  # 关闭页面缓存
-  thymeleaf:
-    cache: false
 
   # druid数据源配置
   datasource:
+    name: druidDataSource
+    type: com.alibaba.druid.pool.DruidDataSource
     druid:
-      url: jdbc:mysql://localhost:3306/kvf_admin?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
-      username: root
-      password: root
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://x.x.x.x:3306/kvf_admin?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
+      username: xxxx
+      password: xxxx
+      filters: stat,wall,config
+      max-active: 100
+      initial-size: 1
+      max-wait: 60000
+      min-idle: 1
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: select 'x'
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-open-prepared-statements: 50
+      max-pool-prepared-statement-per-connection-size: 20
+      web-stat-filter:
+        # 添加过滤规则
+        url-pattern: /*
+        # 忽略过滤格式
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+      stat-view-servlet:
+        # 设置ip白名单
+        allow: 127.0.0.1
+        # 设置ip黑名单，优先级高于白名单
+        deny:
+        # 设置控制台管理用户
+        #        login-username: root
+        #        login-password: root
+        # 是否可以重置数据
+        reset-enable: false
+
+  # 静态资料访问方式
+  mvc:
+    static-path-pattern: /static/**
+
+  # thymeleaf 模块配置
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: LEGACYHTML5
+    encoding: utf-8
+    # 关闭页面缓存
+    cache: false
+    servlet:
+      content-type: text/html
 
   # redis配置
   redis:
@@ -34,13 +78,20 @@ spring:
     # 连接超时时间（毫秒）
     timeout: 10000
     # 集群配置(多个节点使用英文逗号分隔)
-#    cluster:
-#      nodes: 192.168.1.183:9001,192.168.1.183:9002
+    #    cluster:
+    #      nodes: 192.168.1.183:9001,192.168.1.183:9002
 
 
-# 日志配置
-logging:
-  level:
-    com:
-      kalvin:
-        kvf: debug
+# mybatis-plus 配置
+mybatis-plus:
+  check-config-location: false
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.kalvin.kvf.entity.*
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: auto
+      table-underline: true
+
+

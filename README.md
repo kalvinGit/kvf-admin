@@ -3,7 +3,6 @@ kvf-admin是一套快速开发框架、脚手架、后台管理系统、权限�
 * 后端采用spring boot、mybatis(已集成mybatis-plus增强插件，开发更迅速，可查看官方文档了解更多：[mybatis-plus](https://baomidou.gitee.io/mybatis-plus-doc/#/quick-start))、shiro框架
 * 前端采用layui作为UI框架，实现90%的移动端自适应，支持主题更换
 * 提供代码生成器，只需编写20%左右的代码，剩下全部自动生成；支持一键及批量功能模块生成，并支持一定程度上的自定义配置并生成代码，相对比较灵活
-* 目前只支持mysql数据库
 
 ### 项目结构树
 ````
@@ -65,13 +64,29 @@ kvf-admin
 * 账号密码：admin/123456
 
 ### 项目演示
-* 演示地址：http://kvfadmin.kalvinbg.cn/kvf-admin
+* 演示地址：http://kvfadmin.kalvinbg.cn
 * 账号密码：test/123456
 
 ### 系统效果图展示
 
 ![系统效果图](http://cloud.kalvinbg.cn/image/kvf-admin.png)
 ![系统效果图](http://cloud.kalvinbg.cn/image/kvf-admin1.png)
+![系统效果图](http://cloud.kalvinbg.cn/image/kvf-admin2.png)
+![系统效果图](http://cloud.kalvinbg.cn/image/kvf-admin3.png)
+![系统效果图](http://cloud.kalvinbg.cn/image/kvf-admin4.png)
+
+### 更新日志
+* 修复代码生成器生成日期控件没有实例化
+* 修复代码生成器生成的查询字段名称没有转成坨峰命名
+* 修复代码生成器生成mapperxml时，表达式缺少半边中括号
+* 优化部分功能代码
+* 新增logback日志配置
+
+### 敬请期待
+* 字典管理
+* 定时任务管理
+* 集成activity工作流引擎
+* vue-admin版本
 
 ### 交流反馈
 * github仓库：https://github.com/kalvinGit/kvf-admin
@@ -80,9 +95,3 @@ kvf-admin
 * 作者QQ：1481397688
 * 如需关注项目最新动态，请Watch、Star项目，同时也是对项目最好的支持
 
-
-### 捐赠支持
-项目的发展离不开您的支持，请作者晚餐加个鸡腿吧！<br>
-
-<img src="http://cloud.kalvinbg.cn/image/my_wxpay2.png" width="300" alt="微信收款码">
-<img src="http://cloud.kalvinbg.cn/image/my_alipay.jpg" width="300" alt="支付宝收款码">

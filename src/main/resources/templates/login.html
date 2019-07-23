@@ -87,9 +87,10 @@
                 } else {
                     if (r.msg.indexOf('验证码') !== -1) {
                         kvfKit.errorMsg(r.msg + '，请重试。');
-                        $('#kUserGetVerCode').attr('src', api.captchaUrl);
+                        refreshVerCode();
                     } else {
                         kvfKit.errorMsg(r.msg);
+                        refreshVerCode();
                     }
                 }
             });
@@ -98,10 +99,15 @@
         // 绑定监听回车事件
         kvfKit.bindEnterEventForLayuiForm();
 
-        // 刷新图片验证码
+
         $('#kUserGetVerCode').on('click', function () {
-            $(this).attr('src', api.captchaUrl);
+            refreshVerCode();
         });
+
+        // 刷新图片验证码
+        function refreshVerCode() {
+            $('#kUserGetVerCode').attr('src', api.captchaUrl);
+        }
 
     })
 </script>

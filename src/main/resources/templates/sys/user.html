@@ -14,37 +14,42 @@
         <div class="layui-col-md12" id="kMainContentCol">
             <div class="layui-fluid kvf-fluid-padding15">
                 <div class="layui-card">
-                    <div class="layui-form layui-card-header kvf-card-header-auto">
-                        <div class="layui-form-item">
-                            <div class="layui-inline">
-                                <label class="layui-form-label">用户账号</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="username" placeholder="请输入" autocomplete="off" class="layui-input">
+                    <form>
+                        <div class="layui-form layui-card-header kvf-card-header-auto">
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">用户账号</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="username" placeholder="请输入" autocomplete="off" class="layui-input">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">用户姓名</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="realname" placeholder="请输入" autocomplete="off" class="layui-input">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">用户姓名</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="realname" placeholder="请输入" autocomplete="off" class="layui-input">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">用户状态</label>
-                                <div class="layui-input-inline">
-                                    <select class="layui-select" name="status">
-                                        <option value="">请选择</option>
-                                        <option value="0">正常</option>
-                                        <option value="1">禁用</option>
-                                    </select>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">用户状态</label>
+                                    <div class="layui-input-inline">
+                                        <select class="layui-select" name="status">
+                                            <option value="">请选择</option>
+                                            <option value="0">正常</option>
+                                            <option value="1">禁用</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="layui-inline">
-                                <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
-                                    <i class="layui-icon layui-icon-search"></i>
-                                </button>
+                                <div class="layui-inline">
+                                    <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
+                                        <i class="layui-icon layui-icon-search"></i>
+                                    </button>
+                                    <button class="layui-btn " type="reset">
+                                        <i class="layui-icon layui-icon-refresh-1"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
 
                     <div class="layui-card-body">
                         <table id="kContentTable" lay-filter="kContentTable"></table>
