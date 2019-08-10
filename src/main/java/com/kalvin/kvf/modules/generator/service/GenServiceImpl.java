@@ -60,6 +60,7 @@ public class GenServiceImpl implements IGenService {
         TableColumnDTO tableColumn = tOptional.get();
         genConfig.setPrimaryKey(tableColumn.getColumnName());
         genConfig.setPkCamelCase(StrUtil.toCamelCase(tableColumn.getColumnName()));
+        genConfig.setFirstCapPk(StrUtil.upperFirst(genConfig.getPkCamelCase()));
 
         // 处理表列值说明关系
         List<ColumnConfigDTO> columnConfigDTOS = AuxiliaryKit.tableColumnsToColumnConfigs(tableColumnDTOS);

@@ -193,7 +193,7 @@ public class AuxiliaryKit {
                 }
         }
         if (!"".equals(pack)) {
-            path = StrUtil.replace(packageConfig.BASE_PACKAGE, ".", "/") + "/" + moduleName + "/" + pack;
+            path = StrUtil.replace(packageConfig.BASE_PACKAGE + ".modules", ".", "/") + "/" + moduleName + "/" + pack;
         }
 
         if ("".equals(path)) {

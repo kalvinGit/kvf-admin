@@ -92,6 +92,7 @@ public class GenController extends BaseController {
         genConfigVO.setAllColumns(AuxiliaryKit.handleTableColumns(tableColumnDTOS));
         genConfigVO.setFirstCapFunName(StrUtil.upperFirst(genConfigVO.getFunName()));
         genConfigVO.setPkCamelCase(StrUtil.toCamelCase(genConfigVO.getPrimaryKey()));
+        genConfigVO.setFirstCapPk(StrUtil.upperFirst(genConfigVO.getPkCamelCase()));
 
         VelocityContext ctx = VelocityKit.getContext();
         ctx.put("config", genConfigVO);

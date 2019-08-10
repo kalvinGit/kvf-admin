@@ -4,11 +4,11 @@
 #set($servicePK = $pack.SERVICE_PACKAGE)
 #set($serviceImplPK = $pack.SERVICE_IMPL_PACKAGE)
 #set($controllerPK = $pack.CONTROLLER_PACKAGE)
-package ${base}.${config.moduleName}.${servicePK};
+package ${base}.modules.${config.moduleName}.${servicePK};
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import ${base}.${config.moduleName}.${entityPK}.${config.firstCapFunName};
+import ${base}.modules.${config.moduleName}.${entityPK}.${config.firstCapFunName};
 
 /**
  * <p>
@@ -19,7 +19,7 @@ import ${base}.${config.moduleName}.${entityPK}.${config.firstCapFunName};
  #end
  * @since $createTime
  */
-public interface I${config.firstCapFunName}Service extends IService<$config.firstCapFunName> {
+public interface ${config.firstCapFunName}Service extends IService<$config.firstCapFunName> {
 
     /**
      * 获取列表。分页

@@ -76,6 +76,13 @@ kvf-admin
 ![系统效果图](http://cloud.kalvinbg.cn/image/kvf-admin4.png)
 
 ### 更新日志
+#### 2019-08-10
+* 优化代码生成器字段类型转换
+* 修复代码生成器生成代码包路径不正确bug
+* 删除多余依赖包
+* 修复系统管理员重置密码失败bug
+
+#### 2019-07-21
 * 修复代码生成器生成日期控件没有实例化
 * 修复代码生成器生成的查询字段名称没有转成坨峰命名
 * 修复代码生成器生成mapperxml时，表达式缺少半边中括号
@@ -91,7 +98,6 @@ kvf-admin
 ### 交流反馈
 * github仓库：https://github.com/kalvinGit/kvf-admin
 * gitee仓库：https://gitee.com/kalvinmy/kvf-admin
-* 官方QQ群：214768328
 * 作者QQ：1481397688
 * 如需关注项目最新动态，请Watch、Star项目，同时也是对项目最好的支持
 

@@ -9,18 +9,17 @@
 #set($pk = ${config.pkCamelCase})
 #set($service = $f + 'Service')
 #set($class = ${config.firstCapFunName})
-package ${base}.$m.${controllerPK};
+package ${base}.modules.$m.${controllerPK};
 
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import ${base}.common.BaseController;
+import ${base}.common.controller.BaseController;
 import ${base}.common.dto.R;
-import ${base}.$m.${entityPK}.$class;
-import ${base}.${m}.${servicePK}.I${class}Service;
+import ${base}.modules.$m.${entityPK}.$class;
+import ${base}.modules.${m}.${servicePK}.${class}Service;
 
 import java.util.List;
 
@@ -39,7 +38,7 @@ import java.util.List;
 public class ${class}Controller extends BaseController {
 
     @Autowired
-    private I${class}Service $service;
+    private ${class}Service $service;
 
     @RequiresPermissions("$m:$f:index")
     @GetMapping("index")

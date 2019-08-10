@@ -4,11 +4,11 @@
 #set($servicePK = $pack.SERVICE_PACKAGE)
 #set($serviceImplPK = $pack.SERVICE_IMPL_PACKAGE)
 #set($controllerPK = $pack.CONTROLLER_PACKAGE)
-package ${base}.${config.moduleName}.${mapperPK};
+package ${base}.modules.${config.moduleName}.${mapperPK};
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import ${base}.${config.moduleName}.${entityPK}.${config.firstCapFunName};
+import ${base}.modules.${config.moduleName}.${entityPK}.${config.firstCapFunName};
 
 import java.util.List;
 
