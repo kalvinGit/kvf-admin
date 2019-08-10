@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.io.File;
 import java.io.StringWriter;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -77,8 +78,15 @@ public class GenController extends BaseController {
 
         // 处理表列值说明关系
         AuxiliaryKit.handleAndSetColumnsValueRelations(genConfigVO.getColumns());
-        // 设置处理所有表列数据
+
+        // 获取数据库表所有列字段数据
         List<TableColumnDTO> tableColumnDTOS = tableService.listTableColumn(genConfigVO.getTableName());
+
+        // 获取并设置实体类所有需要导入的java包集合
+        Set<String> sets = AuxiliaryKit.getEntityImportPkgs(tableColumnDTOS);
+        genConfigVO.setPkgs(sets);
+
+        // 处理设置所有表列数据
         tableColumnDTOS = AuxiliaryKit.handleTableColumns(tableColumnDTOS);
         AuxiliaryKit.handleAndSetAllColumnsValueRelations(tableColumnDTOS);
         genConfigVO.setAllColumns(AuxiliaryKit.handleTableColumns(tableColumnDTOS));

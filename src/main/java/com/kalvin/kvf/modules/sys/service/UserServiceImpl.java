@@ -1,6 +1,7 @@
 package com.kalvin.kvf.modules.sys.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kalvin.kvf.modules.sys.entity.User;
@@ -31,5 +32,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public User getByUsername(String username) {
         return super.getOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
+    }
+
+    @Override
+    public void updateUserPassword(Long id, String password) {
+        super.update(new LambdaUpdateWrapper<User>()
+                .set(User::getPassword, password)
+                .eq(User::getId, id));
     }
 }

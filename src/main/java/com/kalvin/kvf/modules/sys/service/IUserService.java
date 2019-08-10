@@ -24,4 +24,6 @@ public interface IUserService extends IService<User> {
 
     User getByUsername(String username);
 
+    void updateUserPassword(Long id, String password);
+
 }

@@ -1,9 +1,9 @@
 /**
- * loa通用配置
+ * kvf-admin通用配置
  * @type {{}}
  */
 var config = {
-    logEnable: true,    // 日志开关
+    logEnable: true,    // 全局日志开关
     layui: {    // layui配置
         table: {
             cellMinWidth: 60
@@ -52,11 +52,11 @@ var req = {
 };
 
 /**
- * loaApi接口
+ * kvf-admin Api接口
  * @type {{}}
  */
 var api = {
-    homeView: BASE_WEB + '', // loa主页地址
+    homeView: BASE_WEB + '', // kvf-admin主页地址
     login: BASE_WEB + 'login',
     captchaUrl: BASE_WEB + 'captcha.jpg',
     comm: {
@@ -73,7 +73,7 @@ var api = {
         userAdd: BASE_WEB + 'sys/user/add',
         userEdit: BASE_WEB + 'sys/user/edit',
         userUpdateInfo: BASE_WEB + 'sys/user/updateInfo',
-        userResetPwd: BASE_WEB + 'sys/user/resetPwd',
+        userResetPwd: BASE_WEB + 'sys/user/{id}/resetPwd',
         userChangePwd: BASE_WEB + 'sys/user/changePwd',
         menuListData: BASE_WEB + 'sys/menu/list/data',
         menuRm: BASE_WEB + 'sys/menu/remove/',

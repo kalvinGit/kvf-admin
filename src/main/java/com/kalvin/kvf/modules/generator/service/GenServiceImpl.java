@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -41,8 +42,14 @@ public class GenServiceImpl implements IGenService {
         String funName = StrUtil.toCamelCase(tableName.substring(tableName.indexOf("_") + 1));
         genConfig.setModuleName(moduleName).setFunName(funName).setFirstCapFunName(StrUtil.upperFirst(funName));
 
-        // 处理表列数据
+        // 获取数据库表所有列字段数据
         List<TableColumnDTO> tableColumnDTOS = tableService.listTableColumn(tableName);
+
+        // 获取并设置实体类所有需要导入的java包集合
+        Set<String> sets = AuxiliaryKit.getEntityImportPkgs(tableColumnDTOS);
+        genConfig.setPkgs(sets);
+
+        // 处理表列数据
         tableColumnDTOS = AuxiliaryKit.handleTableColumns(tableColumnDTOS);
         AuxiliaryKit.handleAndSetAllColumnsValueRelations(tableColumnDTOS);
         genConfig.setAllColumns(tableColumnDTOS);

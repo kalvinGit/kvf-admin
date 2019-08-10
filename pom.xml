@@ -61,11 +61,11 @@
             <version>${mybatis-plus.version}</version>
         </dependency>
         <!-- 解决Mybatis.jar和Mybatis-spring的版本不兼容问题 -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
             <version>3.5.1</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-generator</artifactId>

@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 代码生成核心配置封装类
@@ -34,6 +35,7 @@ public class GenConfigVO implements Serializable {
     private List<ButtonConfigDTO> rowButtons;
     private List<ColumnsValueRelationDTO> columnsValueRelations;    // 列值对应说明关系列表数据
     private List<TableColumnDTO> allColumns;    // 表的所有列数据
+    private Set<String> pkgs;   // 实体类所需要导入的java类型包集合
 
     public GenConfigVO(String tableName, String tableType, String tableComment) {
         this.tableName = tableName;

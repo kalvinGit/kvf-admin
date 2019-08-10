@@ -2,6 +2,8 @@ package com.kalvin.kvf.modules.generator.utils;
 
 import cn.hutool.core.util.StrUtil;
 import com.kalvin.kvf.modules.generator.constant.ConfigConstant;
+import com.kalvin.kvf.modules.generator.constant.DbColumnTypeEnum;
+import com.kalvin.kvf.modules.generator.constant.JavaTypeEnum;
 import com.kalvin.kvf.modules.generator.constant.TemplateTypeEnum;
 import com.kalvin.kvf.modules.generator.dto.ColumnCommentValueRelationDTO;
 import com.kalvin.kvf.modules.generator.dto.ColumnConfigDTO;
@@ -9,7 +11,9 @@ import com.kalvin.kvf.modules.generator.dto.ColumnsValueRelationDTO;
 import com.kalvin.kvf.modules.generator.dto.TableColumnDTO;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -114,8 +118,7 @@ public class AuxiliaryKit {
     }
 
     public static String dataTypeConvertVariableType(String dataType) {
-        // todo 现在只是简单处理一下，以后再针对不同数据库处理
-        if ("bigint".equals(dataType)) {
+        /*if ("bigint".equals(dataType)) {
             return "Long";
         } else if ("int".equals(dataType) || "tinyint".equals(dataType)) {
             return "Integer";
@@ -125,7 +128,31 @@ public class AuxiliaryKit {
             return "Date";
         } else {
             throw new RuntimeException("字段类型转换失败，不支持的类型：" + dataType);
+        }*/
+        return AuxiliaryKit.getDbColumnTypeEnumByDbDataType(dataType).getJavaType();
+    }
+
+    public static Set<String> getEntityImportPkgs(List<TableColumnDTO> tableColumns) {
+        Set<String> sets = new HashSet<>();
+        tableColumns.forEach(tc -> {
+            String javaType = AuxiliaryKit.dataTypeConvertVariableType(tc.getDataType());
+            JavaTypeEnum javaTypeEnum = JavaTypeEnum.get(javaType);
+            if (javaTypeEnum == null) {
+                throw new RuntimeException("异常，不支持的Java类型：" + javaType);
+            }
+            if (StrUtil.isNotBlank(javaTypeEnum.getPkg())) {
+                sets.add(javaTypeEnum.getPkg());
+            }
+        });
+        return sets;
+    }
+
+    private static DbColumnTypeEnum getDbColumnTypeEnumByDbDataType(String dataType) {
+        DbColumnTypeEnum dbColumnTypeEnum = DbColumnTypeEnum.get(dataType);
+        if (dbColumnTypeEnum == null) {
+            throw new RuntimeException("发生异常，不支持的数据库类型：" + dataType);
         }
+        return dbColumnTypeEnum;
     }
 
     public static String getGenerateCodePath(TemplateTypeEnum typeEnum, String moduleName, String funName) {

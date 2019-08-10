@@ -235,7 +235,7 @@
             }
             if (layEvent === 'reset') {
                 layer.confirm('确定重置密码吗？', function (index) {
-                    kvfKit.aPost(api.sys.userResetPwd, {}, function (r) {
+                    kvfKit.aPost(api.sys.userResetPwd.replace('{id}', data.id), {}, function (r) {
                         if (r.code === req.status.ok) {
                             kvfKit.sucessMsg('重置成功');
                         } else {

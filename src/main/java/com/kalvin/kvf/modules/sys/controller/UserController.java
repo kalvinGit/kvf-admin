@@ -3,12 +3,11 @@ package com.kalvin.kvf.modules.sys.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.kalvin.kvf.common.utils.CryptionKit;
-import com.kalvin.kvf.common.utils.ShiroKit;
 import com.kalvin.kvf.common.controller.BaseController;
 import com.kalvin.kvf.common.dto.R;
+import com.kalvin.kvf.common.utils.CryptionKit;
+import com.kalvin.kvf.common.utils.ShiroKit;
 import com.kalvin.kvf.modules.sys.dto.UserEditDTO;
 import com.kalvin.kvf.modules.sys.dto.UserRoleGroupDTO;
 import com.kalvin.kvf.modules.sys.entity.Dept;
@@ -130,31 +129,41 @@ public class UserController extends BaseController {
         return R.ok();
     }
 
+    /**
+     * 管理员重置某个用户密码
+     * @param id 用户ID
+     * @return
+     */
     @RequiresPermissions("sys:user:reset")
-    @PostMapping(value = "resetPwd")
-    public R resetPwd() {
-        return this.changePwd(null, null);
+    @PostMapping(value = "{id}/resetPwd")
+    public R resetPwd(@PathVariable Long id) {
+        userService.updateUserPassword(id, CryptionKit.genUserPwd());
+        return R.ok();
     }
 
+    /**
+     * 用户修改密码
+     * @param oldPassword 旧密码
+     * @param password  新密码
+     * @return
+     */
     @PostMapping(value = "changePwd")
     public R changePwd(String oldPassword, String password) {
         if (StrUtil.isBlank(oldPassword) && StrUtil.isBlank(password)) {
-            password = CryptionKit.genUserPwd();
-        } else {
-            User user = userService.getById(ShiroKit.getUserId());
-            oldPassword = CryptionKit.genUserPwd(oldPassword);
-            if (user.getPassword().equals(oldPassword)) {
-                password = CryptionKit.genUserPwd(password);
-                if (user.getPassword().equals(password)) {
-                    return R.fail("新密码不能与旧密码相同");
-                }
-            } else {
-                return R.fail("旧密码不正确");
-            }
+            return R.fail("修改失败，非法的参数");
         }
-        userService.update(new LambdaUpdateWrapper<User>()
-                .set(User::getPassword, password)
-                .eq(User::getId, ShiroKit.getUserId()));
+        // 用户修改密码
+        User user = userService.getById(ShiroKit.getUserId());
+        oldPassword = CryptionKit.genUserPwd(oldPassword);
+        if (user.getPassword().equals(oldPassword)) {
+            password = CryptionKit.genUserPwd(password);
+            if (user.getPassword().equals(password)) {
+                return R.fail("新密码不能与旧密码相同");
+            }
+        } else {
+            return R.fail("旧密码不正确");
+        }
+        userService.updateUserPassword(ShiroKit.getUserId(), password);
         return R.ok();
     }
 
