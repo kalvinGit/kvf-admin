@@ -229,4 +229,32 @@ CREATE TABLE `sys_log`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '日志表' ROW_FORMAT = Dynamic;
 
+
+-- ----------------------------
+-- Table structure for sys_dict
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_dict`;
+CREATE TABLE `sys_dict`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `parent_id` bigint(20) NOT NULL COMMENT '父级ID',
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '字典名称',
+  `type` tinyint(2) NOT NULL DEFAULT 0 COMMENT '类型。0：字典类别；1：字典项；',
+  `code` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '字典码',
+  `value` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '字典值',
+  `status` tinyint(2) NOT NULL DEFAULT 0 COMMENT '状态。0：有效；1：无效',
+  `sort` int(11) NOT NULL DEFAULT 0 COMMENT '排序值。越小越靠前',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '字典表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_dict
+-- ----------------------------
+INSERT INTO `sys_dict` VALUES (1, 0, '根目录', 0, 'ROOT', '', 0, 0, NULL);
+INSERT INTO `sys_dict` VALUES (2, 1, '性别', 0, 'SEX', '', 0, 0, NULL);
+INSERT INTO `sys_dict` VALUES (3, 2, '未知', 1, 'SEX_UNKNOWN', '0', 0, 0, NULL);
+INSERT INTO `sys_dict` VALUES (4, 2, '男', 1, 'SEX_MAN', '1', 0, 0, NULL);
+INSERT INTO `sys_dict` VALUES (5, 2, '女', 1, 'SEX_LADY', '2', 0, 0, NULL);
+
+
 SET FOREIGN_KEY_CHECKS = 1;

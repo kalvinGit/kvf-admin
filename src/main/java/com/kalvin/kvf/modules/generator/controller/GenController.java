@@ -102,7 +102,9 @@ public class GenController extends BaseController {
 
         // 生成所有模板代码
         VelocityKit.allToFile(genConfigVO);
-        return R.ok(sw.toString());
+        // 返回预览页面代码
+        String tempUrl = genConfigVO.getModuleName() + "/" + genConfigVO.getFunName() + "/list/data";
+        return R.ok(sw.toString().replace(tempUrl, "sys/user/list/data"));
     }
 
     @PostMapping(value = "quickly/generate/code")

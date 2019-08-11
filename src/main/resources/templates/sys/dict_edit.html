@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="common/base::pagetitle"></title>
+    <link th:replace="common/base::static"/>
+</head>
+<body>
+<div class="layui-form" style="padding: 20px 30px 0 0;">
+    <!--<div class="layui-form-item">
+        <label class="layui-form-label">父级ID</label>
+        <div class="layui-input-inline">
+            <input type="text" name="parentId" th:value="${editInfo.parentId}" placeholder="请输入父级ID" autocomplete="off" class="layui-input">
+        </div>
+    </div>-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">字典名称</label>
+        <div class="layui-input-inline">
+            <input type="text" name="name" th:value="${editInfo.name}" lay-verify="required" placeholder="请输入字典名称" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-block" id="typeRadio">
+            <input type="radio" name="type" value="0" title="字典类别" autocomplete="off" class="layui-input" th:remove="${editInfo.type!=0?'all':'none'}" th:checked="${editInfo.type==0||editInfo.type==null}">
+            <input type="radio" name="type" value="1" title="字典项" autocomplete="off" class="layui-input" th:remove="${editInfo.type!=1?'all':'none'}" th:checked="${editInfo.type==1}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">字典码</label>
+        <div class="layui-input-inline">
+            <input type="text" name="code" th:value="${editInfo.code}" lay-verify="required" placeholder="请输入字典码" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item" th:remove="${editInfo.type==0?'all':'none'}">
+        <label class="layui-form-label">字典值</label>
+        <div class="layui-input-inline">
+            <input type="text" name="value" th:value="${editInfo.value}" placeholder="请输入字典值" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序值</label>
+        <div class="layui-input-inline">
+            <input type="text" name="sort" th:value="${editInfo.sort==null?0:editInfo.sort}" placeholder="请输入排序值" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-block">
+            <input type="radio" name="status" value="0" title="有效" autocomplete="off" class="layui-input" th:checked="${editInfo.status==0||editInfo.status==null}">
+            <input type="radio" name="status" value="1" title="无效" autocomplete="off" class="layui-input" th:checked="${editInfo.status==1}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-inline">
+            <textarea type="text" class="layui-textarea" name="remark" th:text="${editInfo.remark}" autocomplete="off" placeholder="请输入备注"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit="" lay-filter="kFormSubmit" id="kFormSubmit" value="确认添加">
+        <input type="text" name="id" th:value="${editInfo.id}" placeholder="保存ID" autocomplete="off" class="layui-input">
+        <input type="text" name="parentId" th:value="${editInfo.parentId}" placeholder="保存parentId" autocomplete="off" class="layui-input">
+    </div>
+</div>
+
+<script th:replace="common/base::context"></script>
+<script th:replace="common/base::mainjs"></script>
+<script>
+    layui.use(['form', 'laydate'], function () {
+        var $ = layui.$, form = layui.form, laydate = layui.laydate;
+
+        var parentId = kvfKit.getUrlParam('parentId');
+        var type = kvfKit.getUrlParam('type');
+        var $typeRadioEl = $('#typeRadio');
+        log(type)
+
+        if (type) {
+            if (Number(type) === 0 || Number(type) === 1) {
+                $('input[name=value]').parents('.layui-form-item').remove();
+                $typeRadioEl.append('<input type="radio" name="type" value="0" title="字典类别" autocomplete="off" class="layui-input" checked>');
+            } else {
+                $typeRadioEl.append('<input type="radio" name="type" value="1" title="字典项" autocomplete="off" class="layui-input" checked>');
+            }
+        }
+
+        form.render('radio');
+
+        //监听提交
+        form.on('submit(kFormSubmit)', function(data){
+            var field = data.field; //获取提交的字段
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+
+            field.parentId = parentId;
+            var url = field.id ? 'sys/dict/edit' : 'sys/dict/add';
+            //提交 Ajax 成功后，关闭当前弹层并重载表格
+            $.ajax({
+                type: req.type.post,
+                url: BASE_WEB + url,
+                data: field,
+                async: false,
+                success: function (r) {
+                    if (r.code === req.status.ok) {
+                        // 重载表格
+                        parent.$('#kTreeGrid').treegrid('reload', {id: Number(parentId)});
+                        parent.layer.close(index); //再执行关闭
+                    } else {
+                        kvfKit.errorMsg(r.msg);
+                    }
+                }
+            });
+
+        });
+    })
+</script>
+</body>
+</html>

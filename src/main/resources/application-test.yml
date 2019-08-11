@@ -3,6 +3,11 @@ server:
 
 spring:
 
+  # jackson
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
   # druid数据源配置
   datasource:
     name: druidDataSource

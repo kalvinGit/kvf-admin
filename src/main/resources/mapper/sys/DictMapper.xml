@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kalvin.kvf.modules.sys.mapper.DictMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kalvin.kvf.modules.sys.entity.Dict">
+        <id column="id" property="id" />
+        <result column="parent_id" property="parentId" />
+        <result column="name" property="name" />
+        <result column="type" property="type" />
+        <result column="code" property="code" />
+        <result column="value" property="value" />
+        <result column="status" property="status" />
+        <result column="sort" property="sort" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+       id, parent_id, name, type, code, value, status, sort, remark
+    </sql>
+
+    <select id="selectDictList" resultType="com.kalvin.kvf.modules.sys.entity.Dict">
+        select <include refid="Base_Column_List" /> from sys_dict
+        <trim prefix="where" prefixOverrides="and">
+            <if test="dict.parentId != null">
+                and parent_id = #{dict.parentId}
+            </if>
+            <if test="dict.name != null and dict.name != ''">
+                and name like concat(#{dict.name}, "%")
+            </if>
+            <if test="dict.type != null">
+                and type = #{dict.type}
+            </if>
+            <if test="dict.code != null and dict.code != ''">
+                and k like concat(#{dict.code}, "%")
+            </if>
+            <if test="dict.value != null and dict.value != ''">
+                and value like concat(#{dict.value}, "%")
+            </if>
+            <if test="dict.status != null">
+                and status = #{dict.status}
+            </if>
+            <if test="dict.sort != null">
+                and sort = #{dict.sort}
+            </if>
+            <if test="dict.remark != null and dict.remark != ''">
+                and remark like concat(#{dict.remark}, "%")
+            </if>
+        </trim>
+    </select>
+
+    <select id="selectAllDictItemByCode" resultType="com.kalvin.kvf.modules.sys.entity.Dict">
+        SELECT
+            <include refid="Base_Column_List"></include>
+        FROM
+            sys_dict
+        WHERE
+            parent_id = ( SELECT id FROM sys_dict WHERE CODE = #{code} )
+        AND `status` = 0
+    </select>
+
+</mapper>

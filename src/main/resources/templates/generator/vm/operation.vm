@@ -15,7 +15,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">$column.columnComment</label>
         <div class="layui-input-inline">
-            <input type="text" name="$name" id="$name" th:value="$thValue"#if($column.isNullable == 'YES') lay-verify="required"#end placeholder="请输入$column.columnComment" autocomplete="off" class="layui-input">
+            <input type="text" name="$name" id="$name" th:value="$thValue"#if($column.isNullable == 'NO') lay-verify="required"#end placeholder="请输入$column.columnComment" autocomplete="off" class="layui-input">
         </div>
     </div>
     #elseif($column.dataType == 'tinyint')
@@ -32,7 +32,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">$column.columnComment</label>
         <div class="layui-input-inline">
-            <input type="text" name="$name" th:value="$thValue"#if($column.isNullable == 'YES') lay-verify="required"#end placeholder="请输入$column.columnComment" autocomplete="off" class="layui-input">
+            <input type="text" name="$name" th:value="$thValue"#if($column.isNullable == 'NO') lay-verify="required"#end placeholder="请输入$column.columnComment" autocomplete="off" class="layui-input">
         </div>
     </div>
     #end
@@ -73,7 +73,7 @@
             #if($config.tableType == 'tree_grid')
             field.parentId = parentId;
             #end
-            var url = field.$config.pkCamelCase ? '$config.moduleName/$config.funName/edit' : '$config.moduleName/$config.funName/add'
+            var url = field.$config.pkCamelCase ? '$config.moduleName/$config.funName/edit' : '$config.moduleName/$config.funName/add';
             //提交 Ajax 成功后，关闭当前弹层并重载表格
             $.ajax({
                 type: req.type.post,
