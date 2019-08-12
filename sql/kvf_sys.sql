@@ -95,6 +95,7 @@ CREATE TABLE `sys_menu`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '菜单表' ROW_FORMAT = Compact;
 
+
 -- ----------------------------
 -- Records of sys_menu
 -- ----------------------------
@@ -121,7 +122,11 @@ INSERT INTO `sys_menu` VALUES (22, 5, '删除', NULL, 'sys:dept:del', 2, NULL, 0
 INSERT INTO `sys_menu` VALUES (23, 2, '重置密码', NULL, 'sys:user:reset', 2, NULL, 0, 3, NULL, '2019-05-12 18:01:10');
 INSERT INTO `sys_menu` VALUES (24, 0, 'Druid监控', 'druid/index.html', NULL, 3, 'fa fa-eye', 0, 0, NULL, '2019-05-20 22:43:09');
 INSERT INTO `sys_menu` VALUES (25, 0, '代码生成', '', NULL, 0, 'fa fa-bolt', 0, 2, NULL, '2019-06-10 22:47:31');
-INSERT INTO `sys_menu` VALUES (26, 25, '生成管理', 'generator/table/index', 'generator:table:index', 1, NULL, 0, 0, NULL, '2019-06-10 22:50:09');
+INSERT INTO `sys_menu` VALUES (26, 25, '生成管理', 'generator/table/index', 'gen:table:index', 1, NULL, 0, 0, NULL, '2019-06-10 22:50:09');
+INSERT INTO `sys_menu` VALUES (27, 1, '字典管理', 'sys/dict/index', 'sys:dict:index', 1, NULL, 0, 4, NULL, '2019-08-12 09:47:31');
+INSERT INTO `sys_menu` VALUES (28, 27, '添加', NULL, 'sys:dict:add', 2, NULL, 0, 0, NULL, '2019-08-12 09:48:03');
+INSERT INTO `sys_menu` VALUES (29, 27, '编辑', NULL, 'sys:dict:edit', 2, NULL, 0, 0, NULL, '2019-08-12 09:48:20');
+INSERT INTO `sys_menu` VALUES (30, 27, '删除', NULL, 'sys:dict:del', 2, NULL, 0, 0, NULL, '2019-08-12 09:48:45');
 
 
 
@@ -190,6 +195,21 @@ INSERT INTO `sys_role_menu` VALUES (19, 3, 17);
 INSERT INTO `sys_role_menu` VALUES (20, 3, 18);
 INSERT INTO `sys_role_menu` VALUES (21, 3, 19);
 INSERT INTO `sys_role_menu` VALUES (22, 3, 24);
+INSERT INTO `sys_role_menu` VALUES (23, 3, 25);
+INSERT INTO `sys_role_menu` VALUES (24, 3, 26);
+INSERT INTO `sys_role_menu` VALUES (25, 5, 1);
+INSERT INTO `sys_role_menu` VALUES (26, 5, 2);
+INSERT INTO `sys_role_menu` VALUES (27, 5, 5);
+INSERT INTO `sys_role_menu` VALUES (28, 5, 3);
+INSERT INTO `sys_role_menu` VALUES (29, 5, 4);
+INSERT INTO `sys_role_menu` VALUES (30, 5, 7);
+INSERT INTO `sys_role_menu` VALUES (31, 5, 25);
+INSERT INTO `sys_role_menu` VALUES (32, 5, 26);
+INSERT INTO `sys_role_menu` VALUES (33, 5, 24);
+INSERT INTO `sys_role_menu` VALUES (34, 3, 27);
+INSERT INTO `sys_role_menu` VALUES (35, 3, 30);
+INSERT INTO `sys_role_menu` VALUES (36, 3, 28);
+INSERT INTO `sys_role_menu` VALUES (37, 3, 29);
 
 -- ----------------------------
 -- Table structure for sys_user_role
