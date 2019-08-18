@@ -36,12 +36,14 @@
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">性别</label>
-                            <div class="layui-input-inline">
-                                <select name="sex">
+                            <div class="layui-input-block">
+                                <input type="radio" name="sex" value="1" title="男" class="layui-input" th:checked="${user.sex==1}">
+                                <input type="radio" name="sex" value="2" title="女" class="layui-input" th:checked="${user.sex==2}">
+                                <!--<select name="sex">
                                     <option value="0" th:selected="${user.sex == 0}">请选择</option>
                                     <option value="1" th:selected="${user.sex == 1}">男</option>
                                     <option value="2" th:selected="${user.sex == 2}">女</option>
-                                </select>
+                                </select>-->
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -64,11 +66,13 @@
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">用户状态</label>
-                            <div class="layui-input-inline">
-                                <select name="status" lay-verify="required">
+                            <div class="layui-input-block">
+                                <input type="radio" name="status" value="0" title="正常" class="layui-input" th:remove="${user.status!=0?'all':'none'}" th:checked="${user.status==0}">
+                                <input type="radio" name="status" value="1" title="禁用" class="layui-input" th:remove="${user.status!=1?'all':'none'}" th:checked="${user.status==1}">
+                                <!--<select name="status" lay-verify="required" readonly="true">
                                     <option value="0" th:selected="${user.status == 0}">正常</option>
                                     <option value="1" th:selected="${user.status == 1}">禁用</option>
-                                </select>
+                                </select>-->
                             </div>
                         </div>
                         <div class="layui-form-item">

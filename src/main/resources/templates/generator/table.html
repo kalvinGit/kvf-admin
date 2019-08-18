@@ -145,11 +145,16 @@
                     ,content: api.gen.customGenerateSetting + data.tableName + "?tableComment=" + data.tableComment
                     ,maxmin: true
                     ,area: area   // 宽高
-                    ,btn: ['生成代码并预览', '取消']
+                    ,btn: ['生成代码', '预览(树形表格预览不了)', '取消']
                     ,yes: function(index, layero){
                         //点击确认触发 iframe 内容中的按钮提交
                         var submit = layero.find('iframe').contents().find("#kFormSubmit");
                         submit.click();
+                    }
+                    ,btn2: function (index, layero) {
+                        var submit = layero.find('iframe').contents().find("#preview");
+                        submit.click();
+                        return false;
                     }
                 });
                 layer.full(idx);

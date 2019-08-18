@@ -13,6 +13,10 @@ public class MyTest {
     private final static Logger LOGGER = LoggerFactory.getLogger(MyTest.class);
 
     public static void main(String[] args) throws Exception {
+        velocity();
+    }
+
+    public static void velocity() {
         VelocityContext ctx = new VelocityContext();
         ctx.put("name", "velocity");
         String destPath = "D:\\vm\\";

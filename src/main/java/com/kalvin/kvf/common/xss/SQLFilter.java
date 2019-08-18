@@ -25,7 +25,7 @@ public final class SQLFilter {
         str = StrUtil.replace(str, "\\", "");
 
         // 转换成小写
-        str = str.toLowerCase();
+//        str = str.toLowerCase();
 
         String[] values = str.split(" ");
 
@@ -40,7 +40,7 @@ public final class SQLFilter {
         // 判断是否包含非法字符
         for (String badKey : badKeyStr.split("\\|")) {
             for (String value : values) {
-                if (value.equals(badKey)) {
+                if (value.equalsIgnoreCase(badKey)) {
                     StrUtil.replace(str, badKey, "INVALID");
                     log.error("当前参数({})包含非法的sql关键词({})，系统已自动过滤。", str, badKey);
                 }

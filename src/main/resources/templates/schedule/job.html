@@ -16,24 +16,13 @@
                     <form>
                         <div class="layui-form layui-card-header kvf-card-header-auto">
                             <div class="layui-form-item">
-                            #foreach($queryColumn in $config.queryColumns)
-                            #if($queryColumn.dataType == 'timestamp' || $queryColumn.dataType == 'date' || $queryColumn.dataType == 'datetime')
                             <div class="layui-inline">
-                                <label class="layui-form-label">$queryColumn.comment</label>
+                                <label class="layui-form-label">bean名称</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="$queryColumn.nameCamelCase" id="$queryColumn.nameCamelCase" placeholder="请输入$queryColumn.comment" autocomplete="off" class="layui-input">
+                                    <input type="text" name="bean" placeholder="请输入bean名称" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
-                            #else
-                            <div class="layui-inline">
-                                <label class="layui-form-label">$queryColumn.comment</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="$queryColumn.nameCamelCase" placeholder="请输入$queryColumn.comment" autocomplete="off" class="layui-input">
-                                </div>
-                            </div>
-                            #end
 
-                            #if($config.queryColumns.size() == $foreach.count)
                             <div class="layui-inline">
                                 <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
                                     <i class="layui-icon layui-icon-search"></i>
@@ -42,8 +31,6 @@
                                     <i class="layui-icon layui-icon-refresh-1"></i>
                                 </button>
                             </div>
-                            #end
-                            #end
                             </div>
                         </div>
                     </form>
@@ -63,41 +50,30 @@
 
 <!--头部工具栏模板-->
 <script type="text/html" id="headToolbarTpl">
-    #foreach($headButton in $config.headButtons)
-    <button class="layui-btn layui-btn-sm $headButton.colorScheme" lay-event="$headButton.key">#if($!headButton.icon)<i class="$headButton.icon"></i>#end$headButton.name</button>
-    #end
+    <button class="layui-btn layui-btn-sm " lay-event="add">添加</button>
+    <button class="layui-btn layui-btn-sm layui-bg-blue" lay-event="pause">暂停</button>
+<!--    <button class="layui-btn layui-btn-sm layui-bg-orange" lay-event="resume">恢复</button>-->
+    <button class="layui-btn layui-btn-sm layui-bg-cyan" lay-event="resume">运行</button>
 </script>
 
 <!--表格行工具栏模板-->
 <script type="text/html" id="rowToolbarTpl">
-    #foreach($rowButton in $config.rowButtons)
-    <a class="layui-btn layui-btn-xs $rowButton.colorScheme" lay-event="$rowButton.key">#if($!rowButton.icon)<i class="$rowButton.icon"></i>#end$rowButton.name</a>
-    #end
+    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
 </script>
 
 <!--表格列格式化模板 start-->
-#foreach($column in $config.columns)
-#if($column.columnCommentValueRelations != $null)
-<script type="text/html" id="${column.name}Tpl">
-#if($column.columnCommentValueRelations.size() == 0)
-<!--todo由于注释不统一规范，无法为你生成格式化代码，请自行处理-->
-<span>{{d.$column.name}}</span>
-#end
-#foreach($columnValueRelation in $column.columnCommentValueRelations)
-    #if($foreach.count == 1)
-    {{#  if(d.$column.name == $columnValueRelation.key){ }}
-    <span class="layui-badge layui-bg-blue">$columnValueRelation.name</span>
-    #else
-    {{# } else if(d.$column.name == $columnValueRelation.key) { }}
-    <span class="layui-badge layui-bg-blue">$columnValueRelation.name</span>
-    #end
-    #if($foreach.count == $column.columnCommentValueRelations.size())
+<script type="text/html" id="statusTpl">
+    {{#  if(d.status == 0){ }}
+    <span class="layui-badge layui-bg-green">运行中</span>
+    {{# } else if(d.status == 1) { }}
+    <span class="layui-badge layui-bg-blue">已暂停</span>
+    {{# } else if(d.status == 2) { }}
+    <span class="layui-badge layui-bg-gray">已完成</span>
+    {{# } else if(d.status == 3) { }}
+    <span class="layui-badge layui-bg-red">运行失败</span>
     {{# } }}
-    #end
-#end
 </script>
-#end
-#end
 <!--表格列格式化模板 end-->
 
 <script type="text/javascript" th:inline="javascript">
@@ -109,16 +85,18 @@
         // 实例化table
         var tableIns = table.render($.extend(config.layui.table, {
             elem: '#' + tableId
-            ,url: BASE_WEB + '$config.moduleName/$config.funName/list/data' // 数据接口
+            ,url: BASE_WEB + 'schedule/job/list/data' // 数据接口
             ,toolbar: '#headToolbarTpl'
             ,cols: [[ //表头
                 {type:'checkbox', fixed: 'left'}
-                #foreach($column in $config.columns)
-                ,{field: '$column.name', title: '$column.comment'#if($column.sort), sort: true#end#if($foreach.count!=2), width: 130#end#if($column.format), templet: '#${column.name}Tpl'#end}
-                #end
-                #if($config.rowButtons.size() > 0)
-                ,{field: '', title: '操作', width: 235, fixed: 'right', templet: '#rowToolbarTpl'}
-                #end
+                ,{field: 'bean', title: '任务bean', width: 130}
+                // ,{field: 'method', title: '方法名', width: 130}
+                ,{field: 'cron', title: 'cron表达式', width: 180}
+                ,{field: 'params', title: '参数', width: 200}
+                ,{field: 'status', title: '状态', width: 130, templet: '#statusTpl'}
+                ,{field: 'remark', title: '备注'}
+                ,{field: 'createTime', title: '创建时间', width: 200}
+                ,{field: '', title: '操作', width: 150, fixed: 'right', templet: '#rowToolbarTpl'}
             ]]
         }));
 
@@ -126,14 +104,13 @@
         table.on('toolbar(' + tableId + ')', function(obj){
             var checkStatus = table.checkStatus(obj.config.id);
             var checkData = checkStatus.data; // 得到选中的数据
+            log('checkData=', checkData)
             switch(obj.event) {
-                #foreach($headButton in $config.headButtons)
-                case '$headButton.key':
-                    #if($headButton.id == 1)
+                case 'add':
                     layer.open({
                         type: 2
-                        ,title: '$headButton.name'
-                        ,content: BASE_WEB + '$config.moduleName/$config.funName/edit'
+                        ,title: '添加'
+                        ,content: BASE_WEB + 'schedule/job/edit'
                         ,maxmin: true
                         ,area: area   // 宽高
                         ,btn: ['确定', '取消']
@@ -143,46 +120,47 @@
                             submit.click();
                         }
                     });
-                    #elseif($headButton.id == 2)
+                    break;
+                case 'pause':
                     if(checkData.length === 0){
                         return kvfKit.warningMsg('请选择数据');
                     }
-                    layer.confirm('确定删除吗？', function(index) {
-                        var ids = [];
-                        $.each(checkData, function(i, n){
-                            ids[i] = n.$config.pkCamelCase;
-                        });
-
+                    layer.confirm('确定暂时任务吗？', function(index) {
                         //执行 Ajax 后重载
                         $.ajax({
                             type: req.type.post,
-                            url: BASE_WEB + '$config.moduleName/$config.funName/batchdel',
-                            data: {ids: ids.toString()},
+                            url: BASE_WEB + 'schedule/job/pause/' + checkData[0].id,
                             success: function (r) {
                                 if (r.code === req.status.ok) {
                                     table.reload(tableId);
-                                    kvfKit.sucessMsg('已删除');
+                                    kvfKit.sucessMsg('已暂停定时任务');
                                 } else {
                                     kvfKit.errorMsg(r.msg);
                                 }
                             }
                         });
                     });
-                    #else
-                    layer.open({
-                        type: 1
-                        ,title: '$headButton.name'
-                        ,content: '<div><h3>todo 该功能未实现</h3></div>'    // content使用url打开，请把类型type更改为2
-                        ,maxmin: true
-                        ,area: area   // 宽高
-                        ,btn: ['确定', '取消']
-                        ,yes: function(index, layero){
-                            // todo点击确定处理事件
-                        }
-                    });
-                    #end
                     break;
-                #end
+                case 'resume':
+                    if(checkData.length === 0){
+                        return kvfKit.warningMsg('请选择数据');
+                    }
+                    layer.confirm('确定恢复/运行任务吗？', function(index) {
+                        //执行 Ajax 后重载
+                        $.ajax({
+                            type: req.type.post,
+                            url: BASE_WEB + 'schedule/job/resume/' + checkData[0].id,
+                            success: function (r) {
+                                if (r.code === req.status.ok) {
+                                    table.reload(tableId);
+                                    kvfKit.sucessMsg('已恢复/运行任务');
+                                } else {
+                                    kvfKit.errorMsg(r.msg);
+                                }
+                            }
+                        });
+                    });
+                    break;
             }
         });
 
@@ -192,13 +170,11 @@
             var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
             var tr = obj.tr; //获得当前行 tr 的DOM对象
 
-            #foreach($rowButton in $config.rowButtons)
-            if (layEvent === '$rowButton.key') {
-                #if($rowButton.id == 2)
+            if (layEvent === 'edit') {
                 layer.open({
                     type: 2
-                    ,title: '$rowButton.name'
-                    ,content: BASE_WEB + '$config.moduleName/$config.funName/edit?$config.pkCamelCase=' + data.$config.primaryKey
+                    ,title: '编辑'
+                    ,content: BASE_WEB + 'schedule/job/edit?id=' + data.id
                     ,maxmin: true
                     ,area: area   // 宽高
                     ,btn: ['确定', '取消']
@@ -208,12 +184,13 @@
                         submit.click();
                     }
                 });
-                #elseif($rowButton.id == 3)
+            }
+            if (layEvent === 'del') {
                 layer.confirm('确定删除吗？', function(index) {
                     //执行 Ajax 后重载
                     $.ajax({
                         type: req.type.post,
-                        url: BASE_WEB + '$config.moduleName/$config.funName/del/' + data.$config.pkCamelCase,
+                        url: BASE_WEB + 'schedule/job/delete/' + data.id,
                         async: false,
                         success: function (r) {
                             if (r.code === req.status.ok) {
@@ -225,31 +202,9 @@
                         }
                     });
                 });
-                #else
-                layer.open({
-                    type: 1
-                    ,title: '$rowButton.name'
-                    ,content: '<div><h3>todo 该功能未实现</h3></div>'    // content使用url打开，请把类型type更改为2
-                    ,maxmin: true
-                    ,area: area   // 宽高
-                    ,btn: ['确定', '取消']
-                    ,yes: function(index, layero){
-                        // todo点击确定处理事件
-                    }
-                });
-                #end
             }
-            #end
         });
 
-        #foreach($column in $config.queryColumns)
-        #set($name = $column.nameCamelCase)
-        #if($column.dataType == 'timestamp' || $column.dataType == 'date' || $column.dataType == 'datetime')
-        laydate.render({
-            elem: '#$name' // 指定元素
-        });
-        #end
-        #end
 
         // 监听查询
         form.on('submit(kTableSearchFilter)', function (obj) {

@@ -34,12 +34,23 @@ public class SpringContextKit implements ApplicationContextAware {
     }
 
     /**
+     * 通过bean名称获取窗口bean
+     * @param beanName
+     * @param <BEAN>
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static <BEAN> BEAN getBean(String beanName) {
+        return (BEAN) applicationContext.getBean(beanName);
+    }
+
+    /**
      * 通过class获取容器中的bean
      * @param beanClass
      * @param <BEAN>
      * @return
      */
-    public static <BEAN> BEAN bean(Class<BEAN> beanClass){
+    public static <BEAN> BEAN getBean(Class<BEAN> beanClass){
         return applicationContext.getBean(beanClass);
     }
 

@@ -93,6 +93,7 @@
 
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit="" lay-filter="kFormSubmit" id="kFormSubmit" value="确认添加">
+        <input type="button" lay-submit="" lay-filter="previewSubmit" id="preview" value="preview">
         <input type="text" name="tableName" th:value="${tableName}" autocomplete="off" class="layui-input">
     </div>
 </div>
@@ -188,6 +189,8 @@
         var rowBtnSetObj = {
             2: {btnName: '编辑', btnId: 'edit', btnPerId: prePerId + ':edit', btnColorScheme: 'layui-btn-normal', btnIcon: 'layui-icon layui-icon-edit'},
             3: {btnName: '删除', btnId: 'del', btnPerId: prePerId + ':del', btnColorScheme: 'layui-btn-danger', btnIcon: 'layui-icon layui-icon-delete'}};
+
+        var html = '';
 
         init();
 
@@ -457,18 +460,29 @@
                     if (r.code === req.status.ok) {
                         kvfKit.sucessMsg('代码生成成功！');
                         log(r.data);
-                        var oidx = layer.open({
-                            type: 1
-                            ,title: '页面预览'
-                            ,content: r.data
-                            ,maxmin: false
-                        });
-                        layer.full(oidx);
+                        html = r.data;
                     } else {
                         kvfKit.errorMsg(r.msg);
                     }
                 }
             });
+        });
+
+        // 预览页面
+        $('#preview').on('click', function () {
+            log('html...');
+            if (!html) {
+                log('html2...');
+                return kvfKit.warningMsg('请先生成代码再预览');
+            }
+            var oidx = layer.open({
+                type: 1
+                ,title: '页面预览'
+                ,content: html
+                ,maxmin: false
+            });
+            layer.full(oidx);
+            return true;
         });
 
         form.on('submit(kBtnFormSubmit)', function (data) {

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kalvin.kvf.modules.schedule.mapper.JobMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kalvin.kvf.modules.schedule.entity.Job">
+        <id column="id" property="id" />
+        <result column="bean" property="bean" />
+        <result column="method" property="method" />
+        <result column="params" property="params" />
+        <result column="cron" property="cron" />
+        <result column="status" property="status" />
+        <result column="remark" property="remark" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+       id, bean, method, params, cron, status, remark, create_time
+    </sql>
+
+    <select id="selectJobList" resultType="com.kalvin.kvf.modules.schedule.entity.Job">
+        select <include refid="Base_Column_List" /> from schedule_job
+        <trim prefix="where" prefixOverrides="and">
+            <if test="job.bean != null and job.bean != ''">
+                and bean like concat(#{job.bean}, "%")
+            </if>
+            <if test="job.status != null">
+                and status = #{job.status}
+            </if>
+        </trim>
+        order by create_time desc
+    </select>
+
+</mapper>

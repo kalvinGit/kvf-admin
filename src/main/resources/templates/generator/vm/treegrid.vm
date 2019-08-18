@@ -108,7 +108,7 @@
     layui.use(['element', 'form', 'layer', 'table', 'laydate'], function () {
         var elemet = layui.element, form = layui.form, layer = layui.layer, laydate = layui.laydate;
         var treeGridId = 'kTreeGrid';
-        var area = ['550px', '90%'];
+        var area = ['449px', '90%'];
 
         var treeGridInst;
         easyloader.load('treegrid', function () {

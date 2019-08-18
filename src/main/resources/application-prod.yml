@@ -100,3 +100,13 @@ mybatis-plus:
       table-underline: true
 
 
+# kvf自定义配置
+kvf:
+  # 登录验证码是否开启
+  login:
+    authcode:
+      enable: true
+
+  # quartz开关
+  quartz:
+    enable: true

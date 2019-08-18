@@ -41,8 +41,8 @@
 
     #set($pkValue = '${editInfo.' + $config.pkCamelCase + '}')
     <div class="layui-form-item layui-hide">
-        <input type="button" lay-submit="" lay-filter="kFormSubmit" id="kFormSubmit" value="确认添加">
-        <input type="text" name="id" th:value="$pkValue" placeholder="保存ID" autocomplete="off" class="layui-input">
+        <input type="button" lay-submit="" lay-filter="kFormSubmit" id="kFormSubmit">
+        <input type="text" name="id" th:value="$pkValue" autocomplete="off" class="layui-input">
     </div>
 </div>
 

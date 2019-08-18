@@ -89,7 +89,7 @@ public class GenController extends BaseController {
         // 处理设置所有表列数据
         tableColumnDTOS = AuxiliaryKit.handleTableColumns(tableColumnDTOS);
         AuxiliaryKit.handleAndSetAllColumnsValueRelations(tableColumnDTOS);
-        genConfigVO.setAllColumns(AuxiliaryKit.handleTableColumns(tableColumnDTOS));
+        genConfigVO.setAllColumns(tableColumnDTOS);
         genConfigVO.setFirstCapFunName(StrUtil.upperFirst(genConfigVO.getFunName()));
         genConfigVO.setPkCamelCase(StrUtil.toCamelCase(genConfigVO.getPrimaryKey()));
         genConfigVO.setFirstCapPk(StrUtil.upperFirst(genConfigVO.getPkCamelCase()));

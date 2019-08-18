@@ -10,6 +10,7 @@ import com.kalvin.kvf.common.utils.ShiroKit;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,6 +36,9 @@ public class LoginController extends BaseController {
     @Autowired
     private Producer producer;
 
+    @Value(value = "${kvf.login.authcode.enable}")
+    private boolean needAuthCode;
+
     @GetMapping(value = "login")
     public ModelAndView login() {
         Subject subject = ShiroKit.getSubject();
@@ -47,10 +51,14 @@ public class LoginController extends BaseController {
     @Action("登录")
     @PostMapping(value = "login")
     public R login(@RequestParam("username") String username, @RequestParam("password") String password, boolean rememberMe, String vercode) {
-        // 验证码校验
-        String kaptcha = ShiroKit.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
-        if (!kaptcha.equalsIgnoreCase(vercode)) {
-            return R.fail("验证码不正确");
+
+        // 只有开启了验证码功能才需要验证。可在yml配置kvf.login.authcode.enable来开启或关闭
+        if (needAuthCode) {
+            // 验证码校验
+            String kaptcha = ShiroKit.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
+            if (!kaptcha.equalsIgnoreCase(vercode)) {
+                return R.fail("验证码不正确");
+            }
         }
 
         try {

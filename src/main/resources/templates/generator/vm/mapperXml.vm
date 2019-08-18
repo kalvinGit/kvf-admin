@@ -28,6 +28,7 @@
     <select id="select${config.firstCapFunName}List" resultType="${base}.modules.${config.moduleName}.${entityPK}.${config.firstCapFunName}">
         select <include refid="Base_Column_List" /> from $config.tableName
         <trim prefix="where" prefixOverrides="and">
+            #if($config.queryColumns.size() == 0)
             #foreach($column in $config.allColumns)
             #if($column.columnName != $config.primaryKey)
             #set($valExp = ${config.funName} + '.' + $column.columnNameCamelCase)
@@ -39,6 +40,22 @@
             <if test="$valExp != null">
                 and $column.columnName = #{$valExp}
             </if>
+            #end
+            #end
+            #end
+            #else
+            #foreach($column in $config.queryColumns)
+            #if($column.name != $config.primaryKey)
+            #set($valExp = ${config.funName} + '.' + $column.nameCamelCase)
+            #if($column.dataType == 'varchar' || $column.dataType == 'char')
+            <if test="$valExp != null and $valExp != ''">
+                and $column.name like concat(#{$valExp}, "%")
+            </if>
+            #else
+            <if test="$valExp != null">
+                and $column.name = #{$valExp}
+            </if>
+            #end
             #end
             #end
             #end
