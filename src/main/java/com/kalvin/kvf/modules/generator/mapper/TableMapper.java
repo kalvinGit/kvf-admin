@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TableMapper {
 
-    @Select("select table_name,table_comment from information_schema.TABLES where TABLE_SCHEMA=(select database()) and table_name not like 'qrtz_%'")
+    @Select("select table_name,table_comment from information_schema.TABLES where TABLE_SCHEMA=(select database()) and table_name not like 'qrtz_%' and table_name not like 'QRTZ_%'")
     List<TableDTO> listTable(IPage page);
 
     @Select("select table_name,table_comment from information_schema.TABLES where TABLE_SCHEMA=(select database()) and table_name like concat(#{tableName}, '%')")
