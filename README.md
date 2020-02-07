@@ -106,5 +106,6 @@ kvf-admin
 * github仓库：https://github.com/kalvinGit/kvf-admin
 * gitee仓库：https://gitee.com/kalvinmy/kvf-admin
 * 作者QQ：1481397688
+* 交流群：214768328
 * 如需关注项目最新动态，请Watch、Star项目，同时也是对项目最好的支持
 
