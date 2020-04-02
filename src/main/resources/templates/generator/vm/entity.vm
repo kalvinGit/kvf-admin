@@ -13,8 +13,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import ${base}.common.${entityPK}.BaseEntity;
-
+#set($flg = 0)
 #foreach($pkg in $config.pkgs)
+#if(${pkg.indexOf("java.time.Local")} != -1 && $flg == 0)
+#set($flg = 1)
+import org.springframework.format.annotation.DateTimeFormat;
+#end
 import ${pkg}
 #end
 
@@ -47,6 +51,11 @@ public class $config.firstCapFunName extends BaseEntity {
     /**
      * $column.comment
      */
+    #if($column.variableType == "LocalDateTime")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    #elseif($column.variableType == "LocalDate")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    #end
     private $column.variableType $column.columnNameCamelCase;
     #end
     #end

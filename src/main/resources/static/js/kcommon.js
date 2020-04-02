@@ -208,6 +208,32 @@ var kvfKit = {
         if (r != null) return unescape(r[2]);
         return null;
     },
+
+    /**
+     * 获取form 表单json格式内容
+     * @param form
+     */
+    getFormJson: function (form) {
+        var json = {};
+        var sArr = $(form).serializeArray();
+        sArr.forEach(function (item) {
+            if (item.value) {
+                if (json.hasOwnProperty(item.name)) {
+                    json[item.name] += ',' + item.value;
+                } else {
+                    json[item.name] = item.value;
+                }
+            } else {
+                if (json.hasOwnProperty(item.name)) {
+                    json[item.name] += ',';
+                } else {
+                    json[item.name] = '';
+                }
+            }
+        });
+        return json;
+    },
+
     /**
      * 为form表单绑定回车事件，并实现触发提交表单事件
      */

@@ -5,13 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title th:replace="common/base::pagetitle"></title>
     <link th:replace="common/base::static"/>
+    <style>
+        .title {
+            font-size: 40px;
+            -webkit-text-stroke: 1px #fbfbfb;
+            -webkit-text-fill-color: transparent;
+        }
+        .title2 {
+            font-size: 40px;
+            background: linear-gradient(to bottom,white,black);
+            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;
+        }
+
+    </style>
 </head>
 <body style="background-color: #afb6c5">
 <div class="kvf-user-login" id="kUserLoginBox">
 
     <div class="kvf-user-login-main">
         <div class="kvf-user-login-box kvf-user-login-header">
-            <h2>kvfAdmin</h2>
+            <h2 class="title">kvfAdmin</h2>
         </div>
         <div class="layui-form kvf-user-login-box">
             <div class="layui-form-item">
@@ -40,7 +54,7 @@
                 <a href="forget.html" class="kvf-user-jump-change" style="margin-top: 7px;">忘记密码？</a>
             </div>
             <div class="layui-form-item">
-                <button id="submitBtn" class="layui-btn layui-btn-fluid" lay-submit lay-filter="kUserLoginSubmit">登 入</button>
+                <button id="submitBtn" class="layui-btn layui-btn-fluid" lay-submit lay-filter="kUserLoginSubmit">登 录</button>
             </div>
             <!--<div class="layui-trans layui-form-item layadmin-user-login-other">
                 <label>社交账号登入</label>
@@ -107,6 +121,7 @@
         // 刷新图片验证码
         function refreshVerCode() {
             $('#kUserGetVerCode').attr('src', api.captchaUrl);
+            $('#kUserLoginVercode').val('');
         }
 
     })

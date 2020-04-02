@@ -88,6 +88,11 @@ public class AuxiliaryKit {
         });
     }
 
+    /**
+     * 处理当前数据库表所有列
+     * @param tableColumns
+     * @return
+     */
     public static List<TableColumnDTO> handleTableColumns(List<TableColumnDTO> tableColumns) {
         return tableColumns.stream()
                 .peek(tc -> {
@@ -99,6 +104,11 @@ public class AuxiliaryKit {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 当前数据库表所有列转化为列配置项
+     * @param tableColumns
+     * @return
+     */
     public static List<ColumnConfigDTO> tableColumnsToColumnConfigs(List<TableColumnDTO> tableColumns) {
         List<ColumnConfigDTO> columnConfigs = new ArrayList<>();
         tableColumns.forEach(tc -> {
@@ -117,6 +127,11 @@ public class AuxiliaryKit {
         return columnConfigs;
     }
 
+    /**
+     * 数据库类型转化为java类型
+     * @param dataType 数据库类型
+     * @return
+     */
     public static String dataTypeConvertVariableType(String dataType) {
         return AuxiliaryKit.getDbColumnTypeEnumByDbDataType(dataType).getJavaType();
     }
@@ -144,6 +159,13 @@ public class AuxiliaryKit {
         return dbColumnTypeEnum;
     }
 
+    /**
+     * 获取代码生成路径
+     * @param typeEnum 模板类型
+     * @param moduleName 模块名称
+     * @param funName   方法名
+     * @return
+     */
     public static String getGenerateCodePath(TemplateTypeEnum typeEnum, String moduleName, String funName) {
         ConfigConstant.PackageConfig packageConfig = new ConfigConstant.PackageConfig();
         String pack = "", fileName = "", path = "";

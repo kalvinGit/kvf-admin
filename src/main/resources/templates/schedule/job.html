@@ -27,7 +27,7 @@
                                 <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
                                     <i class="layui-icon layui-icon-search"></i>
                                 </button>
-                                <button class="layui-btn " type="reset">
+                                <button class="layui-btn " type="reset" data-event="refresh">
                                     <i class="layui-icon layui-icon-refresh-1"></i>
                                 </button>
                             </div>
@@ -80,7 +80,7 @@
     layui.use(['element', 'form', 'layer', 'table', 'laydate'], function () {
         var elemet = layui.element, form = layui.form, layer = layui.layer, table = layui.table, laydate = layui.laydate;
         var tableId = 'kContentTable';
-        var area = ['449px', '90%'];
+        var area = ['449px', '95%'];
 
         // 实例化table
         var tableIns = table.render($.extend(config.layui.table, {
@@ -205,16 +205,31 @@
             }
         });
 
-
         // 监听查询
         form.on('submit(kTableSearchFilter)', function (obj) {
-            var params = obj.field;
+            renderTableData(obj.field);
+            return false;
+        });
+
+        var active = {
+            refresh: function () {
+                var $form = $('form');
+                $form[0].reset();
+                renderTableData(kvfKit.getFormJson($form));
+            }
+        };
+
+        kvfKit.activeInit(active);
+
+        function renderTableData(params) {
+            params = params ? params : {};
+            log('seach=', params); //
+
             tableIns.reload({
                 where: params,
                 page: {current: 1}
             });
-            return false;
-        });
+        }
 
         // 绑定监听回车事件
         kvfKit.bindEnterEventForLayuiForm();

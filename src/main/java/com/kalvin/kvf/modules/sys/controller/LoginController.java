@@ -2,7 +2,7 @@ package com.kalvin.kvf.modules.sys.controller;
 
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
-import com.kalvin.kvf.common.annotation.Action;
+import com.kalvin.kvf.common.annotation.Log;
 import com.kalvin.kvf.common.controller.BaseController;
 import com.kalvin.kvf.common.dto.R;
 import com.kalvin.kvf.common.utils.HttpServletContextKit;
@@ -48,7 +48,7 @@ public class LoginController extends BaseController {
         return new ModelAndView("login");
     }
 
-    @Action("登录")
+    @Log("登录")
     @PostMapping(value = "login")
     public R login(@RequestParam("username") String username, @RequestParam("password") String password, boolean rememberMe, String vercode) {
 
@@ -75,7 +75,7 @@ public class LoginController extends BaseController {
         return R.ok();
     }
 
-    @Action("退出")
+    @Log("退出")
     @GetMapping(value = "logout")
     public ModelAndView logout() {
         String username = ShiroKit.getUser().getUsername();

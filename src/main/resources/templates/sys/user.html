@@ -43,7 +43,7 @@
                                     <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
                                         <i class="layui-icon layui-icon-search"></i>
                                     </button>
-                                    <button class="layui-btn " type="reset">
+                                    <button class="layui-btn " type="reset" data-event="refresh">
                                         <i class="layui-icon layui-icon-refresh-1"></i>
                                     </button>
                                 </div>
@@ -140,7 +140,7 @@
             ]]
         }));
 
-        var area = ['449px', '730px'];
+        var area = ['449px', '95%'];
 
         // 监听表格头部事件
         table.on('toolbar(' + tableId + ')', function(obj){
@@ -249,14 +249,29 @@
 
         // 监听查询
         form.on('submit(kTableSearchFilter)', function (obj) {
-            var params = obj.field;
-            log('seach=', params);//
+            renderTableData(obj.field);
+            return false;
+        });
+
+        var active = {
+            refresh: function () {
+                var $form = $('form');
+                $form[0].reset();
+                renderTableData(kvfKit.getFormJson($form));
+            }
+        };
+
+        kvfKit.activeInit(active);
+
+        function renderTableData(params) {
+            params = params ? params : {};
+            log('seach=', params); //
+
             tableIns.reload({
                 where: params,
                 page: {current: 1}
             });
-            return false;
-        });
+        }
 
         // 绑定监听回车事件
         kvfKit.bindEnterEventForLayuiForm();

@@ -16,6 +16,7 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -30,9 +31,16 @@ import java.util.*;
 @Component
 public class UserRealm extends AuthorizingRealm {
 
+    // 在shiro框架中(UserRealm)使用过@Autowire注入的类，缓存注解和事务注解都失效。
+    // 解决方法：
+    // 1.在Shiro框架中注入Bean时，不使用@Autowire，使用ApplicationContextRegister.getBean()方法，手动注入bean。保证该方法只有在程序完全启动运行时，才被注入。
+    // 2.使用@Autowire+@Lazy注解，设置注入到Shiro框架的Bean延时加载（即在第一次使用的时候加载）。
+    // 原文链接：https://blog.csdn.net/elonpage/article/details/78965176
+    @Lazy
     @Autowired
     private IUserService userService;
 
+    @Lazy
     @Autowired
     private IMenuService menuService;
 
@@ -50,7 +58,7 @@ public class UserRealm extends AuthorizingRealm {
         List<String> permsList;
 
         // todo 系统管理员，拥有最高权限（不用在系统设置任何权限）
-        if (SysConstant.ADMIN.equals(username)) {
+        /*if (SysConstant.ADMIN.equals(username)) {
             List<Menu> menuList = menuService.list();
             permsList = new ArrayList<>(menuList.size());
             for (Menu menu : menuList) {
@@ -58,7 +66,8 @@ public class UserRealm extends AuthorizingRealm {
             }
         } else {
             permsList = menuService.getPermission(userId);
-        }
+        }*/
+        permsList = menuService.getPermission(userId);
 
         //用户权限列表
         Set<String> permsSet = new HashSet<>();

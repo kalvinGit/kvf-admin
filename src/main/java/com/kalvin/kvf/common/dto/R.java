@@ -17,6 +17,8 @@ public class R implements Serializable {
     private Object data;
     private Long total; // 分页信息：总条数
 
+    public R() { }
+
     private R(int code, String msg, Object data) {
         this.code = code;
         this.msg = msg;

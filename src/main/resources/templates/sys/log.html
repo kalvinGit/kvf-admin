@@ -25,7 +25,7 @@
                             <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
                                 <i class="layui-icon layui-icon-search"></i>
                             </button>
-                            <button class="layui-btn " type="reset">
+                            <button class="layui-btn " type="reset" data-event="refresh">
                                 <i class="layui-icon layui-icon-refresh-1"></i>
                             </button>
                         </div>
@@ -63,19 +63,39 @@
                 ,{field: 'browser', title: '浏览器', width: 180}
                 ,{field: 'os', title: '系统', width: 100}
                 ,{field: 'time', title: '执行时长(毫秒)', width: 150}
-                ,{field: 'createTime', title: '访问时间', width: 180, sort: true}
+                ,{field: 'createTime', title: '访问时间', width: 180, sort: true, templet: formatDate}
             ]]
         }));
 
         // 监听查询
         form.on('submit(kTableSearchFilter)', function (obj) {
-            var params = obj.field;
+            renderTableData(obj.field);
+            return false;
+        });
+
+        var active = {
+            refresh: function () {
+                var $form = $('form');
+                $form[0].reset();
+                renderTableData(kvfKit.getFormJson($form));
+            }
+        };
+
+        kvfKit.activeInit(active);
+
+        function renderTableData(params) {
+            params = params ? params : {};
+            log('seach=', params); //
+
             tableIns.reload({
                 where: params,
                 page: {current: 1}
             });
-            return false;
-        });
+        }
+
+        function formatDate(d) {
+            return new Date(d.createTime).format("yyyy-MM-dd hh:mm:ss")
+        }
 
         // 绑定监听回车事件
         kvfKit.bindEnterEventForLayuiForm();

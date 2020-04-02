@@ -16,25 +16,27 @@
         <div class="layui-col-md12" id="kMainContentCol">
             <div class="layui-fluid kvf-fluid-padding15">
                 <div class="layui-card">
-                    <div class="layui-form layui-card-header kvf-card-header-auto">
-                        <div class="layui-form-item">
-                            <div class="layui-inline">
-                                <label class="layui-form-label">字典名称</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="name" placeholder="请输入字典名称" autocomplete="off" class="layui-input">
+                    <form>
+                        <div class="layui-form layui-card-header kvf-card-header-auto">
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">字典名称</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="name" placeholder="请输入字典名称" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline">
+                                    <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
+                                        <i class="layui-icon layui-icon-search"></i>
+                                    </button>
+                                    <button class="layui-btn " type="reset" data-event="refresh">
+                                        <i class="layui-icon layui-icon-refresh-1"></i>
+                                    </button>
                                 </div>
                             </div>
-
-                            <div class="layui-inline">
-                                <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
-                                    <i class="layui-icon layui-icon-search"></i>
-                                </button>
-                                <button class="layui-btn " type="reset">
-                                    <i class="layui-icon layui-icon-refresh-1"></i>
-                                </button>
-                            </div>
                         </div>
-                    </div>
+                    </form>
 
                     <div class="layui-card-body">
                         <table id="kTreeGrid" style="height: 545px"></table>
@@ -88,7 +90,7 @@
     layui.use(['element', 'form', 'layer', 'table', 'laydate'], function () {
         var elemet = layui.element, form = layui.form, layer = layui.layer, laydate = layui.laydate;
         var treeGridId = 'kTreeGrid';
-        var area = ['433px', '90%'];
+        var area = ['433px', '95%'];
 
         var treeGridInst;
         easyloader.load('treegrid', function () {
@@ -237,6 +239,9 @@
                     });
                 });
             },
+            refresh: function () {
+                renderTableData();
+            }
         };
 
         kvfKit.activeInit(active);
@@ -261,13 +266,19 @@
 
         // 监听查询
         form.on('submit(kTableSearchFilter)', function (obj) {
-            var params = obj.field;
+            renderTableData(obj.field);
+            return false;
+        });
+
+        function renderTableData(params) {
+            params = params ? params : {};
+            log('seach=', params); //
+
             $.get(BASE_WEB + 'sys/dict/list/data', params, function(r) {
                 r.type = 'q';
                 treeGridInst.treegrid('loadData', r);
             }, 'json');
-            return false;
-        });
+        }
 
         // 绑定监听回车事件
         kvfKit.bindEnterEventForLayuiForm();

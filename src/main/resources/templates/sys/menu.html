@@ -30,7 +30,7 @@
                                     <button class="layui-btn" lay-submit="" lay-filter="kTableSearchFilter">
                                         <i class="layui-icon layui-icon-search"></i>
                                     </button>
-                                    <button class="layui-btn " type="reset">
+                                    <button class="layui-btn " type="reset" data-event="refresh">
                                         <i class="layui-icon layui-icon-refresh-1"></i>
                                     </button>
                                 </div>
@@ -91,7 +91,7 @@
     layui.use(['element', 'form', 'layer', 'table'], function () {
         var elemet = layui.element, form = layui.form, layer = layui.layer;
         var treeGridId = 'kTreeGrid';
-        var area = ['510px', '548px'];
+        var area = ['510px', '95%'];
 
         var treeGridInst;
         easyloader.load('treegrid', function () {
@@ -239,6 +239,9 @@
                         }
                     });
                 });
+            },
+            refresh: function () {
+                renderTableData();
             }
         };
 
@@ -263,16 +266,19 @@
 
         // 监听查询
         form.on('submit(kTableSearchFilter)', function (obj) {
-            var params = obj.field;
+            renderTableData(obj.field);
+            return false;
+        });
+
+        function renderTableData(params) {
+            params = params ? params : {};
             log('seach=', params); //
 
             $.get(api.sys.menuListData, params, function(r) {
                 r.type = 'q';
                 treeGridInst.treegrid('loadData', r);
             }, 'json');
-
-            return false;
-        });
+        }
 
         // 绑定监听回车事件
         kvfKit.bindEnterEventForLayuiForm();

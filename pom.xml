@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.4.RELEASE</version>
+        <version>2.2.4.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.kalvin</groupId>
@@ -17,14 +17,52 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <spring-boot.version>2.1.4.RELEASE</spring-boot.version>
-        <mybatis-plus.version>3.1.0</mybatis-plus.version>
-        <druid.version>1.1.10</druid.version>
-        <redis.version>2.1.5.RELEASE</redis.version>
+        <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
+        <mybatis-plus.version>3.3.0</mybatis-plus.version>
+        <druid.version>1.1.21</druid.version>
+        <redis.version>2.2.5.RELEASE</redis.version>
         <shiro.version>1.4.0</shiro.version>
         <quartz.version>2.3.0</quartz.version>
         <hutool.version>4.5.1</hutool.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>aliyun</id>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/libs-milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>aliyun-plugin</id>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>repository.spring.release</id>
+            <name>Spring GA Repository</name>
+            <url>https://repo.spring.io/plugins-release/</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <dependencies>
         <dependency>
@@ -78,10 +116,15 @@
             <version>2.1</version>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis-typehandlers-jsr310</artifactId>
             <version>1.0.2</version>
+        </dependency>-->
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
 
         <!-- 数据库相关依赖-->
@@ -130,11 +173,16 @@
             <artifactId>spring-boot-starter-cache</artifactId>
             <version>${spring-boot.version}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>net.sf.ehcache</groupId>
             <artifactId>ehcache</artifactId>
             <version>2.10.6</version>
-        </dependency>
+        </dependency>-->
+        <!--<dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache-core</artifactId>
+            <version>2.4.8</version>
+        </dependency>-->
         <!-- shiro ehcache -->
         <dependency>
             <groupId>org.apache.shiro</groupId>
@@ -159,6 +207,13 @@
             <groupId>com.github.axet</groupId>
             <artifactId>kaptcha</artifactId>
             <version>0.0.9</version>
+        </dependency>
+
+        <!-- ueditor-->
+        <dependency>
+            <groupId>com.gitee.qdbp.thirdparty</groupId>
+            <artifactId>ueditor</artifactId>
+            <version>1.4.3.3</version>
         </dependency>
     </dependencies>
 

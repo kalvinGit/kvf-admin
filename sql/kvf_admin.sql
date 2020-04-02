@@ -17,6 +17,10 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP DATABASE IF EXISTS kvf_admin;
+CREATE DATABASE kvf_admin DEFAULT CHARSET utf8mb4;
+USE kvf_admin;
+
 -- ----------------------------
 -- Table structure for sys_user
 -- ----------------------------
@@ -133,6 +137,9 @@ INSERT INTO `sys_menu` VALUES (33, 31, '编辑', NULL, 'schedule:job:edit', 2, N
 INSERT INTO `sys_menu` VALUES (34, 31, '删除', NULL, 'schedule:job:del', 2, NULL, 0, 0, NULL, '2019-08-17 18:14:55');
 INSERT INTO `sys_menu` VALUES (35, 31, '暂停', NULL, 'schedule:job:pause', 2, NULL, 0, 0, NULL, '2019-08-17 18:16:10');
 INSERT INTO `sys_menu` VALUES (36, 31, '恢复', NULL, 'schedule:job:resume', 2, NULL, 0, 0, NULL, '2019-08-17 18:16:28');
+INSERT INTO `sys_menu` VALUES (37, 0, '组件管理', NULL, NULL, 0, 'fa fa-th-large', 0, 3, NULL, '2020-03-31 11:14:02');
+INSERT INTO `sys_menu` VALUES (38, 37, '富文本', 'sys/component/ueditor/index', 'component:ueditor:index', 1, NULL, 0, 1, NULL, '2020-03-31 11:17:55');
+INSERT INTO `sys_menu` VALUES (39, 37, '图标库', 'sys/component/icons/index', 'component:icons:index', 1, NULL, 0, 0, NULL, '2020-03-31 11:22:09');
 
 
 
@@ -216,6 +223,17 @@ INSERT INTO `sys_role_menu` VALUES (34, 3, 27);
 INSERT INTO `sys_role_menu` VALUES (35, 3, 30);
 INSERT INTO `sys_role_menu` VALUES (36, 3, 28);
 INSERT INTO `sys_role_menu` VALUES (37, 3, 29);
+INSERT INTO `sys_role_menu` VALUES (38, 3, 31);
+INSERT INTO `sys_role_menu` VALUES (39, 3, 32);
+INSERT INTO `sys_role_menu` VALUES (40, 3, 33);
+INSERT INTO `sys_role_menu` VALUES (41, 3, 34);
+INSERT INTO `sys_role_menu` VALUES (42, 3, 35);
+INSERT INTO `sys_role_menu` VALUES (43, 3, 36);
+INSERT INTO `sys_role_menu` VALUES (44, 4, 7);
+INSERT INTO `sys_role_menu` VALUES (45, 4, 9);
+INSERT INTO `sys_role_menu` VALUES (46, 3, 37);
+INSERT INTO `sys_role_menu` VALUES (47, 3, 39);
+INSERT INTO `sys_role_menu` VALUES (48, 3, 38);
 
 -- ----------------------------
 -- Table structure for sys_user_role
@@ -298,6 +316,8 @@ CREATE TABLE `schedule_job`  (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '定时任务表' ROW_FORMAT = Dynamic;
+
+INSERT INTO `schedule_job` VALUES (1, 'helloJob', NULL, NULL, '0 0 12 * * ?', 1, '无参测试', '2019-08-18 13:30:08');
 
 
 SET FOREIGN_KEY_CHECKS = 1;

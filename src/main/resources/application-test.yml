@@ -14,7 +14,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://x.x.x.x:3306/kvf_admin?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
+      url: jdbc:mysql://localhost:3306/kvf_admin?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
       username: xxxx
       password: xxxx
       filters: stat,wall,config
@@ -67,8 +67,8 @@ spring:
     # Redis数据库索引
     database: 0
     # Redis服务器地址
-    host:  127.0.0.1
-    port:  6379
+    host: 127.0.0.1
+    port: 6379
     password:
     jedis:
       pool:
@@ -106,7 +106,9 @@ kvf:
   login:
     authcode:
       enable: true
-
   # quartz开关
   quartz:
     enable: true
+  # 缓存开关
+  cache:
+    enable: false

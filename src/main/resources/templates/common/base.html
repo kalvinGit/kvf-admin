@@ -44,5 +44,12 @@
         <script th:src="@{/static/plugins/echarts/echarts.min.js}"></script>
     </div>
 
+    <!--UEditor插件相关js-->
+    <div th:fragment="ueditorjs">
+        <script type="text/javascript" charset="utf-8" th:src="@{/static/plugins/ueditor/ueditor.config.js}"></script>
+        <script type="text/javascript" charset="utf-8" th:src="@{/static/plugins/ueditor/ueditor.all.js}"></script>
+        <script type="text/javascript" charset="utf-8" th:src="@{/static/plugins/ueditor/lang/zh-cn/zh-cn.js}"></script>
+    </div>
+
 </body>
 </html>

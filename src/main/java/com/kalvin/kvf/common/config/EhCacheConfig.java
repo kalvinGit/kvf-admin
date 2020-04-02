@@ -1,5 +1,6 @@
 package com.kalvin.kvf.common.config;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
@@ -12,6 +13,7 @@ import org.springframework.core.io.ClassPathResource;
  */
 @EnableCaching
 @Configuration
+@ConditionalOnProperty(name = "kvf.cache.enable", havingValue = "true")
 public class EhCacheConfig {
 
     @Bean

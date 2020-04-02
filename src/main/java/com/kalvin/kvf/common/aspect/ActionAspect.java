@@ -5,9 +5,8 @@ import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.useragent.Browser;
 import cn.hutool.http.useragent.Platform;
 import cn.hutool.http.useragent.UserAgentUtil;
-import com.kalvin.kvf.common.annotation.Action;
+import com.kalvin.kvf.common.annotation.Log;
 import com.kalvin.kvf.common.utils.HttpServletContextKit;
-import com.kalvin.kvf.modules.sys.entity.Log;
 import com.kalvin.kvf.modules.sys.entity.User;
 import com.kalvin.kvf.modules.sys.service.ILogService;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +38,7 @@ public class ActionAspect {
 	@Autowired
 	private ILogService logService;
 	
-	@Pointcut("@annotation(com.kalvin.kvf.common.annotation.Action)")
+	@Pointcut("@annotation(com.kalvin.kvf.common.annotation.Log)")
 	public void logPointCut() { 
 		
 	}
@@ -82,8 +81,8 @@ public class ActionAspect {
 			return;
 		}
 
-		Log actionLog = new Log();
-		Action action = method.getAnnotation(Action.class);
+		com.kalvin.kvf.modules.sys.entity.Log actionLog = new com.kalvin.kvf.modules.sys.entity.Log();
+		Log action = method.getAnnotation(Log.class);
 		if(action != null){
 			// 注解上的描述
 			if (StrUtil.isNotBlank(action.value())) {

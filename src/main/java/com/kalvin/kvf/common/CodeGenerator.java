@@ -48,9 +48,10 @@ public class CodeGenerator {
                 .setTablePrefix(tablePrefix)
                 .setNaming(NamingStrategy.underline_to_camel)
                 .setInclude(tableNames)//修改替换成你需要的表名，多个表名传数组
+                .setRestControllerStyle(true)
                 .setSuperEntityClass("com.kalvin.kvf.common.entity.BaseEntity")
-                .setSuperControllerClass("com.kalvin.kvf.common.controller.BaseController")
-                .setRestControllerStyle(true);
+                .setSuperControllerClass("com.kalvin.kvf.common.controller.BaseController");
+
         config.setActiveRecord(false)
                 .setAuthor(author)
                 .setOutputDir(outputDir)

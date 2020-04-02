@@ -314,6 +314,11 @@
                     </a>
                 </li>-->
                 <li class="layui-nav-item layui-hide-xs" lay-unselect="">
+                    <a href="https://github.com/kalvinGit/kvf-admin" target="_blank">
+                        <i class="layui-icon layui-icon-download-circle">项目源码</i>
+                    </a>
+                </li>
+                <li class="layui-nav-item layui-hide-xs" lay-unselect="">
                     <a href="javascript:;" data-event="theme">
                         <i class="layui-icon layui-icon-theme"></i>
                     </a>
@@ -338,7 +343,7 @@
                 </li>
 
                 <li class="layui-nav-item" lay-unselect="">
-                    <a href="javascript:;" th:href="@{/logout}" title="退出">
+                    <a href="javascript:;" data-event="logout" title="退出">
                         <i class="fa fa-power-off"></i>
                     </a>
                 </li>
@@ -535,6 +540,17 @@
             },
             prev: function () {
                 rollPage('left');
+            },
+            logout: function () {
+                layer.confirm('是否退出登录？', {
+                    btn: ['是', '否']
+                }, function(){
+                    kvfKit.aGet('/logout', function (r) {
+                        parent.window.location.replace(api.login);
+                    })
+                }, function(index){
+
+                });
             },
             next: function () {
                 rollPage();

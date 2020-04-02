@@ -8,6 +8,8 @@ import com.kalvin.kvf.common.constant.Constants;
 import com.kalvin.kvf.common.dto.ZTreeDTO;
 import com.kalvin.kvf.modules.sys.entity.Menu;
 import com.kalvin.kvf.modules.sys.mapper.MenuMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +22,11 @@ import java.util.List;
  * @author Kalvin
  * @since 2019-04-29
  */
+@Slf4j
 @Service
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IMenuService {
+
+    private final static String CACHE_NAME = "menu";
 
     @Override
     public List<String> getPermission(Long userId) {
@@ -66,6 +71,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         return baseMapper.selectUserPermissionMenuList(parentId, userId);
     }
 
+    @Cacheable(value = CACHE_NAME)
     @Override
     public List<Menu> listUserPermissionMenuWithSubByUserId(Long userId) {
         List<Menu> menus = this.listUserPermissionMenu(0L, userId);
@@ -76,6 +82,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         return menus;
     }
 
+    @Cacheable(value = CACHE_NAME)
     @Override
     public List<Menu> listUserPermissionNavMenuByUserId(Long userId) {
         return baseMapper.selectUserPermissionNavMenuList(userId);
