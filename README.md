@@ -134,6 +134,7 @@ kvf-admin
 * 前端通用工具js【kcommon.js】
 * 前端静态文件引用统一管理配置【base.html】，在需要引用里面的配置的页面上引用即可，如引用通用的css：`<link th:replace="common/base::static"/>`
 * 后端自定义日志注解@Log("业务操作说明")[com.kalvin.kvf.common.annotation.Log]，在需要加入日志的controller方法上加这个注解即可
+* 缓存使用[点我](https://my.oschina.net/sdlvzg/blog/1608871)：对需要加入缓存的方法上添加`@Cacheable(value="cache_name")`注解即可，同时需要在对应的方法上加上更新或删除缓存注解`@CacheEvict(value = "cache_name", allEntries = true)`;也可以使用redisTemplate添加删除更新缓存
 * 代码生成器使用文档[点我](https://github.com/kalvinGit/kvf-admin/wiki/kvf%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E4%BD%BF%E7%94%A8%E6%96%87%E6%A1%A3)
 * Spring上下文工具【SpringContextKit.java】，可使用它手动获取指定bean。如`IUserService userService = SpringContextKit.getBean(IUserService.class);`
 * 自定义异常处理类【KvfException.java】，可用于业务层【service】抛出业务异常，如：`throw new KvfException("不存在的任务ID");` ，前端可接收到这个提示信息
@@ -141,7 +142,6 @@ kvf-admin
 * 开发环境【dev】默认关闭登录验证码，若需要开启验证码登录可在application-dev.yml配置开启
 
 ### 敬请期待
-* 日程管理
 * 集成activity工作流引擎
 * vue-admin版本
 
