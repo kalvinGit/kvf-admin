@@ -145,6 +145,21 @@ kvf-admin
 * 集成activity工作流引擎
 * vue-admin版本
 
+### 常见问题
+1.有些人访问报错：`org.apache.ibatis.binding.BindingException: Parameter 'xxx' not found,Available parameters are [0, 1, param1, param2]`
+
+为什么会出现部分人报错，有些却不报错呢？
+答案参考这篇分析文章：[点我](https://blog.csdn.net/u011821334/article/details/101763001)
+
+####解决方案：
+* 方案一：
+可能是使用低版本的idea，因为低版本的idea默认是没有加上-parameters选项的，需要手动加上；（上面的分析文章有详细说明）
+或者升级idea版本
+
+* 方案二：
+在mapper的方法参数上加上@Param注解
+
+
 ### 交流反馈
 * github仓库：https://github.com/kalvinGit/kvf-admin
 * gitee仓库：https://gitee.com/kalvinmy/kvf-admin

@@ -37,7 +37,7 @@ public interface MenuMapper extends BaseMapper<Menu> {
      * @param userId
      * @return
      */
-    List<Menu> selectUserPermissionMenuList(Long parentId, Long userId);
+    List<Menu> selectUserPermissionMenuList(@Param("parentId") Long parentId, @Param("userId") Long userId);
 
     /**
      * 查询用户有权限的导航菜单列表（用于横向导航菜单）
