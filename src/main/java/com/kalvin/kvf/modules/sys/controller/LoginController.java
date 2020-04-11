@@ -77,11 +77,11 @@ public class LoginController extends BaseController {
 
     @Log("退出")
     @GetMapping(value = "logout")
-    public ModelAndView logout() {
+    public R logout() {
         String username = ShiroKit.getUser().getUsername();
         ShiroKit.logout();
         LOGGER.info("{}退出登录", username);
-        return new ModelAndView("redirect:/login");
+        return R.ok();
     }
 
     /**

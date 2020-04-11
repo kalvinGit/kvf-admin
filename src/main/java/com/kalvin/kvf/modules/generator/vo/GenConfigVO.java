@@ -2,6 +2,7 @@ package com.kalvin.kvf.modules.generator.vo;
 
 import com.kalvin.kvf.modules.generator.dto.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
@@ -17,6 +18,7 @@ import java.util.Set;
 @Data
 @Accessors(chain = true)
 @ToString
+@NoArgsConstructor
 public class GenConfigVO implements Serializable {
 
     private static final long serialVersionUID = 1L;

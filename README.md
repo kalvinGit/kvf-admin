@@ -1,6 +1,6 @@
 # kvf-admin
-kvf-admin是一套快速开发框架、脚手架、后台管理系统、权限系统，上手简单，拿来即用。为广大开发者去除大部分重复繁锁的代码工作，让开发者拥有更多的时间陪恋人、家人和朋友。
-* 后端采用spring boot、mybatis(已集成mybatis-plus增强插件，开发更迅速，可查看官方文档了解更多：[mybatis-plus](https://baomidou.gitee.io/mybatis-plus-doc/#/quick-start))、shiro框架
+kvf-admin是一套快速开发框架、脚手架、后台管理系统、权限系统，上手简单，拿来即用。为广大开发者去除大部分重复繁锁的代码工作，让开发者拥有更多的时间陪恋人、家人和朋友。**交流群：214768328**
+* 后端采用spring boot、mybatis(已集成mybatis-plus增强插件，开发更迅速，可查看官方文档了解更多：[mybatis-plus](https://mp.baomidou.com/))、shiro框架
 * 前端采用layui作为UI框架，实现90%的移动端自适应，支持主题更换
 * 提供代码生成器([wiki使用文档](https://github.com/kalvinGit/kvf-admin/wiki/kvf%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E4%BD%BF%E7%94%A8%E6%96%87%E6%A1%A3))，只需编写20%左右的代码，剩下全部自动生成；支持一键及批量功能模块生成，并支持一定程度上的自定义配置并生成代码，相对比较灵活
 
@@ -146,7 +146,7 @@ kvf-admin
 * vue-admin版本
 
 ### 常见问题
-1.有些人访问报错：`org.apache.ibatis.binding.BindingException: Parameter 'xxx' not found,Available parameters are [0, 1, param1, param2]`
+**1.有些人访问报错：`org.apache.ibatis.binding.BindingException: Parameter 'xxx' not found,Available parameters are [0, 1, param1, param2]`**
 
 为什么会出现部分人报错，有些却不报错呢？
 答案参考这篇分析文章：[点我](https://blog.csdn.net/u011821334/article/details/101763001)
@@ -158,6 +158,26 @@ kvf-admin
 
 * 方案二：
 在mapper的方法参数上加上@Param注解
+
+
+**2.mybatisPlus自带的crud方法默认会根据实体类字段驼峰自动转下划线匹配数据表字段，如果不需要自动转下划线该如何配置**
+#### 全局配置：
+可在配置项`map-underscore-to-camel-case`配置：
+配置为`true`时，mybatisplus会根据实体类字段驼峰自动转下划线匹配数据表字段如：myColumn(实体字段) -> my_column(表字段)
+`map-underscore-to-camel-case:true`
+同理，配置为`false`时：myColumn(实体字段) -> myColumn(表字段)
+`map-underscore-to-camel-case:false`
+![全局配置](https://images.gitee.com/uploads/images/2020/0404/110427_012b323d_1235987.png "微信截图_20200404110317.png")
+
+#### 局部配置：
+如果只是部分表或字段需要，可在实体类的字段上配置@TableField(value="表字段")注解指定数据表字段名称如：
+
+```
+@TableField(value = "myColumn")
+private String myColumn;
+```
+
+
 
 
 ### 交流反馈

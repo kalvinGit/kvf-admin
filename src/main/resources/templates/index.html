@@ -90,7 +90,7 @@
         }
         .layadmin-side-shrink .layui-layout-admin .layui-logo {
             width: 60px;
-            background-image: url(/static/plugins/layui/css/modules/res/logo.png);
+            background-image: url(/static/image/logo/K.png);
         }
         .layadmin-side-shrink .layui-layout-admin .layui-logo span {
             display: none;
@@ -333,7 +333,7 @@
                 </li>
                 <li class="layui-nav-item" lay-unselect="">
                     <a href="javascript:;">
-                        <cite shiro:principal property="username"></cite>
+                        <cite shiro:principal property="realname"></cite>
                         <span class="layui-nav-more"></span>
                     </a>
                     <dl class="layui-nav-child">
@@ -546,7 +546,9 @@
                     btn: ['是', '否']
                 }, function(){
                     kvfKit.aGet('/logout', function (r) {
-                        parent.window.location.replace(api.login);
+                        if (r.code === req.status.ok) {
+                            parent.window.location.replace(api.login);
+                        }
                     })
                 }, function(index){
 
