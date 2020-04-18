@@ -16,6 +16,9 @@ public final class SQLFilter {
      */
     public String cleanSqlKeyWords(String str) {
         if(StrUtil.isBlank(str)) {
+            return "";
+        }
+        if (StrUtil.isNullOrUndefined(str)) {
             return null;
         }
         // 去掉'|"|;|\字符

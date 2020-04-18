@@ -85,6 +85,11 @@
                 </div>
             </div>
             <hr class="layui-bg-cyan">
+            <div>
+                <label style="font-weight: bold;">说明：</label><br>
+                <span style="font-weight: bold; color: #009688">是否排序：</span><span style="color: #FF5722">table表格的列是否支持升降排序功能；</span><br>
+                <span style="font-weight: bold; color: #009688">是否格式化：</span><span style="color: #FF5722">比如性别可格式化为：1->男；2->女；</span>
+            </div>
             <div id="columnSetBox">
             </div>
 
@@ -139,7 +144,7 @@
         <div class="layui-form-item layui-hide">
             <input type="button" lay-submit="" lay-filter="kBtnFormSubmit" id="kBtnFormSubmit" value="确认添加">
             <input type="text" name="id" autocomplete="off" class="layui-input">
-            <input type="text" name="type" autocomplete="off" class="layui-input">
+            <input type="text" name="btnType" autocomplete="off" class="layui-input">
         </div>
     </div>
 </div>
@@ -154,13 +159,13 @@
         <label class="layui-form-label">{{d.columnComment}}({{d.columnName}})</label>
         <div class="layui-input-block">
             <div style="float:left;">
-                <label class="layui-form-label">是否排序</label>
+                <label class="layui-form-label" id="isSort">是否排序</label>
                 <input type="radio" name="{{d.columnName}}_sort" value="0" title="是" autocomplete="off" class="layui-input">
                 <input type="radio" name="{{d.columnName}}_sort" value="1" title="否" autocomplete="off" class="layui-input" checked>
             </div>
 
             <div style="float:left;">
-                <label class="layui-form-label">是否格式化</label>
+                <label class="layui-form-label" id="isFormat">是否格式化</label>
                 <input type="radio" name="{{d.columnName}}_format" {{= d.dataType==='tinyint'?'checked':''}} value="0" title="是" autocomplete="off" class="layui-input">
                 <input type="radio" name="{{d.columnName}}_format" {{= d.dataType==='tinyint'?'':'checked'}} value="1" title="否" autocomplete="off" class="layui-input">
             </div>
@@ -243,7 +248,7 @@
         function open(type, that) {
             var id = $(that).data('id');
             var tempObj = {};
-            $('input[name="type"]').val(type);
+            $('input[name="btnType"]').val(type);
             if (type === 'head') {
                 tempObj = headBtnSetObj;
             }
@@ -488,7 +493,7 @@
         form.on('submit(kBtnFormSubmit)', function (data) {
             var field = data.field;
             var id = genBtnObjId();
-            switch (field.type) {
+            switch (field.btnType) {
                 case 'head':
                     if (field.id) {
                         delete headBtnSetObj[field.id];
@@ -519,12 +524,12 @@
 
         var tipIdx;
         $('div.xm-select-parent[fs_id="notShowCol"]').hover(function () {
-            tipIdx = layer.tips('最高优先级', $(this), {tips: 1});
+            tipIdx = layer.tips('最高优先级；当这项有值时，【只展示列】不会生效', $(this), {tips: 1});
         }, function () {
             layer.close(tipIdx);
         });
         /*$('div.xm-select-parent[fs_id="onlyShowCol"]').hover(function () {
-            tipIdx = layer.tips('当上面的多选框（不展示列）无选择时有效', $(this), {tips: 1});
+            tipIdx = layer.tips('需要清空【不展示列】的项才会生效', $(this), {tips: 2});
         }, function () {
             layer.close(tipIdx);
         });*/

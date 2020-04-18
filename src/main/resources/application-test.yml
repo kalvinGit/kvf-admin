@@ -46,6 +46,8 @@ spring:
         #        login-password: root
         # 是否可以重置数据
         reset-enable: false
+        # 开启druid监控页面
+        enabled: true
 
   # 静态资料访问方式
   mvc:
