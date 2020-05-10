@@ -46,6 +46,7 @@ public class FormController extends BaseController {
         return mv;
     }
 
+    @RequiresPermissions("workflow:form:prev")
     @GetMapping(value = "/{id}/prev")
     public ModelAndView prevForm(@PathVariable Long id) {
         ModelAndView mv = new ModelAndView("workflow/form_prev");
@@ -60,28 +61,28 @@ public class FormController extends BaseController {
         return R.ok(page);
     }
 
-//    @RequiresPermissions("workflow:form:add")
+    @RequiresPermissions("workflow:form:add")
     @PostMapping(value = "add")
     public R add(Form form) {
         formService.saveForm(form);
         return R.ok();
     }
 
-//    @RequiresPermissions("workflow:form:del")
+    @RequiresPermissions("workflow:form:delete")
     @PostMapping(value = "batchdel")
     public R batchdel(@RequestParam("ids") List<Long> ids) {
         formService.removeByIds(ids);
         return R.ok();
     }
 
-//    @RequiresPermissions("workflow:form:edit")
+    @RequiresPermissions("workflow:form:edit")
     @PostMapping(value = "edit")
     public R edit(Form form) {
         formService.updateById(form);
         return R.ok();
     }
 
-//    @RequiresPermissions("workflow:form:del")
+    @RequiresPermissions("workflow:form:delete")
     @PostMapping(value = "del/{id}")
     public R del(@PathVariable Long id) {
         formService.removeById(id);

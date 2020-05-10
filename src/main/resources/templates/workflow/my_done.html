@@ -122,45 +122,6 @@
             ]]
         }));
 
-        // 监听表格头部事件
-        table.on('toolbar(' + tableId + ')', function(obj){
-            var checkStatus = table.checkStatus(obj.config.id);
-            var checkData = checkStatus.data; // 得到选中的数据
-            log('checkData=', checkData)
-            switch(obj.event) {
-
-                case 'batchdel':
-                    if(checkData.length === 0){
-                        return kvfKit.warningMsg('请选择数据');
-                    }
-                    layer.confirm('确定删除吗？', function(index) {
-
-                        var ids = [];
-                        $.each(checkData, function(i, n){
-                            ids[i] = n.id;
-                        });
-
-                        //执行 Ajax 后重载
-                        $.ajax({
-                            type: req.type.post,
-                            url: BASE_WEB + 'workflow/delete/batch',
-                            data: {modelIds: ids.toString()},
-                            success: function (r) {
-                                if (r.code === req.status.ok) {
-                                    table.reload(tableId);
-                                    kvfKit.sucessMsg('已删除');
-                                } else {
-                                    kvfKit.errorMsg(r.msg);
-                                }
-                            }
-                        });
-
-                    });
-                    break;
-
-            }
-        });
-
         // 表格行按钮 监听事件
         table.on('tool(' + tableId + ')', function (obj) {
             var data = obj.data; //获得当前行数据
@@ -243,25 +204,6 @@
             var secondsRemainder = Math.round(hsRemainder % 60);
             return (hour === 0 ? '' : hour + '小时') + (minute === 0 ? '' : minute + '分钟') + secondsRemainder + '毫秒';
         }
-
-        // 选完文件后不自动上传
-        //拖拽上传
-        upload.render({
-            elem: '#pick'
-            ,url: BASE_WEB + 'workflow/import/batch'
-            ,auto: false
-            ,accept: 'file'
-            ,multiple: false
-            ,bindAction: '#uploadAndImport'
-            ,done: function(r){
-                if (r.code === req.status.ok) {
-                    kvfKit.sucessMsg('导入成功');
-                    table.reload(tableId);
-                } else {
-                    kvfKit.errorMsg('导入失败：' + r.msg)
-                }
-            }
-        });
 
     });
 </script>

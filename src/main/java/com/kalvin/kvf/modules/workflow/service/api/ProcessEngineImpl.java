@@ -139,11 +139,6 @@ public class ProcessEngineImpl implements IProcessEngine {
     }
 
     @Override
-    public void submitTask(String processInstanceId, String taskId) {
-
-    }
-
-    @Override
     public void submitTask(Map<String, Object> flowVariables) {
         final Map<String, Object> variables = new HashMap<>();
         final String currentUser = ShiroKit.getUser().getUsername();

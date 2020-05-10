@@ -51,28 +51,28 @@ public class ProcessFormController extends BaseController {
         return R.ok(page);
     }
 
-//    @RequiresPermissions("workflow:processForm:add")
+    @RequiresPermissions("workflow:process:setting")
     @PostMapping(value = "add")
     public R add(ProcessForm processForm) {
         processFormService.save(processForm);
         return R.ok();
     }
 
-//    @RequiresPermissions("workflow:processForm:del")
+    /*@RequiresPermissions("workflow:process:setting")
     @PostMapping(value = "batchdel")
     public R batchdel(@RequestParam("ids") List<Long> ids) {
         processFormService.removeByIds(ids);
         return R.ok();
-    }
+    }*/
 
-//    @RequiresPermissions("workflow:processForm:edit")
+    @RequiresPermissions("workflow:process:setting")
     @PostMapping(value = "edit")
     public R edit(ProcessForm processForm) {
         processFormService.updateById(processForm);
         return R.ok();
     }
 
-//    @RequiresPermissions("workflow:processForm:del")
+    @RequiresPermissions("workflow:process:setting")
     @PostMapping(value = "del/{id}")
     public R del(@PathVariable Long id) {
         processFormService.removeById(id);

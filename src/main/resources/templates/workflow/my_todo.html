@@ -57,7 +57,7 @@
 
 <!--头部工具栏模板-->
 <script type="text/html" id="headToolbarTpl">
-    <button class="layui-btn layui-btn-sm " lay-event="batchPass">批量通过</button>
+<!--    <button class="layui-btn layui-btn-sm " lay-event="batchPass">批量通过</button>-->
 <!--    <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchdel">删除</button>-->
 <!--    <button class="layui-btn layui-btn-sm layui-bg-blue" lay-event="export">导出</button>-->
 <!--    <button class="layui-btn layui-btn-sm layui-bg-orange" lay-event="import">导入</button>-->
@@ -112,18 +112,18 @@
             log('checkData=', checkData)
             switch(obj.event) {
                 case 'batchPass':
+                    return kvfKit.unhappyMsg('TODO: 批量审批');
                     if(checkData.length === 0){
                         return kvfKit.warningMsg('请选择数据');
                     }
-                    layer.confirm('确定删除吗？', function(index) {
+                    layer.confirm('确定批量通过吗？', function(index) {
 
                         var ids = [];
                         $.each(checkData, function(i, n){
                             ids[i] = n.id;
                         });
-
                         //执行 Ajax 后重载
-                        $.ajax({
+                        /*$.ajax({
                             type: req.type.post,
                             url: BASE_WEB + 'workflow/delete/batch',
                             data: {modelIds: ids.toString()},
@@ -135,8 +135,7 @@
                                     kvfKit.errorMsg(r.msg);
                                 }
                             }
-                        });
-
+                        });*/
                     });
                     break;
 
@@ -173,15 +172,6 @@
                         submit.click();
                     }
                 });
-                /*kvfKit.aPost(BASE_WEB + 'workflow/submit/task/{processInstanceId}/{taskId}'.replace("{processInstanceId}", data.processInstanceId).replace("{taskId}", data.id),
-                    {}, function (r) {
-                        if (r.code === req.status.ok) {
-                            kvfKit.sucessMsg('成功提交任务');
-                            table.reload(tableId);
-                        } else {
-                            kvfKit.errorMsg(r.msg);
-                        }
-                    });*/
             }
             if (layEvent === 'historicReview') {
                 idx = layer.open({
@@ -226,20 +216,6 @@
 
         function formatCreateTime(d) {
             return new Date(d.createTime).format("yyyy-MM-dd hh:mm:ss")
-        }
-
-        function formatLastUpdateTime(d) {
-            return new Date(d.lastUpdateTime).format("yyyy-MM-dd hh:mm:ss")
-        }
-
-        function getProcessName(d) {
-            var r = kvfKit.get(BASE_WEB + 'workflow/processInstance/' + d.processInstanceId);
-            return r.data.name;
-        }
-
-        function getStartUser(d) {
-            var r = kvfKit.get(BASE_WEB + 'workflow/processInstance/' + d.processInstanceId);
-            return r.data.startUserId;
         }
 
         // 选完文件后不自动上传

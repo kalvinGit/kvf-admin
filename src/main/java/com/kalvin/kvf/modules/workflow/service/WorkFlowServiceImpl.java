@@ -422,7 +422,6 @@ public class WorkFlowServiceImpl implements IWorkFlowService {
     @Override
     public ProcessQuery<List<CommentVO>> getProcessInstanceComments(String processInstanceId) {
         List<Comment> comments = taskService.getProcessInstanceComments(processInstanceId, "comment");
-//        Collections.reverse(comments);
         ArrayList<CommentVO> commentVOS = new ArrayList<>();
         for (int i = comments.size() - 1; i >= 0; i--) {
             CommentVO commentVO = new CommentVO();

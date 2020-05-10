@@ -126,14 +126,23 @@
                     kvfKit.warningMsg("该流程未发布，不能启动");
                     return false;
                 }
-                var idx = layer.open({
-                    type: 2
-                    ,title: data.processName
-                    ,content: BASE_WEB + 'workflow/process/{deploymentId}/start'.replace('{deploymentId}', data.deploymentId)
-                    ,maxmin: false
-                    ,area: area   // 宽高
-                });
-                layer.full(idx);
+                kvfKit.aGet(
+                    BASE_WEB + 'workflow/process/{deploymentId}/start'.replace("{deploymentId}", data.deploymentId),
+                    function (r) {
+                        if (r.code === req.status.ok) {
+                            idx = layer.open({
+                                type: 2
+                                ,title: data.processName
+                                ,content: BASE_WEB + 'workflow/task/{taskId}/form'.replace('{taskId}', r.data)
+                                ,maxmin: false
+                                ,area: area   // 宽高
+                            });
+                            layer.full(idx);
+                        } else {
+                            kvfKit.errorMsg(r.msg);
+                        }
+                    }
+                )
             }
         });
 
@@ -172,25 +181,6 @@
         function formatLastUpdateTime(d) {
             return new Date(d.lastUpdateTime).format("yyyy-MM-dd hh:mm:ss")
         }
-
-        // 选完文件后不自动上传
-        //拖拽上传
-        upload.render({
-            elem: '#pick'
-            ,url: BASE_WEB + 'workflow/import/batch'
-            ,auto: false
-            ,accept: 'file'
-            ,multiple: false
-            ,bindAction: '#uploadAndImport'
-            ,done: function(r){
-                if (r.code === req.status.ok) {
-                    kvfKit.sucessMsg('导入成功');
-                    table.reload(tableId);
-                } else {
-                    kvfKit.errorMsg('导入失败：' + r.msg)
-                }
-            }
-        });
 
     });
 </script>

@@ -18,12 +18,7 @@ import com.kalvin.kvf.modules.workflow.vo.CommentVO;
 import com.kalvin.kvf.modules.workflow.vo.ModelVO;
 import com.kalvin.kvf.modules.workflow.vo.ProcessQueryVO;
 import lombok.extern.slf4j.Slf4j;
-import org.activiti.bpmn.model.Process;
-import org.activiti.bpmn.model.*;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.impl.bpmn.behavior.MultiInstanceActivityBehavior;
-import org.activiti.engine.impl.bpmn.behavior.UserTaskActivityBehavior;
-import org.apache.xpath.operations.Mod;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,9 +42,6 @@ import java.util.Map;
 @RequestMapping(value = "workflow")
 public class WorkflowController {
 
-    @Resource
-    private RepositoryService repositoryService;
-
     @Autowired
     private IProcessEngine processEngine;
 
@@ -70,36 +62,37 @@ public class WorkflowController {
         return new ModelAndView("workflow/model_create");
     }
 
+    @RequiresPermissions("workflow:process:designer")
     @GetMapping(value = "editor")
     public ModelAndView editor() {
         return new ModelAndView("workflow/modeler");
     }
 
+    @RequiresPermissions("workflow:process:index")
     @GetMapping(value = "process/index")
     public ModelAndView process() {
         return new ModelAndView("workflow/process");
     }
 
-    @GetMapping(value = "formDesigner/index")
-    public ModelAndView formDesigner() {
-        return new ModelAndView("workflow/form_designer");
-    }
-
+    @RequiresPermissions("workflow:myprocess:index")
     @GetMapping(value = "myprocess/index")
     public ModelAndView myProcess() {
         return new ModelAndView("workflow/my_process");
     }
 
+    @RequiresPermissions("workflow:mytodo:index")
     @GetMapping(value = "mytodo/index")
     public ModelAndView myTodo() {
         return new ModelAndView("workflow/my_todo");
     }
 
+    @RequiresPermissions("workflow:mydone:index")
     @GetMapping(value = "mydone/index")
     public ModelAndView myDone() {
         return new ModelAndView("workflow/my_done");
     }
 
+    @RequiresPermissions("workflow:myapply:index")
     @GetMapping(value = "myapply/index")
     public ModelAndView myApply() {
         return new ModelAndView("workflow/my_apply");
@@ -127,6 +120,11 @@ public class WorkflowController {
         return mv;
     }
 
+    /**
+     * 任务表单页面
+     * @param taskId 任务ID
+     * @return mv
+     */
     @GetMapping(value = "task/{taskId}/form")
     public ModelAndView taskForm(@PathVariable String taskId) {
         ModelAndView mv = new ModelAndView("workflow/common/base_wfform");
@@ -140,6 +138,11 @@ public class WorkflowController {
         return mv;
     }
 
+    /**
+     * 流程表单页面
+     * @param processInstanceId 流程实例ID
+     * @return mv
+     */
     @GetMapping(value = "process/{processInstanceId}/form")
     public ModelAndView processForm(@PathVariable String processInstanceId) {
         ModelAndView mv = new ModelAndView("workflow/common/base_wfform");
@@ -165,17 +168,34 @@ public class WorkflowController {
         return mv;
     }
 
+    /**
+     * 保存模型
+     * @param modelVO 模型VO实体
+     * @return r
+     */
+    @RequiresPermissions("workflow:process:add")
     @PostMapping(value = "save/model")
     public R saveModel(ModelVO modelVO) {
         final String modelId = workFlowService.create(modelVO);
         return R.ok(modelId);
     }
 
+    /**
+     * 流程管理列表
+     * @param processQueryVO 查询参数
+     * @return r
+     */
     @GetMapping(value = "process/list")
     public R processList(ProcessQueryVO processQueryVO) {
         return R.ok(workFlowService.getProcesses(processQueryVO));
     }
 
+    /**
+     * 发布/部署流程
+     * @param modelId 模型ID
+     * @return r
+     */
+    @RequiresPermissions("workflow:process:push")
     @PostMapping(value = "deploy/{modelId}")
     public R deploy(@PathVariable String modelId) {
         return R.ok(workFlowService.deploy(modelId));
@@ -188,47 +208,83 @@ public class WorkflowController {
     @GetMapping(value = "process/{deploymentId}/start")
     public R start(@PathVariable String deploymentId) {
         final String taskId = processEngine.start(deploymentId);
-        log.debug("taskId={}", taskId);
-//        response.sendRedirect("/workflow/task/{taskId}/form".replace("{taskId}", taskId));
         return R.ok(taskId);
     }
 
-    @PostMapping(value = "submit/task/{processInstanceId}/{taskId}")
-    public R submit(@PathVariable String processInstanceId, @PathVariable String taskId) {
-//        processEngine.submitTask(variables);
-        return R.ok();
+    /**
+     * 当前用户启动流程（一般用于开发者开发测试流程）
+     * @param deploymentId 流程发布ID
+     */
+    @RequiresPermissions("workflow:process:start")
+    @GetMapping(value = "process/{deploymentId}/start/test")
+    public R startT(@PathVariable String deploymentId) {
+        final String taskId = processEngine.start(deploymentId);
+        return R.ok(taskId);
     }
 
+    /**
+     * 提交任务
+     * @param flowVariables 流程表单数据
+     * @return r
+     */
     @PostMapping(value = "submit/task")
-    public R submit(@RequestParam Map<String, Object> variables) {
-        processEngine.submitTask(variables);
+    public R submit(@RequestParam Map<String, Object> flowVariables) {
+        processEngine.submitTask(flowVariables);
         return R.ok();
     }
 
+    /**
+     * 驳回任务
+     * @param taskId 任务ID
+     * @return r
+     */
     @PostMapping(value = "put/back/task/{taskId}")
     public R putBackTask(@PathVariable String taskId) {
         processEngine.backToPreNode(taskId);
         return R.ok();
     }
 
+    /**
+     * 驳回指定环节
+     * @param taskId 任务ID
+     * @param targetNodeId 目标节点ID
+     * @return r
+     */
     @PostMapping(value = "put/back2/task/{taskId}/{targetNodeId}")
     public R putBack2Task(@PathVariable String taskId, @PathVariable String targetNodeId) {
         processEngine.back2Node(taskId, targetNodeId);
         return R.ok();
     }
 
+    /**
+     * 驳回至首环节
+     * @param taskId 任务ID
+     * @return r
+     */
     @PostMapping(value = "put/back/first/task/{taskId}")
     public R putBackFirstTask(@PathVariable String taskId) {
         processEngine.backToFirstNode(taskId);
         return R.ok();
     }
 
+    /**
+     * 删除模型
+     * @param modelId 模型ID
+     * @return r
+     */
+    @RequiresPermissions("workflow:process:delete")
     @PostMapping(value = "delete/{modelId}")
     public R delete(@PathVariable String modelId) {
         workFlowService.delete(modelId);
         return R.ok();
     }
 
+    /**
+     * 批量删除模型
+     * @param modelIds 模型ID集合
+     * @return r
+     */
+    @RequiresPermissions("workflow:process:delete")
     @PostMapping(value = "delete/batch")
     public R deleteBatch(@RequestParam("modelIds") List<String> modelIds) {
         workFlowService.deleteBatch(modelIds);
@@ -239,6 +295,7 @@ public class WorkflowController {
      * 导出流程设计文件（.json）
      * @param modelIds 模型ID集合
      */
+    @RequiresPermissions("workflow:process:export")
     @GetMapping(value = "export/batch")
     public void exportBatch(@RequestParam("modelIds") List<String> modelIds) {
         ProcessQuery<JSONObject> processesJson = workFlowService.getProcessesJson(modelIds);
@@ -259,6 +316,7 @@ public class WorkflowController {
      * @param file 流程设计文件（.json）
      * @return r
      */
+    @RequiresPermissions("workflow:process:import")
     @PostMapping(value = "import/batch")
     public R importBatch(@RequestParam(value = "file") MultipartFile file) {
         try {
@@ -274,6 +332,7 @@ public class WorkflowController {
      * @param deploymentIds 发布ID集合
      * @return r
      */
+    @RequiresPermissions("workflow:process:suspend")
     @PostMapping(value = "suspend/process")
     public R suspendProcess(@RequestParam("deploymentIds") List<String> deploymentIds) {
         processEngine.suspendProcessDefinitionByIds(deploymentIds);
@@ -285,6 +344,7 @@ public class WorkflowController {
      * @param deploymentIds 发布ID集合
      * @return r
      */
+    @RequiresPermissions("workflow:process:activate")
     @PostMapping(value = "activate/process")
     public R activateProcess(@RequestParam("deploymentIds") List<String> deploymentIds) {
         processEngine.activateProcessDefinitionByIds(deploymentIds);
@@ -313,29 +373,44 @@ public class WorkflowController {
         return R.ok();
     }
 
-    @GetMapping(value = "form/designer/list")
-    public R formDesignerList() {
-        return R.ok();
-    }
-
+    /**
+     * 我的流程列表
+     * @param processQueryVO 查询参数
+     * @return r
+     */
     @GetMapping(value = "myprocess/list")
     public R myProcessList(ProcessQueryVO processQueryVO) {
         processQueryVO.setUsername(ShiroKit.getUser().getUsername());
         return R.ok(workFlowService.getDeployProcesses(processQueryVO));
     }
 
+    /**
+     * 我的待办列表
+     * @param processQueryVO 查询参数
+     * @return r
+     */
     @GetMapping(value = "mytodo/list")
     public R myTodoList(ProcessQueryVO processQueryVO) {
         processQueryVO.setUsername(ShiroKit.getUser().getUsername());
         return workFlowService.getTodoTasks(processQueryVO).toR();
     }
 
+    /**
+     * 我的已办列表
+     * @param processQueryVO 查询参数
+     * @return r
+     */
     @GetMapping(value = "mydone/list")
     public R myDoneList(ProcessQueryVO processQueryVO) {
         processQueryVO.setUsername(ShiroKit.getUser().getUsername());
         return workFlowService.getDoneTasks(processQueryVO).toR();
     }
 
+    /**
+     * 我的申请列表
+     * @param processQueryVO 查询参数
+     * @return r
+     */
     @GetMapping(value = "myapply/list")
     public R myApplyList(ProcessQueryVO processQueryVO) {
         processQueryVO.setUsername(ShiroKit.getUser().getUsername());
@@ -386,37 +461,4 @@ public class WorkflowController {
         return R.ok();
     }
 
-    @GetMapping(value = "test/{pid}")
-    public R mytest(@PathVariable String pid) {
-//        String startNodeId = ProcessKit.getStartNodeId("95001");
-//        log.debug("startNodeId={}", startNodeId);
-//        ProcessKit.getHisFlowData("95001");
-        BpmnModel bpmnModel = repositoryService.getBpmnModel(pid);
-        String sourceSystemId = bpmnModel.getSourceSystemId();
-        Map<String, List<ExtensionAttribute>> definitionsAttributes = bpmnModel.getDefinitionsAttributes();
-        List<Process> processes = bpmnModel.getProcesses();
-        Process process = processes.get(0);
-        FlowElement flowElement = process.getFlowElement("sid-01BC7AFA-995A-4928-9B7D-1736E340E0E3");
-        if (flowElement instanceof UserTask) {
-
-            MultiInstanceLoopCharacteristics multiInstanceLoopCharacteristics = new MultiInstanceLoopCharacteristics();
-            // 审批人集合参数
-            multiInstanceLoopCharacteristics.setInputDataItem("assigneeList");
-            // 迭代集合
-//            multiInstanceLoopCharacteristics.setElementVariable("assignee");
-            // 完成条件 已完成数等于实例数
-            multiInstanceLoopCharacteristics.setCompletionCondition("${nrOfActiveInstances == nrOfInstances}");
-            // 并行
-            multiInstanceLoopCharacteristics.setSequential(false);
-
-            ((UserTask) flowElement).setLoopCharacteristics(multiInstanceLoopCharacteristics);
-            Object behavior = ((UserTask) flowElement).getBehavior();
-            MultiInstanceActivityBehavior multiInstanceActivityBehavior = ((UserTaskActivityBehavior) ((UserTask) flowElement).getBehavior()).getMultiInstanceActivityBehavior();
-        }
-        Map<String, List<ExtensionAttribute>> attributes = process.getAttributes();
-        Map<String, List<ExtensionElement>> extensionElements = process.getExtensionElements();
-        log.debug("processName={}", process.getName());
-        log.debug("sourceSystemId={}", sourceSystemId);
-        return R.ok(bpmnModel.toString());
-    }
 }

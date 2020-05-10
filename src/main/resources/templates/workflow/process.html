@@ -396,7 +396,7 @@
                     return false;
                 }
                 kvfKit.aGet(
-                    BASE_WEB + 'workflow/process/{deploymentId}/start'.replace("{deploymentId}", data.deploymentId),
+                    BASE_WEB + 'workflow/process/{deploymentId}/start/test'.replace("{deploymentId}", data.deploymentId),
                     function (r) {
                         if (r.code === req.status.ok) {
                             idx = layer.open({

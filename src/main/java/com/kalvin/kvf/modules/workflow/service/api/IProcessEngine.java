@@ -34,11 +34,6 @@ public interface IProcessEngine {
 
     /**
      * 提交任务
-     */
-    void submitTask(String processInstanceId, String taskId);
-
-    /**
-     * 提交任务
      * @param flowVariables 流程表单流转数据
      */
     void submitTask(Map<String, Object> flowVariables);
