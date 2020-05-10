@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kalvin.kvf.common.utils.ShiroKit;
 import com.kalvin.kvf.modules.sys.entity.Role;
 import com.kalvin.kvf.modules.sys.entity.RoleMenu;
 import com.kalvin.kvf.modules.sys.mapper.RoleMapper;
@@ -66,6 +67,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
             }
             roleMenuService.saveOrUpdateBatch(roleMenus);
         }
+
+        // 更新shiro权限缓存使能立即生效
+        ShiroKit.flushPrivileges();
 
     }
 

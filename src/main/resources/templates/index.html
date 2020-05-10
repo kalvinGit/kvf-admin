@@ -485,6 +485,8 @@
             laytpl($('#leftNavTpl').html()).render(r.data, function (html) {
                 $('#leftNav').html(html);
                 element.render('nav', 'kAppLeftNavFilter');
+                // 默认展开第一个
+                $('#leftNav').find('li:first-child').addClass('layui-nav-itemed');
             });
         });
 

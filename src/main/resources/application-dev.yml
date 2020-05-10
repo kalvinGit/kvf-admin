@@ -14,7 +14,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/kvf_admin?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
+      url: jdbc:mysql://localhost:3306/kvf_admin?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true
       username: root
       password: root
       filters: stat,wall,config
@@ -87,6 +87,11 @@ spring:
     # 集群配置(多个节点使用英文逗号分隔)
     #    cluster:
     #      nodes: 192.168.1.183:9001,192.168.1.183:9002
+
+
+  # activiti 配置
+  activiti:
+    check-process-definitions: false
 
 
 # mybatis-plus 配置

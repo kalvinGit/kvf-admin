@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title th:replace="common/base::pagetitle"></title>
+    <link th:replace="common/base::static"/>
+</head>
+<body style="background-color: #f2f2f2;">
+
+<div id="kPage" class="layui-fluid" style="padding: 0">
+    <div class="layui-row">
+        <div class="layui-col-md12" id="kMainContentCol">
+            <div class="layui-fluid kvf-fluid-padding15">
+                <div class="layui-card">
+                    <form>
+                        <div class="layui-form layui-card-header kvf-card-header-auto">
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">流程名称</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="processName" placeholder="请输入流程名称" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">任务名称</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="taskName" placeholder="请输入任务名称" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline">
+                                    <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
+                                        <i class="layui-icon layui-icon-search"></i>
+                                    </button>
+                                    <button class="layui-btn " type="reset" data-event="refresh">
+                                        <i class="layui-icon layui-icon-refresh-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="layui-card-body">
+                        <table id="kContentTable" lay-filter="kContentTable"></table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:replace="common/base::context"></script>
+<script th:replace="common/base::mainjs"></script>
+
+<!--头部工具栏模板-->
+<script type="text/html" id="headToolbarTpl">
+    <button class="layui-btn layui-btn-sm " lay-event="batchPass">批量通过</button>
+<!--    <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchdel">删除</button>-->
+<!--    <button class="layui-btn layui-btn-sm layui-bg-blue" lay-event="export">导出</button>-->
+<!--    <button class="layui-btn layui-btn-sm layui-bg-orange" lay-event="import">导入</button>-->
+</script>
+
+<!--表格行工具栏模板-->
+<script type="text/html" id="rowToolbarTpl">
+    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="view"><i class="layui-icon layui-icon-more"></i>查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="todoTask"><i class="layui-icon layui-icon-ok"></i>办理</a>
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="historicReview"><i class="layui-icon layui-icon-help"></i>历史审批</a>
+<!--    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del"><i class="layui-icon layui-icon-delete"></i>挂起</a>-->
+</script>
+
+<!--表格列格式化模板 start-->
+<script type="text/html" id="statusTpl">
+    {{#  if(d.suspensionState == 1){ }}
+    <span class="layui-badge layui-bg-green">激活</span>
+    {{# } else { }}
+    <span class="layui-badge layui-bg-red">挂起</span>
+    {{# } }}
+</script>
+<!--表格列格式化模板 end-->
+
+<script type="text/javascript" th:inline="javascript">
+    layui.use(['element', 'form', 'layer', 'table', 'laydate', 'upload'], function () {
+        var elemet = layui.element, form = layui.form, layer = layui.layer, table = layui.table, laydate = layui.laydate;
+        var upload = layui.upload;
+        var tableId = 'kContentTable';
+        var area = ['449px', '95%'];
+
+        // 实例化table
+        var tableIns = table.render($.extend(config.layui.table, {
+            elem: '#' + tableId
+            ,url: BASE_WEB + 'workflow/mytodo/list' // 数据接口
+            ,toolbar: '#headToolbarTpl'
+            ,cols: [[ //表头
+                {type:'checkbox', fixed: 'left'}
+                // ,{field: 'id', title: '流程ID', width: 130}
+                ,{field: 'name', title: '任务名称'}
+                ,{field: 'processName', title: '所属流程', width: 200}
+                ,{field: 'startUser', title: '流程发起人', width: 100}
+                ,{field: 'suspensionState', title: '状态', width: 90, templet: '#statusTpl'}
+                ,{field: 'createTime', title: '创建时间', width: 200, templet: formatCreateTime}
+                ,{field: '', title: '操作', width: 250, fixed: 'right', templet: '#rowToolbarTpl'}
+            ]]
+        }));
+
+        // 监听表格头部事件
+        table.on('toolbar(' + tableId + ')', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id);
+            var checkData = checkStatus.data; // 得到选中的数据
+            log('checkData=', checkData)
+            switch(obj.event) {
+                case 'batchPass':
+                    if(checkData.length === 0){
+                        return kvfKit.warningMsg('请选择数据');
+                    }
+                    layer.confirm('确定删除吗？', function(index) {
+
+                        var ids = [];
+                        $.each(checkData, function(i, n){
+                            ids[i] = n.id;
+                        });
+
+                        //执行 Ajax 后重载
+                        $.ajax({
+                            type: req.type.post,
+                            url: BASE_WEB + 'workflow/delete/batch',
+                            data: {modelIds: ids.toString()},
+                            success: function (r) {
+                                if (r.code === req.status.ok) {
+                                    table.reload(tableId);
+                                    kvfKit.sucessMsg('已删除');
+                                } else {
+                                    kvfKit.errorMsg(r.msg);
+                                }
+                            }
+                        });
+
+                    });
+                    break;
+
+            }
+        });
+
+        // 表格行按钮 监听事件
+        table.on('tool(' + tableId + ')', function (obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if (layEvent === 'view') {
+                var idx = layer.open({
+                    type: 2
+                    ,title: data.processName
+                    ,content: BASE_WEB + 'workflow/task/{taskId}/form'.replace('{taskId}', data.id)
+                    ,maxmin: false
+                    ,area: area   // 宽高
+                });
+                layer.full(idx);
+            }
+            if (layEvent === 'todoTask') {
+                layer.open({
+                    type: 2
+                    ,title: '快速办理任务'
+                    ,content: BASE_WEB + 'workflow/task/{taskId}/approve/index'.replace('{taskId}', data.id)
+                    ,maxmin: true
+                    ,area: ['478px', '78%']   // 宽高
+                    ,btn: ['同意', '取消']
+                    ,yes: function (index, layero) {
+                        //点击确认触发 iframe 内容中的按钮提交
+                        var submit = layero.find('iframe').contents().find("#kFormSubmit");
+                        submit.click();
+                    }
+                });
+                /*kvfKit.aPost(BASE_WEB + 'workflow/submit/task/{processInstanceId}/{taskId}'.replace("{processInstanceId}", data.processInstanceId).replace("{taskId}", data.id),
+                    {}, function (r) {
+                        if (r.code === req.status.ok) {
+                            kvfKit.sucessMsg('成功提交任务');
+                            table.reload(tableId);
+                        } else {
+                            kvfKit.errorMsg(r.msg);
+                        }
+                    });*/
+            }
+            if (layEvent === 'historicReview') {
+                idx = layer.open({
+                    type: 2
+                    ,title: '历史审批信息'
+                    ,content: BASE_WEB + 'workflow/hisComment/index?processInstanceId=' + data.processInstanceId
+                    ,maxmin: false
+                    ,area: area   // 宽高
+                });
+                layer.full(idx);
+            }
+
+        });
+
+        // 监听查询
+        form.on('submit(kTableSearchFilter)', function (obj) {
+            renderTableData(obj.field);
+            return false;
+        });
+
+        var active = {
+            refresh: function () {
+                var $form = $('form');
+                $form[0].reset();
+                renderTableData(kvfKit.getFormJson($form));
+            }
+        };
+
+        kvfKit.activeInit(active);
+
+        function renderTableData(params) {
+            params = params ? params : {};
+
+            tableIns.reload({
+                where: params,
+                page: {current: 1}
+            });
+        }
+
+        // 绑定监听回车事件
+        kvfKit.bindEnterEventForLayuiForm();
+
+        function formatCreateTime(d) {
+            return new Date(d.createTime).format("yyyy-MM-dd hh:mm:ss")
+        }
+
+        function formatLastUpdateTime(d) {
+            return new Date(d.lastUpdateTime).format("yyyy-MM-dd hh:mm:ss")
+        }
+
+        function getProcessName(d) {
+            var r = kvfKit.get(BASE_WEB + 'workflow/processInstance/' + d.processInstanceId);
+            return r.data.name;
+        }
+
+        function getStartUser(d) {
+            var r = kvfKit.get(BASE_WEB + 'workflow/processInstance/' + d.processInstanceId);
+            return r.data.startUserId;
+        }
+
+        // 选完文件后不自动上传
+        //拖拽上传
+        upload.render({
+            elem: '#pick'
+            ,url: BASE_WEB + 'workflow/import/batch'
+            ,auto: false
+            ,accept: 'file'
+            ,multiple: false
+            ,bindAction: '#uploadAndImport'
+            ,done: function(r){
+                if (r.code === req.status.ok) {
+                    kvfKit.sucessMsg('导入成功');
+                    table.reload(tableId);
+                } else {
+                    kvfKit.errorMsg('导入失败：' + r.msg)
+                }
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>

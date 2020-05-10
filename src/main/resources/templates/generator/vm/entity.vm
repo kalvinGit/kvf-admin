@@ -19,7 +19,7 @@ import ${base}.common.${entityPK}.BaseEntity;
 #set($flg = 1)
 import org.springframework.format.annotation.DateTimeFormat;
 #end
-import ${pkg}
+import ${pkg};
 #end
 
 /**

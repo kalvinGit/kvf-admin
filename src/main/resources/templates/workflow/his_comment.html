@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title th:replace="common/base::pagetitle"></title>
+    <link th:replace="common/base::static"/>
+</head>
+<body style="background-color: #f2f2f2;">
+
+<div id="kPage" class="layui-fluid" style="padding: 0">
+    <div class="layui-row">
+        <div class="layui-col-md12" id="kMainContentCol">
+            <div class="layui-fluid kvf-fluid-padding15">
+                <div class="layui-card">
+                    <div class="layui-card-header">流程流转审批意见</div>
+
+                    <div class="layui-card-body">
+                        <table class="layui-table" lay-skin="line">
+                            <colgroup>
+                                <col width="250">
+                                <col width="150">
+                                <col width="250">
+                                <col>
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th>节点名称</th>
+                                <th>审批人</th>
+                                <th>审批时间</th>
+                                <th>审批意见</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:if="${comments.size() == 0}">
+                                <td colspan="4" style="text-align: center">无数据</td>
+                            </tr>
+                            <tr th:each="comment: ${comments}">
+                                <td th:text="${comment.taskName}">节点名称</td>
+                                <td th:text="${comment.username}">审批人</td>
+                                <td th:text="${#dates.format(comment.time, 'yyyy-MM-dd hh:mm:ss')}">审批时间</td>
+                                <td th:text="${comment.fullMessage}">审批意见</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="layui-card">
+                    <div class="layui-card-header">流程实例流转图</div>
+
+                    <div class="layui-card-body">
+                        <img th:src="@{/workflow/process/} + ${processInstanceId + '/flowChart/image.png'}">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:replace="common/base::context"></script>
+<script th:replace="common/base::mainjs"></script>
+
+<!--头部工具栏模板-->
+<script type="text/html" id="headToolbarTpl">
+    <button class="layui-btn layui-btn-sm " lay-event="add">创建</button>
+    <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchdel">删除</button>
+    <button class="layui-btn layui-btn-sm layui-bg-blue" lay-event="export">导出</button>
+    <button class="layui-btn layui-btn-sm layui-bg-orange" lay-event="import">导入</button>
+</script>
+
+<!--表格行工具栏模板-->
+<script type="text/html" id="rowToolbarTpl">
+    <a class="layui-btn layui-btn-xs" lay-event="submitApply"><i class="layui-icon layui-icon-play"></i>提交申请</a>
+    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="push"><i class="layui-icon layui-icon-release"></i>发布</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+</script>
+
+<!--表格列格式化模板 start-->
+<script type="text/html" id="statusTpl">
+    {{#  if(d.processStatus == 1){ }}
+    <span class="layui-badge layui-bg-blue">审批中</span>
+    {{# } else if(d.processStatus == 2) { }}
+    <span class="layui-badge layui-bg-black">已结束</span>
+    {{# } }}
+</script>
+<!--表格列格式化模板 end-->
+
+<script type="text/javascript" th:inline="javascript">
+    layui.use(['element', 'form', 'layer', 'table', 'laydate', 'upload'], function () {
+        var elemet = layui.element, form = layui.form, layer = layui.layer, table = layui.table, laydate = layui.laydate;
+        var processInstanceId = kvfKit.getUrlParam("processInstanceId");
+        log("processInstanceId=", processInstanceId);
+
+
+    });
+</script>
+
+</body>
+</html>

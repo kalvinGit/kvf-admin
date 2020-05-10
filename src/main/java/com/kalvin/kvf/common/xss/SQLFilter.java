@@ -15,6 +15,7 @@ public final class SQLFilter {
      * @param str  待验证的字符串
      */
     public String cleanSqlKeyWords(String str) {
+        final String oldStr = str;
         if(StrUtil.isBlank(str)) {
             return "";
         }
@@ -44,8 +45,8 @@ public final class SQLFilter {
         for (String badKey : badKeyStr.split("\\|")) {
             for (String value : values) {
                 if (value.equalsIgnoreCase(badKey)) {
-                    StrUtil.replace(str, badKey, "INVALID");
-                    log.error("当前参数({})包含非法的sql关键词({})，系统已自动过滤。", str, badKey);
+                    str = StrUtil.replace(str, badKey, "INVALID");
+                    log.error("当前参数({})包含非法的sql关键词({})，系统已自动过滤。", oldStr, badKey);
                 }
             }
         }

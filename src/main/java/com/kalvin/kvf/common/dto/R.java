@@ -66,4 +66,9 @@ public class R implements Serializable {
     public Long getTotal() {
         return total;
     }
+
+    public R setTotal(Long total) {
+        this.total = total;
+        return this;
+    }
 }

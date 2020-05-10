@@ -24,6 +24,8 @@
         <shiro.version>1.4.0</shiro.version>
         <quartz.version>2.3.0</quartz.version>
         <hutool.version>4.5.1</hutool.version>
+        <activiti.version>6.0.0</activiti.version>
+        <apache.xmlgraphics.version>1.7</apache.xmlgraphics.version>
     </properties>
 
     <repositories>
@@ -214,6 +216,71 @@
             <groupId>com.gitee.qdbp.thirdparty</groupId>
             <artifactId>ueditor</artifactId>
             <version>1.4.3.3</version>
+        </dependency>
+
+        <!-- activiti相关依赖 -->
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-spring-boot-starter-basic</artifactId>
+            <version>${activiti.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mybatis</groupId>
+                    <artifactId>mybatis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-json-converter</artifactId>
+            <version>${activiti.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.activiti</groupId>
+                    <artifactId>activiti-bpmn-model</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--<dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti5-engine</artifactId>
+            <version>${activiti.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mybatis</groupId>
+                    <artifactId>mybatis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>-->
+
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-codec</artifactId>
+            <version>${apache.xmlgraphics.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-css</artifactId>
+            <version>${apache.xmlgraphics.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-svg-dom</artifactId>
+            <version>${apache.xmlgraphics.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-svggen</artifactId>
+            <version>${apache.xmlgraphics.version}</version>
+        </dependency>
+
+        <!--  el表达式解析工具 -->
+        <dependency>
+            <groupId>org.eweb4j</groupId>
+            <artifactId>fel</artifactId>
+            <version>0.8</version>
         </dependency>
     </dependencies>
 

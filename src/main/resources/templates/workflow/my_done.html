@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title th:replace="common/base::pagetitle"></title>
+    <link th:replace="common/base::static"/>
+</head>
+<body style="background-color: #f2f2f2;">
+
+<div id="kPage" class="layui-fluid" style="padding: 0">
+    <div class="layui-row">
+        <div class="layui-col-md12" id="kMainContentCol">
+            <div class="layui-fluid kvf-fluid-padding15">
+                <div class="layui-card">
+                    <form>
+                        <div class="layui-form layui-card-header kvf-card-header-auto">
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">流程名称</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="processName" placeholder="请输入流程名称" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">任务名称</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="taskName" placeholder="请输入任务名称" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                                <div class="layui-inline">
+                                    <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
+                                        <i class="layui-icon layui-icon-search"></i>
+                                    </button>
+                                    <button class="layui-btn " type="reset" data-event="refresh">
+                                        <i class="layui-icon layui-icon-refresh-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="layui-card-body">
+                        <table id="kContentTable" lay-filter="kContentTable"></table>
+                    </div>
+                </div>
+
+                <!--  导入流程模型弹出层 -->
+                <div class="layui-container" style="display: none; width: 300px" id="uploadLayout">
+                    <div class="layui-upload" style="margin-top: 30px;">
+                        <div class="layui-upload-drag" id="pick">
+                            <i class="layui-icon"></i>
+                            <p>点击上传，或将文件拖拽到此处</p>
+                            <div class="layui-hide" id="uploadDemoView">
+                                <hr>
+                                <img src="" alt="上传成功后渲染" style="max-width: 196px">
+                            </div>
+                        </div>
+                        <div class="layui-col-md12 layui-hide">
+                            <button type="button" class="layui-btn layui-btn-sm" id="uploadAndImport">上传并导入</button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:replace="common/base::context"></script>
+<script th:replace="common/base::mainjs"></script>
+
+<!--头部工具栏模板-->
+<script type="text/html" id="headToolbarTpl">
+
+</script>
+
+<!--表格行工具栏模板-->
+<script type="text/html" id="rowToolbarTpl">
+    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="view"><i class="layui-icon layui-icon-more"></i>查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="recall"><i class="layui-icon layui-icon-return"></i>撤回</a>
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="historicReview"><i class="layui-icon layui-icon-help"></i>历史审批</a>
+</script>
+
+<!--表格列格式化模板 start-->
+<script type="text/html" id="statusTpl">
+    {{#  if(d.processStatus == 1){ }}
+    <span class="layui-badge layui-bg-blue">审批中</span>
+    {{# } else if(d.processStatus == 2) { }}
+    <span class="layui-badge layui-bg-black">已结束</span>
+    {{# } }}
+</script>
+<!--表格列格式化模板 end-->
+
+<script type="text/javascript" th:inline="javascript">
+    layui.use(['element', 'form', 'layer', 'table', 'laydate', 'upload'], function () {
+        var elemet = layui.element, form = layui.form, layer = layui.layer, table = layui.table, laydate = layui.laydate;
+        var upload = layui.upload;
+        var tableId = 'kContentTable';
+        var area = ['449px', '95%'];
+
+        // 实例化table
+        var tableIns = table.render($.extend(config.layui.table, {
+            elem: '#' + tableId
+            ,url: BASE_WEB + 'workflow/mydone/list' // 数据接口
+            ,toolbar: '#headToolbarTpl'
+            ,cols: [[ //表头
+                {type:'checkbox', fixed: 'left'}
+                // ,{field: 'id', title: '流程ID', width: 130}
+                ,{field: 'processName', title: '所属流程'}
+                ,{field: 'name', title: '任务名称', width: 200}
+                ,{field: 'startUser', title: '流程发起人', width: 100}
+                ,{field: 'assignee', title: '委托人', width: 100, templet: '<span>{{d.owner==null?"":d.assignee}}</span>'}
+                ,{field: 'approveAction', title: '审批操作', width: 90}
+                ,{field: 'durationInMillis', title: '耗时', width: 180, templet: convertTo}
+                ,{field: 'processStatus', title: '流程状态', width: 90, templet: '#statusTpl'}
+                ,{field: 'endTime', title: '完成时间', width: 200, templet: formatEndTime}
+                ,{field: '', title: '操作', width: 250, fixed: 'right', templet: '#rowToolbarTpl'}
+            ]]
+        }));
+
+        // 监听表格头部事件
+        table.on('toolbar(' + tableId + ')', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id);
+            var checkData = checkStatus.data; // 得到选中的数据
+            log('checkData=', checkData)
+            switch(obj.event) {
+
+                case 'batchdel':
+                    if(checkData.length === 0){
+                        return kvfKit.warningMsg('请选择数据');
+                    }
+                    layer.confirm('确定删除吗？', function(index) {
+
+                        var ids = [];
+                        $.each(checkData, function(i, n){
+                            ids[i] = n.id;
+                        });
+
+                        //执行 Ajax 后重载
+                        $.ajax({
+                            type: req.type.post,
+                            url: BASE_WEB + 'workflow/delete/batch',
+                            data: {modelIds: ids.toString()},
+                            success: function (r) {
+                                if (r.code === req.status.ok) {
+                                    table.reload(tableId);
+                                    kvfKit.sucessMsg('已删除');
+                                } else {
+                                    kvfKit.errorMsg(r.msg);
+                                }
+                            }
+                        });
+
+                    });
+                    break;
+
+            }
+        });
+
+        // 表格行按钮 监听事件
+        table.on('tool(' + tableId + ')', function (obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if (layEvent === 'view') {
+                var idx = layer.open({
+                    type: 2
+                    ,title: data.processName
+                    ,content: BASE_WEB + 'workflow/process/{processInstanceId}/form'.replace('{processInstanceId}', data.processInstanceId)
+                    ,maxmin: false
+                    ,area: area   // 宽高
+                });
+                layer.full(idx);
+            }
+            if (layEvent === 'recall') {
+                layer.confirm('确定要撤回审批吗？', function () {
+                    kvfKit.aPost(BASE_WEB + 'workflow/withdraw/task/{taskId}'.replace("{taskId}", data.id),
+                        {}, function (r) {
+                            if (r.code === req.status.ok) {
+                                kvfKit.sucessMsg('成功撤回任务，请移步【我的待办】查看');
+                                table.reload(tableId);
+                            } else {
+                                kvfKit.errorMsg(r.msg);
+                            }
+                        });
+                });
+
+            }
+            if (layEvent === 'historicReview') {
+                idx = layer.open({
+                    type: 2
+                    ,title: '历史审批信息'
+                    ,content: BASE_WEB + 'workflow/hisComment/index?processInstanceId=' + data.processInstanceId
+                    ,maxmin: false
+                    ,area: area   // 宽高
+                });
+                layer.full(idx);
+            }
+        });
+
+        // 监听查询
+        form.on('submit(kTableSearchFilter)', function (obj) {
+            renderTableData(obj.field);
+            return false;
+        });
+
+        var active = {
+            refresh: function () {
+                var $form = $('form');
+                $form[0].reset();
+                renderTableData(kvfKit.getFormJson($form));
+            }
+        };
+
+        kvfKit.activeInit(active);
+
+        function renderTableData(params) {
+            params = params ? params : {};
+
+            tableIns.reload({
+                where: params,
+                page: {current: 1}
+            });
+        }
+
+        // 绑定监听回车事件
+        kvfKit.bindEnterEventForLayuiForm();
+
+        function formatEndTime(d) {
+            return new Date(d.endTime).format("yyyy-MM-dd hh:mm:ss")
+        }
+
+        function convertTo(d) {
+            var seconds = d.durationInMillis / 1000;
+            var hour = Math.floor(seconds / (60 * 60));
+            var hsRemainder = seconds % (60 * 60);
+            var minute = Math.floor(hsRemainder / 60);
+            var secondsRemainder = Math.round(hsRemainder % 60);
+            return (hour === 0 ? '' : hour + '小时') + (minute === 0 ? '' : minute + '分钟') + secondsRemainder + '毫秒';
+        }
+
+        // 选完文件后不自动上传
+        //拖拽上传
+        upload.render({
+            elem: '#pick'
+            ,url: BASE_WEB + 'workflow/import/batch'
+            ,auto: false
+            ,accept: 'file'
+            ,multiple: false
+            ,bindAction: '#uploadAndImport'
+            ,done: function(r){
+                if (r.code === req.status.ok) {
+                    kvfKit.sucessMsg('导入成功');
+                    table.reload(tableId);
+                } else {
+                    kvfKit.errorMsg('导入失败：' + r.msg)
+                }
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="common/base::pagetitle"></title>
+    <link th:replace="common/base::static"/>
+    <style>
+        .theme {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body style="background: white">
+<form>
+    <div class="layui-form" style="padding: 20px 30px 0 0;">
+        <!-- 渲染模块-->
+        <div class="theme" th:text="${formConfig.theme}">
+            我是表单主题
+        </div>
+        <div id="fileBox">
+            <div class="layui-form-item" th:each="fields: ${formConfig.fields}">
+                <label class="layui-form-label" th:text="${fields.fieldName}">输入框</label>
+                <div th:class="${fields.control=='textarea'||fields.control=='checkbox'||fields.control=='radio'?'layui-input-block':'layui-input-inline'}">
+                    <input th:if="${fields.control=='input'}" type="text" th:name="${fields.field}" th:lay-verify="${fields.required==1?'required':''}" th:placeholder="${'请填写' + fields.fieldName}" autocomplete="off" class="layui-input">
+                    <select th:if="${fields.control=='select'}" th:name="${fields.field}" th:lay-verify="${fields.required==1?'required':''}">
+                        <option th:each="option: ${fields.options}" th:value="${option.value}" th:text="${option.text}"></option>
+                    </select>
+                    <textarea th:if="${fields.control=='textarea'}" th:name="${fields.field}" th:placeholder="${'请填写' + fields.fieldName}" th:lay-verify="${fields.required==1?'required':''}" class="layui-textarea"></textarea>
+                    <input th:if="${fields.control=='checkbox'}" th:each="option: ${fields.options}" type="checkbox" th:name="${fields.field}" th:title="${option.text}" th:value="${option.value}" lay-skin="primary">
+                    <input th:if="${fields.control=='radio'}" th:each="option: ${fields.options}" type="radio" th:name="${fields.field}" th:value="${option.value}" th:title="${option.text}" th:lay-verify="${fields.required==1?'required':''}">
+                    <input th:if="${fields.control=='date'||fields.control=='datetime'||fields.control=='time'}" th:id="${fields.field}" type="text" th:name="${fields.field}" th:lay-verify="${fields.required==1?'required':''}" th:placeholder="${'请选择' + fields.fieldName}" th:data-date-type="${fields.control}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <hr>
+        <!-- 审批意见模块 -->
+        <div class="layui-form-item">
+            <label class="layui-form-label">审批意见</label>
+            <div class="layui-input-block">
+                <textarea name="comment" placeholder="请填写审批意见" class="layui-textarea"></textarea>
+            </div>
+        </div>
+
+        <!-- 按钮模块  -->
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <a class="layui-btn " lay-event="agree"><i class="layui-icon layui-icon-ok-circle"></i>同意</a>
+                <a class="layui-btn layui-btn-warm" lay-event="putBack"><i class="layui-icon layui-icon-return"></i>驳回</a>
+                <a class="layui-btn layui-btn-danger" lay-event="back2FirstNode"><i class="layui-icon layui-icon-prev"></i>回退首环节</a>
+                <a class="layui-btn layui-btn-normal" lay-event="back2AnyNode"><i class="layui-icon layui-icon-circle"></i>回退任意环节</a>
+                <button type="reset" class="layui-btn layui-btn-primary" ><i class="layui-icon layui-icon-refresh"></i>重置</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<script th:replace="common/base::context"></script>
+<script th:replace="common/base::mainjs"></script>
+<script>
+    layui.use(['form', 'laydate', 'util'], function () {
+        var $ = layui.$, form = layui.form, laydate = layui.laydate, util = layui.util;
+
+        util.event('lay-event', {
+            agree: function (obj) {
+                kvfKit.happyMsg('当前预览表单，该功能不可用');
+            },
+            putBack: function (obj) {
+                kvfKit.happyMsg('当前预览表单，该功能不可用');
+            },
+            back2FirstNode: function (obj) {
+                kvfKit.happyMsg('当前预览表单，该功能不可用');
+            },
+            back2AnyNode: function (obj) {
+                kvfKit.happyMsg('当前预览表单，该功能不可用');
+            }
+        });
+
+        // 渲染日期控制
+        $('#fileBox').find('input[data-date-type]').each(function (i, item) {
+            var dateType = $(item).data('dateType');
+            var id = $(item).attr('id');
+            laydate.render({
+                elem: '#' + id // 指定元素
+                ,type: dateType
+            });
+        });
+
+    })
+</script>
+</body>
+</html>

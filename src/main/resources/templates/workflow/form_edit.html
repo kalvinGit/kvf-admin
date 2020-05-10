@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="common/base::pagetitle"></title>
+    <link th:replace="common/base::static"/>
+</head>
+<body>
+<div class="layui-form" style="padding: 20px 30px 0 0;">
+
+    <div class="layui-card">
+        <div class="layui-card-header">表单基础信息配置</div>
+        <div class="layui-card-body">
+            <div class="layui-form-item">
+                <label class="layui-form-label">表单类型</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="type" value="0" title="简单表单" autocomplete="off" class="layui-input" checked>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">表单名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="name" th:value="${editInfo.name}" lay-verify="required" placeholder="请输入表单名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">表单主题</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="theme" th:value="${editInfo.theme}" placeholder="请输入表单主题" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-header">表单字段配置</div>
+        <div class="layui-card-body">
+            <div id="formFieldConfigBox">
+                <div class="layui-form-item" data-id="0">
+                    <label class="layui-form-label" style="width: 140px"><a class="layui-btn layui-btn-xs layui-bg-red" lay-event="remove"><i class="fa fa-remove"></i></a><a class="layui-btn layui-btn-xs layui-bg-orange" lay-event="up"><i class="fa fa-angle-up"></i></a><a class="layui-btn layui-btn-xs layui-bg-cyan" lay-event="down"><i class="fa fa-angle-down"></i></a> 字段名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="fieldName" lay-verify="required" placeholder="表单显示的名称" autocomplete="off" class="layui-input">
+                    </div>
+                    <label class="layui-form-label">字段key</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="field" lay-verify="required" placeholder="即表单的name属性值" autocomplete="off" class="layui-input">
+                    </div>
+                    <label class="layui-form-label">表单控件</label>
+                    <div class="layui-input-inline">
+                        <select name="control" lay-verify="">
+                            <option value="input" selected>文本框</option>
+                            <option value="textarea">多行文本框</option>
+                            <option value="date">日期选择框</option>
+                            <option value="datetime">日期时间选择框</option>
+                            <option value="time">时间选择框</option>
+                            <option value="select">下拉选择框</option>
+                            <option value="radio">单选框</option>
+                            <option value="checkbox">复选框</option>
+                        </select>
+                    </div>
+                    <label class="layui-form-label">选项值</label>
+                    <div class="layui-input-inline">
+                        <a class="layui-btn layui-btn-xs layui-bg-blue" style="margin-top: 8px;" lay-event="configOpt"><i class="layui-icon layui-icon-set"></i>配置选项</a>
+                    </div>
+                </div>
+                <hr>
+            </div>
+            <a class="layui-btn layui-btn-sm layui-bg-green" lay-event="addField"><i class="layui-icon layui-icon-add-circle"></i>新增字段</a>
+        </div>
+
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit="" lay-filter="kFormSubmit" id="kFormSubmit">
+        <input type="text" name="id" th:value="${editInfo.id}" autocomplete="off" class="layui-input">
+    </div>
+
+</div>
+
+<!--  选项值配置模板 -->
+<div class="layui-container" style="display: none; width: 100%;" id="configOptTpl">
+    <div class="layui-form" lay-filter="configOptFilter" style="margin-top: 15px" >
+        <div id="configOptBox">
+            <div class="layui-form-item" data-id="0" data-field-id="0">
+                <label class="layui-form-label"><a class="layui-btn layui-btn-xs layui-bg-red" lay-event="removeOpt"><i class="fa fa-remove"></i></a> text</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="text" lay-verify="required" placeholder="显示值" autocomplete="off" class="layui-input">
+                </div>
+                <label class="layui-form-label">value</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="value" lay-verify="required" placeholder="保存值" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item layui-hide">
+            <input type="button" lay-submit="" lay-filter="kConfigOptFormSubmit" id="kConfigOptFormSubmit" value="确认添加">
+        </div>
+    </div>
+</div>
+
+<!--字段组件-->
+<script type="text/html" id="fieldTpl">
+    <div class="layui-form-item" data-id="{{d.id}}">
+        <label class="layui-form-label" style="width: 140px"><a class="layui-btn layui-btn-xs layui-bg-red" lay-event="remove"><i class="fa fa-remove"></i></a><a class="layui-btn layui-btn-xs layui-bg-orange" lay-event="up"><i class="fa fa-angle-up"></i></a><a class="layui-btn layui-btn-xs layui-bg-cyan" lay-event="down"><i class="fa fa-angle-down"></i></a> 字段名称</label>
+        <div class="layui-input-inline">
+            <input type="text" name="fieldName" value="{{d.fieldName}}" lay-verify="required" placeholder="表单显示的名称" autocomplete="off" class="layui-input">
+        </div>
+        <label class="layui-form-label" style="width: 51px">字段key</label>
+        <div class="layui-input-inline" style="width: 150px">
+            <input type="text" name="field" value="{{d.field}}" lay-verify="required" placeholder="即表单的name属性值" autocomplete="off" class="layui-input">
+        </div>
+        <label class="layui-form-label" style="width: 56px">表单控件</label>
+        <div class="layui-input-inline" style="width: 140px">
+            <select name="control" lay-verify="">
+                <option value="input" {{= (d.control=='input'?'selected':'')}}>文本框</option>
+                <option value="textarea" {{= (d.control=='textarea'?'selected':'')}}>多行文本框</option>
+                <option value="date" {{= (d.control=='date'?'selected':'')}}>日期选择框</option>
+                <option value="datetime" {{= (d.control=='datetime'?'selected':'')}}>日期时间选择框</option>
+                <option value="time" {{= (d.control=='time'?'selected':'')}}>时间选择框</option>
+                <option value="select" {{= (d.control=='select'?'selected':'')}}>下拉选择框</option>
+                <option value="radio" {{= (d.control=='radio'?'selected':'')}}>单选框</option>
+                <option value="checkbox" {{= (d.control=='checkbox'?'selected':'')}}>复选框</option>
+            </select>
+        </div>
+        <label class="layui-form-label" style="width: 28px">必填</label>
+        <div class="layui-input-inline" style="width: 60px">
+            <select name="required" lay-verify="">
+                <option value="1" {{= (d.required=='1'?'selected':'')}}>是</option>
+                <option value="0" {{= (d.required=='0'?'selected':'')}}>否</option>
+            </select>
+        </div>
+        <label class="layui-form-label" style="width: 42px">选项值</label>
+        <div class="layui-input-inline">
+            <a class="layui-btn layui-btn-xs layui-bg-blue" style="margin-top: 8px;" lay-event="configOpt"><i class="layui-icon layui-icon-set"></i>配置选项</a>
+        </div>
+    </div>
+</script>
+
+<!--选项组件-->
+<script type="text/html" id="optTpl">
+    <div class="layui-form-item" data-id="{{d.id}}" data-field-id="{{d.fieldId}}">
+        <label class="layui-form-label"><a class="layui-btn layui-btn-xs layui-bg-red" lay-event="removeOpt"><i class="fa fa-remove"></i></a> text</label>
+        <div class="layui-input-inline">
+            <input type="text" name="text" value="{{d.text}}" lay-verify="required" placeholder="显示值" autocomplete="off" class="layui-input">
+        </div>
+        <label class="layui-form-label">value</label>
+        <div class="layui-input-inline">
+            <input type="text" name="value" value="{{d.value}}" lay-verify="required" placeholder="保存值" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+</script>
+
+<script th:replace="common/base::context"></script>
+<script th:replace="common/base::mainjs"></script>
+<script th:inline="javascript">
+    layui.use(['form', 'laydate', 'util'], function () {
+        var $ = layui.$, form = layui.form, laydate = layui.laydate;
+        var util = layui.util;
+
+        var tipsIdx;
+        $('#formFieldConfigBox').on('mouseenter', 'a[lay-event="configOpt"]', function () {
+            tipsIdx = layer.tips('只有控件为select、radio、checkbox时需要配置', $(this), {tips: 1, time: 5000});
+        }).on('mouseleave', 'a[lay-event="configOpt"]', function () {
+            layer.close(tipsIdx);
+        });
+
+        var fieldsData = [[${editInfo.designData}]];
+        log('fieldsData0=', fieldsData);
+        fieldsData = fieldsData ? fieldsData : '{}';
+        // fieldsData = fieldsData.replace(new RegExp('\u0026quot', "gm"), '"');
+        fieldsData = kvfKit.replaceAll(fieldsData, '\u0026quot', '"');
+        fieldsData = JSON.parse(fieldsData);
+        log('fieldsData1=', fieldsData);
+        var tOpenId;
+        // TODO: fieldsData
+        // var fieldsData = {
+        //     "100": {
+        //         "id": "100",
+        //         "fieldName": "申请人",
+        //         "field": "proposer",
+        //         "control": "select",
+        //         "options": {
+        //             "100100": {
+        //                 "id": "100100",
+        //                 "fieldId": "100",
+        //                 "text": "事假",
+        //                 "value": "0"
+        //             },
+        //             "200200": {
+        //                 "id": "200200",
+        //                 "fieldId": "100",
+        //                 "text": "年假",
+        //                 "value": "2"
+        //             },
+        //         },
+        //     },
+        //     "200": {
+        //         "id": "200",
+        //         "fieldName": "请假类型",
+        //         "field": "leaveType",
+        //         "control": "radio",
+        //         "options": {
+        //             "100100": {
+        //                 "id": "100100",
+        //                 "fieldId": "200",
+        //                 "text": "男",
+        //                 "value": "1"
+        //             },
+        //             "200200": {
+        //                 "id": "200200",
+        //                 "fieldId": "200",
+        //                 "text": "女",
+        //                 "value": "2"
+        //             },
+        //         },
+        //     },
+        // };
+        // fieldsData = {};
+        renderFields();
+
+        util.event('lay-event', {
+            addField: function(obj) {
+                var fieldData = newFieldData();
+                var itemHtml = kvfKit.renderTpl('fieldTpl', fieldData);
+                var formFieldConfigBoxObj = $('#formFieldConfigBox');
+                var itemObj = formFieldConfigBoxObj.find('.layui-form-item');
+                if (itemObj.length > 0) {
+                    itemObj.last().after('<hr>' + itemHtml);
+                } else {
+                    formFieldConfigBoxObj.append(itemHtml);
+                }
+                form.render();
+            },
+            configOpt: function (obj) {
+                var fieldId = getId(obj);
+                log('当前配置fieldId=', fieldId);
+                renderOptions(fieldId);
+                tOpenId = layer.open({
+                    type: 1
+                    , title: '配置选项'
+                    , content: $('#configOptTpl')
+                    , maxmin: false
+                    , area: ['662px', '95%']   // 宽高
+                    , btn: ['确定', '新增', '取消']
+                    , yes: function (index, layero) {
+                        $('#kConfigOptFormSubmit').click();
+                    }
+                    ,btn2: function (index, layero) {   // 新增选项
+                        var data = newOptionData(fieldId);
+                        var itemHtml = kvfKit.renderTpl('optTpl', data);
+                        var configOptBoxObj = $('#configOptBox');
+                        var itemObj = configOptBoxObj.find('.layui-form-item');
+                        if (itemObj.length > 0) {
+                            itemObj.last().after('<hr>' + itemHtml);
+                        } else {
+                            configOptBoxObj.append(itemHtml);
+                        }
+                        return false;
+                    }
+                });
+            },
+            remove: function (obj) {
+                removeItem(obj);
+                removeFieldData(getId(obj));
+            },
+            up: function (obj) {
+                moveItem(obj, 'up');
+            },
+            down: function (obj) {
+                moveItem(obj, 'down');
+            },
+            removeOpt: function (obj) {
+                removeOption(obj);
+            }
+        });
+
+        laydate.render({
+            elem: '#createTime' // 指定元素
+            ,type: 'datetime'
+        });
+        laydate.render({
+            elem: '#updateTime' // 指定元素
+            ,type: 'datetime'
+        });
+
+        form.on('submit(kConfigOptFormSubmit)', function (obj) {
+            $('#configOptBox').find('.layui-form-item').each(function (i, item) {
+                var optionId = $(item).data('id');
+                var fieldId = $(item).data('fieldId');
+                var text = $(item).find('input[name="text"]').val();
+                var value = $(item).find('input[name="value"]').val();
+
+                log('update fieldId=', fieldId);
+                log('update optionId=', optionId);
+                if (isBlankObj(fieldsData[fieldId])) {
+                    fieldsData[fieldId] = {id: fieldId, options: {}};
+                }
+                if (isBlankObj(fieldsData[fieldId]['options'])) {
+                    fieldsData[fieldId]['options'] = {};
+                    fieldsData[fieldId]['options'][optionId] = {id: optionId, fieldId: fieldId, text: text, value: value};
+                } else {
+                    if (isBlankObj(fieldsData[fieldId]['options'][optionId])) {
+                        fieldsData[fieldId]['options'][optionId] = {id: optionId, fieldId: fieldId, text: text, value: value};
+                    } else {
+                        fieldsData[fieldId]['options'][optionId].id = optionId;
+                        fieldsData[fieldId]['options'][optionId].fieldId = fieldId;
+                        fieldsData[fieldId]['options'][optionId].text = text;
+                        fieldsData[fieldId]['options'][optionId].value = value;
+                    }
+                }
+            });
+            log('update fieldsData=', fieldsData);
+            layer.close(tOpenId);
+        });
+
+        //监听提交
+        form.on('submit(kFormSubmit)', function(data){
+            var fields = data.field; //获取提交的字段
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+
+            var formConfigData = {id: fields.id, type: fields.type, name: fields.name, theme: fields.theme, designData: {}};
+            var items = $('#formFieldConfigBox').find('.layui-form-item');
+
+            for (var i = 0; i < items.length; i++) {
+                var itemObj = $(items[i]);
+                var fieldId = itemObj.data('id');
+                var fieldName = itemObj.find('input[name="fieldName"]').val();
+                var field = itemObj.find('input[name="field"]').val();
+                var control = itemObj.find('select[name="control"]').val();
+                var required = itemObj.find('select[name="required"]').val();
+
+                if (fieldNeedOption(control) && (isBlankObj(fieldsData[fieldId]) || isBlankObj(fieldsData[fieldId].options))) {
+                    return kvfKit.errorMsg('字段【' + fieldName + '】使用【' + control + '】表单控件，必须至少配置一个选项值');
+                }
+
+                if (isBlankObj(fieldsData[fieldId])) {
+                    formConfigData['designData'][fieldId] = {id: fieldId, fieldName: fieldName, field: field, control: control, required: required, options: {}};
+                } else {
+                    formConfigData['designData'][fieldId] = {id: fieldId, fieldName: fieldName, field: field, control: control, required: required, options: fieldsData[fieldId].options};
+                }
+            }
+
+            formConfigData.designData = JSON.stringify(formConfigData.designData);
+            formConfigData.designData = kvfKit.replaceAll(formConfigData.designData, '"', '&quot;');
+
+            log('formConfigData=', formConfigData);
+
+            var url = fields.id ? 'workflow/form/edit' : 'workflow/form/add';
+            //提交 Ajax 成功后，关闭当前弹层并重载表格
+            $.ajax({
+                type: req.type.post,
+                url: BASE_WEB + url,
+                data: formConfigData,
+                async: false,
+                success: function (r) {
+                    if (r.code === req.status.ok) {
+                        // 重载表格
+                        parent.layui.table.reload('kContentTable');
+                        parent.layer.close(index); //再执行关闭
+                    } else {
+                        kvfKit.errorMsg(r.msg);
+                    }
+                }
+            });
+
+        });
+
+        function getId(obj) {
+            return findCurrentItemObj(obj).data('id');
+        }
+
+        function generateId() {
+            return new Date().format('yyyyMMddhhmmss') + randomn(2);
+        }
+
+        function newFieldData() {
+            return {id: generateId(), fieldName: '', field: '', control: '', required: 1};
+        }
+
+        function newOptionData(fieldId) {
+            return {id: generateId(), fieldId: fieldId, text: '', value: ''};
+        }
+
+        function randomn(n) {
+            if (n > 21) return null;
+            return parseInt((Math.random() + 1) * Math.pow(10, n - 1));
+        }
+
+        function findCurrentItemObj(insideObj) {
+            return insideObj.parents('.layui-form-item');
+        }
+
+        function removeFieldData(fieldId) {
+            delete fieldsData[fieldId];
+        }
+
+        function emptyOptionData(fieldId) {
+            fieldsData[fieldId].options = {};
+        }
+
+        function removeOption(obj) {
+            var optionId = getId(obj);
+            var fieldId = findCurrentItemObj(obj).data('fieldId');
+            if (fieldsData[fieldId] && fieldsData[fieldId]['options']) {
+                delete fieldsData[fieldId]['options'][optionId];
+                log('after delete fieldsData=', fieldsData);
+            }
+            removeItem(obj);
+        }
+        
+        function renderFields() {
+            var fieldIds = Object.keys(fieldsData);
+            var sb = new StringBuilder();
+            fieldIds.forEach(function (fieldId, i) {
+                if (sb.toString()) {
+                    sb.append('<hr>');
+                }
+                sb.append(kvfKit.renderTpl('fieldTpl', fieldsData[fieldId]));
+            });
+            if (sb.toString()) {
+                $('#formFieldConfigBox').html(sb.toString());
+            } else {
+                $('#formFieldConfigBox').html(kvfKit.renderTpl('fieldTpl', newFieldData()))
+            }
+            form.render();
+        }
+
+        function renderOptions(fieldId) {
+            if (fieldsData[fieldId]) {
+                var options = fieldsData[fieldId].options || {};
+                var optionIds = Object.keys(options);
+                var sb = new StringBuilder();
+                optionIds.forEach(function (optionId, i) {
+                    if (sb.toString()) {
+                        sb.append('<hr>');
+                    }
+                    sb.append(kvfKit.renderTpl('optTpl', options[optionId]));
+                });
+                if (sb.toString()) {
+                    $('#configOptBox').html(sb.toString());
+                } else {
+                    $('#configOptBox').html(kvfKit.renderTpl('optTpl', newOptionData(fieldId)));
+                }
+            } else {
+                $('#configOptBox').html(kvfKit.renderTpl('optTpl', newOptionData(fieldId)));
+            }
+        }
+
+        function moveItem(obj, direction) {
+            var currentItemObj = findCurrentItemObj(obj);
+            var brotherItemObj;
+            if (direction === 'up') {
+                brotherItemObj = currentItemObj.prev();
+                if (brotherItemObj.length === 0) {
+                    kvfKit.warningMsg('已经在最上面啦，无法移动');
+                    return false;
+                }
+                // 因为还有一个<hr>元素，所有应该找再上/下一个兄弟节点
+                brotherItemObj = brotherItemObj.prev();
+            } else if (direction === 'down') {
+                brotherItemObj = currentItemObj.next();
+                if (brotherItemObj.length === 0) {
+                    kvfKit.warningMsg('已经在最下面啦，无法移动');
+                    return false;
+                }
+                // 因为还有一个<hr>元素，所有应该找再上/下一个兄弟节点
+                brotherItemObj = brotherItemObj.next();
+            } else {
+                return kvfKit.errorMsg('无效的参数【direction】，值：', direction);
+            }
+
+            var tempData = {
+                id: brotherItemObj.data('id'),
+                fieldName: brotherItemObj.find('[name="fieldName"]').val(),
+                field: brotherItemObj.find('[name="field"]').val(),
+                control: brotherItemObj.find('[name="control"]').val(),
+                required: brotherItemObj.find('[name="control"]').val()
+            };
+
+            brotherItemObj.find('[name="control"] option:selected').removeAttr('selected');
+            brotherItemObj.find('[name="required"] option:selected').removeAttr('selected');
+
+            brotherItemObj.data('id', currentItemObj.data('id'));
+            brotherItemObj.find('[name="fieldName"]').val(currentItemObj.find('[name="fieldName"]').val());
+            brotherItemObj.find('[name="field"]').val(currentItemObj.find('[name="field"]').val());
+            brotherItemObj.find('[name="control"] option[value="' + currentItemObj.find('[name="control"]').val() + '"]').attr('selected', 'selected');
+            brotherItemObj.find('[name="required"] option[value="' + currentItemObj.find('[name="required"]').val() + '"]').attr('selected', 'selected');
+
+            currentItemObj.find('[name="control"] option:selected').removeAttr('selected');
+            currentItemObj.find('[name="required"] option:selected').removeAttr('selected');
+
+            currentItemObj.data('id', tempData.id);
+            currentItemObj.find('[name="fieldName"]').val(tempData.fieldName);
+            currentItemObj.find('[name="field"]').val(tempData.field);
+            currentItemObj.find('[name="control"] option[value="' + tempData.control + '"]').attr('selected', 'selected');
+            currentItemObj.find('[name="required"] option[value="' + tempData.required + '"]').attr('selected', 'selected');
+
+            form.render();
+        }
+
+        function removeItem(obj) {
+            var currentItemObj = findCurrentItemObj(obj);
+            var prevItemObj = currentItemObj.prev();
+            if (prevItemObj.length === 0) {
+                var nextItemObj = currentItemObj.next();
+                if (nextItemObj.prop('tagName') === 'HR') {
+                    nextItemObj.remove();
+                }
+            } else {
+                prevItemObj.remove();
+            }
+            currentItemObj.remove();
+        }
+
+        function isBlankObj(obj) {
+            return !obj || $.isEmptyObject(obj);
+        }
+
+        function fieldNeedOption(control) {
+            switch (control) {
+                case 'select':
+                case 'radio':
+                case 'checkbox':
+                    return true;
+                default:
+                    return false;
+            }
+        }
+    })
+</script>
+</body>
+</html>

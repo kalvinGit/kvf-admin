@@ -1,5 +1,6 @@
 package com.kalvin.kvf.modules.sys.service;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -9,6 +10,7 @@ import com.kalvin.kvf.modules.sys.mapper.UserMapper;
 import com.kalvin.kvf.modules.sys.vo.UserQueryVO;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,5 +41,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         super.update(new LambdaUpdateWrapper<User>()
                 .set(User::getPassword, password)
                 .eq(User::getId, id));
+    }
+
+    @Override
+    public List<User> search(String query) {
+        if (StrUtil.isBlank(query)) {
+            return new ArrayList<>();
+        }
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(User::getUsername, query).or().like(User::getRealname, query);
+        return super.list(queryWrapper);
     }
 }

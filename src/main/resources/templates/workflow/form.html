@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title th:replace="common/base::pagetitle"></title>
+    <link th:replace="common/base::static"/>
+</head>
+<body style="background-color: #f2f2f2;">
+
+<div id="kPage" class="layui-fluid" style="padding: 0">
+    <div class="layui-row">
+        <div class="layui-col-md12" id="kMainContentCol">
+            <div class="layui-fluid kvf-fluid-padding15">
+                <div class="layui-card">
+                    <form>
+                        <div class="layui-form layui-card-header kvf-card-header-auto">
+                            <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">表单名称</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="name" placeholder="请输入表单名称" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <label class="layui-form-label">表单代号</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="code" placeholder="请输入表单代码" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
+                                    <i class="layui-icon layui-icon-search"></i>
+                                </button>
+                                <button class="layui-btn " type="reset" data-event="refresh">
+                                    <i class="layui-icon layui-icon-refresh-1"></i>
+                                </button>
+                            </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="layui-card-body">
+                        <table id="kContentTable" lay-filter="kContentTable"></table>
+                    </div>
+                </div>
+
+                <!--  表单类型选择 -->
+                <div class="layui-container" style="display: none; width: 100%;" id="formTypeTpl">
+                    <div class="layui-form" lay-filter="formTypeFilter" style="margin-top: 15px">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">表单类型</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="formType" value="0" title="简单表单" autocomplete="off" class="layui-input" checked>
+                                <input type="radio" name="formType" value="1" title="复杂表单" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-hide">
+                            <input type="button" lay-submit="" lay-filter="kFormTypeFormSubmit" id="kFormTypeFormSubmit" value="确认添加">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:replace="common/base::context"></script>
+<script th:replace="common/base::mainjs"></script>
+
+<!--头部工具栏模板-->
+<script type="text/html" id="headToolbarTpl">
+    <button class="layui-btn layui-btn-sm " lay-event="add">添加</button>
+    <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchdel">批量删除</button>
+</script>
+
+<!--表格行工具栏模板-->
+<script type="text/html" id="rowToolbarTpl">
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="prev"><i class="layui-icon layui-icon-form"></i>预览</a>
+    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+</script>
+
+<!--表格列格式化模板 start-->
+<script type="text/html" id="typeTpl">
+    {{#  if(d.type == 0){ }}
+    <span class="layui-badge layui-bg-blue">简单表单</span>
+    {{# } else if(d.type == 1) { }}
+    <span class="layui-badge layui-bg-blue">复杂表单</span>
+    {{# } }}
+</script>
+<!--表格列格式化模板 end-->
+
+<script type="text/javascript" th:inline="javascript">
+    layui.use(['element', 'form', 'layer', 'table', 'laydate'], function () {
+        var elemet = layui.element, form = layui.form, layer = layui.layer, table = layui.table, laydate = layui.laydate;
+        var tableId = 'kContentTable';
+        var area = ['449px', '95%'];
+
+        // 实例化table
+        var tableIns = table.render($.extend(config.layui.table, {
+            elem: '#' + tableId
+            ,url: BASE_WEB + 'workflow/form/list/data' // 数据接口
+            ,toolbar: '#headToolbarTpl'
+            ,cols: [[ //表头
+                {type:'checkbox', fixed: 'left'}
+                ,{field: 'name', title: '表单名称'}
+                ,{field: 'code', title: '表单代号', width: 180}
+                ,{field: 'type', title: '表单类型', width: 130, templet: '#typeTpl'}
+                ,{field: 'theme', title: '表单主题', width: 130}
+                ,{field: 'createTime', title: '创建时间', width: 180}
+                ,{field: 'updateTime', title: '更新时间', width: 180}
+                ,{field: '', title: '操作', width: 250, fixed: 'right', templet: '#rowToolbarTpl'}
+            ]]
+        }));
+
+        var tOpenId;
+        // 监听表格头部事件
+        table.on('toolbar(' + tableId + ')', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id);
+            var checkData = checkStatus.data; // 得到选中的数据
+            switch(obj.event) {
+                case 'add':
+                    tOpenId = layer.open({
+                        type: 1
+                        , title: '选择表单类型'
+                        , content: $('#formTypeTpl')
+                        , maxmin: false
+                        , area: ['397px', '176px']   // 宽高
+                        , btn: ['创建', '取消']
+                        , yes: function (index, layero) {
+                            $('#kFormTypeFormSubmit').click();
+                        }
+                    });
+
+                    break;
+                case 'batchdel':
+                    if(checkData.length === 0){
+                        return kvfKit.warningMsg('请选择数据');
+                    }
+                    layer.confirm('确定删除吗？', function(index) {
+                        var ids = [];
+                        $.each(checkData, function(i, n){
+                            ids[i] = n.id;
+                        });
+
+                        //执行 Ajax 后重载
+                        $.ajax({
+                            type: req.type.post,
+                            url: BASE_WEB + 'workflow/form/batchdel',
+                            data: {ids: ids.toString()},
+                            success: function (r) {
+                                if (r.code === req.status.ok) {
+                                    table.reload(tableId);
+                                    kvfKit.sucessMsg('已删除');
+                                } else {
+                                    kvfKit.errorMsg(r.msg);
+                                }
+                            }
+                        });
+                    });
+                    break;
+            }
+        });
+
+        // 表格行按钮 监听事件
+        table.on('tool(' + tableId + ')', function (obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if (layEvent === 'prev') {
+                var prevId = layer.open({
+                    type: 2
+                    ,title: '表单预览'
+                    ,content: BASE_WEB + 'workflow/form/{id}/prev'.replace('{id}', data.id)
+                    ,maxmin: false
+                    ,area: area   // 宽高
+                    /*,btn: ['确定', '取消']
+                    ,yes: function(index, layero){
+                    }*/
+                });
+                layer.full(prevId);
+            }
+            if (layEvent === 'edit') {
+                if (data.type === 0) {
+                    var idx = layer.open({
+                        type: 2
+                        ,title: '更新表单设计'
+                        ,content: BASE_WEB + 'workflow/form/edit?id=' + data.id
+                        ,maxmin: false
+                        ,area: area   // 宽高
+                        ,btn: ['确定', '取消']
+                        ,yes: function(index, layero){
+                            //点击确认触发 iframe 内容中的按钮提交
+                            var submit = layero.find('iframe').contents().find("#kFormSubmit");
+                            submit.click();
+                        }
+                    });
+                    layer.full(idx);
+                }
+            }
+            if (layEvent === 'del') {
+                layer.confirm('确定删除吗？', function(index) {
+                    //执行 Ajax 后重载
+                    $.ajax({
+                        type: req.type.post,
+                        url: BASE_WEB + 'workflow/form/del/' + data.id,
+                        async: false,
+                        success: function (r) {
+                            if (r.code === req.status.ok) {
+                                table.reload(tableId);
+                                kvfKit.sucessMsg('已删除');
+                            } else {
+                                kvfKit.errorMsg(r.msg);
+                            }
+                        }
+                    });
+                });
+            }
+        });
+
+
+        // 监听查询
+        form.on('submit(kTableSearchFilter)', function (obj) {
+            renderTableData(obj.field);
+            return false;
+        });
+
+        form.on('submit(kFormTypeFormSubmit)', function (obj) {
+            var field = obj.field;
+            var formType = field.formType;
+            layer.close(tOpenId);
+
+            log('field=', field);
+
+            if (formType === '0') {
+                // 创建简单表单
+                var idx = layer.open({
+                    type: 2
+                    ,title: '快速表单设计器'
+                    ,content: BASE_WEB + 'workflow/form/edit'
+                    ,maxmin: false
+                    ,area: area   // 宽高
+                    ,btn: ['确定', '取消']
+                    ,yes: function(index, layero){
+                        //点击确认触发 iframe 内容中的按钮提交
+                        var submit = layero.find('iframe').contents().find("#kFormSubmit");
+                        submit.click();
+                    }
+                });
+                layer.full(idx);
+            } else {
+                // TODO: 创建复杂表单：基于ueditor编辑器设计表单
+                kvfKit.unhappyMsg('TODO: 创建复杂表单：基于ueditor编辑器设计表单');
+            }
+        });
+
+        var active = {
+            refresh: function () {
+                var $form = $('form');
+                $form[0].reset();
+                renderTableData(kvfKit.getFormJson($form));
+            }
+        };
+
+        kvfKit.activeInit(active);
+
+        function renderTableData(params) {
+            params = params ? params : {};
+
+            tableIns.reload({
+                where: params,
+                page: {current: 1}
+            });
+        }
+
+        // 绑定监听回车事件
+        kvfKit.bindEnterEventForLayuiForm();
+
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="common/base::pagetitle"></title>
+    <link th:replace="common/base::static"/>
+</head>
+<body>
+<div class="layui-form" style="padding: 20px 30px 0 0;">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">关联表单</label>
+        <div class="layui-input-inline">
+            <select name="formCode" lay-verify="" id="formCode">
+                <option value="">请选择要关联的表单</option>
+                <option th:each="form: ${forms}" th:value="${form.code}" th:text="${form.name}" th:selected="${processForm.formCode==form.code}"></option>
+            </select>
+        </div>
+        <div class="layui-form-mid layui-word-aux">移除关联表单，置空即可</div>
+    </div>
+    <!--<div class="layui-card">
+        <div class="layui-card-header">配置表单</div>
+        <div class="layui-card-body">
+
+        </div>
+    </div>-->
+    <!--<div class="layui-card">
+        <div class="layui-card-header">流程节点审批人配置</div>
+        <div class="layui-card-body">
+            TODO: 流程节点审批人配置
+        </div>
+
+    </div>-->
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit="" lay-filter="kFormSubmit" id="kFormSubmit">
+        <input type="text" name="id" th:value="${processForm.id}" autocomplete="off" class="layui-input">
+        <input type="text" name="modelId" th:value="${processForm.modelId}" autocomplete="off" class="layui-input">
+    </div>
+
+</div>
+
+<script th:replace="common/base::context"></script>
+<script th:replace="common/base::mainjs"></script>
+<script th:inline="javascript">
+    layui.use(['form', 'laydate', 'util'], function () {
+        var $ = layui.$, form = layui.form, laydate = layui.laydate;
+        var util = layui.util;
+
+        var modelId = kvfKit.getUrlParam('modelId');
+
+        util.event('lay-event', {
+            /*remove: function (obj) {
+                removeItem(obj);
+                removeFieldData(getId(obj));
+            }*/
+        });
+
+
+        //监听提交
+        form.on('submit(kFormSubmit)', function(data){
+            var field = data.field; //获取提交的字段
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+
+            var url;
+            if (field.modelId) {
+                if (field.formCode) {
+                    // 更新关联表单
+                    url = 'workflow/processForm/edit';
+                } else {
+                    // 删除关联表单
+                    url = 'workflow/processForm/del/' + field.id;
+                }
+            } else {
+                // 关联表单
+                if (field.formCode) {
+                    field.modelId = modelId;
+                    url = 'workflow/processForm/add';
+                } else {
+                    return kvfKit.warningMsg('你什么都没有做');
+                }
+
+            }
+
+            log('field=', field);
+
+            //提交 Ajax 成功后，关闭当前弹层并重载表格
+            $.ajax({
+                type: req.type.post,
+                url: BASE_WEB + url,
+                data: field,
+                async: false,
+                success: function (r) {
+                    if (r.code === req.status.ok) {
+                        // 重载表格
+                        // parent.layui.table.reload('kContentTable');
+                        parent.layer.close(index); //再执行关闭
+                    } else {
+                        kvfKit.errorMsg(r.msg);
+                    }
+                }
+            });
+
+        });
+
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="common/base::pagetitle"></title>
+    <link th:replace="common/base::static"/>
+</head>
+<body>
+<div class="layui-form" style="padding: 20px 30px 0 0;">
+    <div id="fileBox" style="display: none">
+        <div class="layui-form-item" th:each="fields: ${formConfig.fields}">
+            <label class="layui-form-label" th:text="${fields.fieldName}">输入框</label>
+            <div th:class="${fields.control=='textarea'||fields.control=='checkbox'||fields.control=='radio'?'layui-input-block':'layui-input-inline'}" th:data-checkbox="${fields.control=='checkbox'}">
+                <input th:if="${fields.control=='input'}" th:disabled="${!flowData.isFirstNode()}" type="text" th:name="${fields.field}" th:value="${fields.value}" th:lay-verify="${fields.required==1?'required':''}" th:placeholder="${'请填写' + fields.fieldName}" autocomplete="off" class="layui-input">
+                <select th:if="${fields.control=='select'}" th:disabled="${!flowData.isFirstNode()}" th:name="${fields.field}" th:lay-verify="${fields.required==1?'required':''}">
+                    <option th:each="option: ${fields.options}" th:value="${option.value}" th:text="${option.text}" th:selected="${option.value==fields.value}"></option>
+                </select>
+                <textarea th:if="${fields.control=='textarea'}" th:disabled="${!flowData.isFirstNode()}" th:name="${fields.field}" th:text="${fields.value}" th:placeholder="${'请填写' + fields.fieldName}" th:lay-verify="${fields.required==1?'required':''}" class="layui-textarea"></textarea>
+                <input th:if="${fields.control=='checkbox'}" th:disabled="${!flowData.isFirstNode()}" th:each="option: ${fields.options}" type="checkbox" th:name="${fields.field}" th:title="${option.text}" th:checked="${#strings.contains(fields.value, option.value)}" th:value="${option.value}" th:lay-verify="${fields.required==1?'required':''}" lay-skin="primary">
+                <input th:if="${fields.control=='radio'}" th:disabled="${!flowData.isFirstNode()}" th:each="option: ${fields.options}" type="radio" th:name="${fields.field}" th:value="${option.value}" th:checked="${option.value==fields.value}" th:title="${option.text}" th:lay-verify="${fields.required==1?'required':''}">
+                <input th:if="${fields.control=='date'||fields.control=='datetime'||fields.control=='time'}" th:disabled="${!flowData.isFirstNode()}" th:id="${fields.field}" type="text" th:name="${fields.field}" th:value="${fields.value}" th:lay-verify="${fields.required==1?'required':''}" th:placeholder="${'请选择' + fields.fieldName}" th:data-date-type="${fields.control}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <!-- 审批意见模块 -->
+    <div class="layui-form-item">
+        <label class="layui-form-label" th:text="${flowData.isFirstNode()?'备注':'审批意见'}">审批意见</label>
+        <div class="layui-input-block">
+            <textarea name="comment" th:placeholder="${flowData.isFirstNode()?'请填写备注':'请填写审批意见'}" lay-verify="required" class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <hr >
+    <!-- 选择审批用户模块 -->
+    <div class="layui-form-item" th:if="${flowData.nextNodeNum!=0}">
+        <label class="layui-form-label">审批用户</label>
+        <div class="layui-input-inline" style="width: 30px">
+            <a class="layui-btn layui-btn-xs layui-bg-black" lay-event="selectUser" style="margin-top: 8px" id="selectUser"><i class="fa fa-user-plus"></i></a>
+            <input type="hidden" class="layui-input" name="nextUser" th:value="${#lists.size(flowData.nextNodes) == 1?flowData.nextNodes[0].assignee:''}" autocomplete="off">
+        </div>
+        <div class="layui-form-mid layui-word-aux" style="color: #35867e!important;" id="nextUserText" th:text="${#lists.size(flowData.nextNodes) == 1?flowData.nextNodes[0].assignee:''}"></div>
+    </div>
+    <!-- 任务节点模块 -->
+    <div class="layui-form-item">
+        <label class="layui-form-label">下一环节</label>
+        <div class="layui-input-block" th:if="${flowData.nextNodeNum==0}">
+            <input type="radio" name="arc" title="归档" checked>
+        </div>
+        <div class="layui-input-block">
+            <input th:each="nextNode, info: ${flowData.nextNodes}" type="radio" name="targetNodeId" lay-filter="selectNode" th:value="${nextNode.nodeId}" th:title="${nextNode.nodeName}" th:checked="${info.size==1}" th:data-assignee="${nextNode.assignee}" lay-verify="required">
+        </div>
+    </div>
+
+
+    <!-- 流程流转核心字段值 -->
+    <div class="layui-form-item">
+        <input type="hidden" name="theme" th:value="${formConfig.theme}">
+        <input type="hidden" name="processName" th:value="${flowData.processName}">
+        <input type="hidden" name="processDefinitionId" th:value="${flowData.processDefinitionId}">
+        <input type="hidden" name="processInstanceId" th:value="${flowData.processInstanceId}">
+        <input type="hidden" name="executionId" th:value="${flowData.executionId}">
+        <input type="hidden" name="startUser" th:value="${flowData.startUser}">
+        <input type="hidden" name="currentUser" th:value="${flowData.currentUser}">
+        <input type="hidden" name="taskId" th:value="${flowData.taskId}">
+        <input type="hidden" name="mainFormKey" th:value="${flowData.mainFormKey}">
+        <input type="hidden" name="formKey" th:value="${flowData.formKey}">
+        <input type="hidden" name="firstNodeId" th:value="${flowData.firstNodeId}">
+        <input type="hidden" name="currentNodeId" th:value="${flowData.currentNodeId}">
+        <input type="hidden" name="currentNodeName" th:value="${flowData.currentNodeName}">
+        <input type="hidden" name="firstNode" th:value="${flowData.firstNode}">
+        <input type="hidden" name="firstSubmit" th:value="${flowData.firstSubmit}">
+        <input type="hidden" name="nextNodeNum" th:value="${flowData.nextNodeNum}">
+    </div>
+
+    <!-- 按钮模块  -->
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit="" lay-filter="kFormSubmit" id="kFormSubmit" value="确认添加">
+    </div>
+</div>
+
+<script th:replace="common/base::context"></script>
+<script th:replace="common/base::mainjs"></script>
+<script>
+    layui.use(['form', 'laydate', 'util'], function () {
+        var $ = layui.$, form = layui.form, laydate = layui.laydate, util = layui.util;
+
+        util.event('lay-event', {
+            selectUser: function (obj) {
+                // kvfKit.unhappyMsg('TODO: 选择用户功能');
+                layer.open({
+                    type: 2
+                    ,title: '选择用户'
+                    ,content: BASE_WEB + 'common/select/user'
+                    ,maxmin: false
+                    ,area: ['449px', '95%']   // 宽高
+                    ,btn: ['确定', '取消']
+                    ,yes: function(index, layero) {
+                        //点击确认触发 iframe 内容中的按钮提交
+                        // var submit = layero.find('iframe').contents().find("#kFormSubmit");
+                        // submit.click();
+                        var selectedUsers = $(layero).find('iframe')[0].contentWindow.callbackData();
+                        var sb = new StringBuilder();
+                        var sb2 = new StringBuilder();
+                        selectedUsers.forEach(function (item) {
+                            if (sb.length() > 0) {
+                                sb.append(',');
+                                sb2.append(',');
+                            }
+                            sb.append(item.username);
+                            sb2.append(item.realname);
+                        });
+                        setAssignee(sb.toString(), sb2.toString());
+                    }
+                });
+            }
+        });
+
+        //监听提交
+        form.on('submit(kFormSubmit)', function(data){
+            var index = parent.layer.getFrameIndex(window.name); // 先得到当前iframe层的索引
+            var field = data.field; //获取提交的字段
+            var nextNodeNum = $('input[name="nextNodeNum"]').val();
+            if (Number(nextNodeNum) !==0 && !field.nextUser) {
+                return kvfKit.unhappyMsg('下一审批用户不允许为空', true);
+            }
+
+            fillCheckboxData(field);
+
+            log('fill field=', field);
+
+            //提交 Ajax 成功后，关闭当前弹层并重载表格
+            $.ajax({
+                type: req.type.post,
+                url: BASE_WEB + 'workflow/submit/task',
+                dataType:'json',
+                data: field,
+                async: false,
+                success: function (r) {
+                    if (r.code === req.status.ok) {
+                        if (Number(nextNodeNum) === 0) {
+                            kvfKit.sucessMsg('流程归档成功！');
+                        } else {
+                            kvfKit.sucessMsg('任务提交至【' + $('input[name="targetNodeId"]:checked').attr('title') + '】节点，由用户【' + $('#nextUserText').text() + '】处理');
+                        }
+                        // 重载表格
+                        parent.layui.table.reload('kContentTable');
+                        parent.layer.close(index); //再执行关闭
+                    } else {
+                        kvfKit.errorMsg(r.msg?r.msg:'任务已提交，无法再提交！');
+                    }
+                }
+            });
+
+        });
+
+        function setAssignee(assigneeId, assigneeName) {
+            $('input[name="nextUser"]').val(assigneeId);
+            // TODO: 用户真实名称
+            $('#nextUserText').text(assigneeName?assigneeName:assigneeId);
+        }
+
+        /**
+         * 获取并补全同name checkbox选中的所有值：如1,2,3
+         * @param field
+         * @returns {*}
+         */
+        function fillCheckboxData(field) {
+            $("div[data-checkbox='true']").each(function(i, item) {
+                var checkedData = [];
+                var checkboxs = $(item).find('input[type="checkbox"]:checked');
+                if (checkboxs.length > 0) {
+                    var name = $(checkboxs[0]).attr('name');
+                    checkboxs.each(function (j, cItem) {
+                        checkedData[j] = $(cItem).val();
+                    });
+                    // 将数组合并成字符串
+                    field[name] = checkedData.join(",");
+                }
+            });
+        }
+    })
+</script>
+</body>
+</html>
