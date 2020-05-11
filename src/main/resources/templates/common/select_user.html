@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="common/base::pagetitle"></title>
+    <link th:replace="common/base::static"/>
+</head>
+<body>
+<div class="layui-form" style="padding: 20px 30px 0 0;">
+
+    <div class="layui-card">
+        <div class="layui-card-header" style="text-align: center">搜索用户</div>
+        <div class="layui-card-body">
+            <select name="username" xm-select="userSelect" xm-select-search="" xm-select-skin="default">
+                <option value="">搜索用户</option>
+            </select>
+            <!--<div class="layui-form-item">
+                <div class="layui-input-block">
+                    <input type="checkbox" name="" title="写作" lay-skin="primary" checked>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <input type="checkbox" name="" title="发呆" lay-skin="primary">
+                </div>
+            </div>-->
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit="" lay-filter="kFormSubmit" id="kFormSubmit">
+    </div>
+
+</div>
+
+<script th:replace="common/base::context"></script>
+<script th:replace="common/base::mainjs"></script>
+<script th:inline="javascript">
+    var formSelects;
+    layui.use(['form', 'laydate', 'util', 'formSelects'], function () {
+        var $ = layui.$, form = layui.form, laydate = layui.laydate;
+        var util = layui.util;
+        formSelects = layui.formSelects;
+
+        util.event('lay-event', {
+        });
+
+        /**
+         * 1.配置远程搜索, 请求头, 请求参数, 请求类型等
+         *
+         * formSelects.config(ID, Options, isJson);
+         *
+         * @param ID        xm-select的值
+         * @param Options   配置项
+         * @param isJson    是否传输json数据, true将添加请求头 Content-Type: application/json; charset=UTF-8
+         */
+        formSelects.config('userSelect', {
+            type: 'get',                //请求方式: post, get, put, delete...
+            header: {},                 //自定义请求头
+            data: {},                   //自定义除搜索内容外的其他数据
+            searchUrl: BASE_WEB + 'common/search/user',              //搜索地址, 默认使用xm-select-search的值, 此参数优先级高
+            searchName: 'keyword',      //自定义搜索内容的key值
+            searchVal: '',              //自定义搜索内容, 搜素一次后失效, 优先级高于搜索框中的值
+            keyName: 'realname',            //自定义返回数据中name的key, 默认 name
+            keyVal: 'username',            //自定义返回数据中value的key, 默认 value
+            keySel: 'selected',         //自定义返回数据中selected的key, 默认 selected
+            keyDis: 'disabled',         //自定义返回数据中disabled的key, 默认 disabled
+            keyChildren: 'children',    //联动多选自定义children
+            delay: 500,                 //搜索延迟时间, 默认停止输入500ms后开始搜索
+            direction: 'auto',          //多选下拉方向, auto|up|down
+            response: {
+                statusCode: 0,          //成功状态码
+                statusName: 'code',     //code key
+                msgName: 'msg',         //msg key
+                dataName: 'data'        //data key
+            },
+            success: function(id, url, searchVal, result){      //使用远程方式的success回调
+                console.log(result);    //返回的结果
+            },
+            error: function(id, url, searchVal, err){           //使用远程方式的error回调
+                //同上
+                console.log(err);   //err对象
+                kvfKit.errorMsg(err.msg);
+            },
+            beforeSuccess: function(id, url, searchVal, result){        //success之前的回调, 干嘛呢? 处理数据的, 如果后台不想修改数据, 你也不想修改源码, 那就用这种方式处理下数据结构吧
+                if (result.code === req.status.ok) {
+                    result.code = 0;
+                }
+                return result;  //必须return一个结果, 这个结果要符合对应的数据结构
+            },
+            beforeSearch: function(id, url, searchVal){         //搜索前调用此方法, return true将触发搜索, 否则不触发
+                return searchVal;
+
+            },
+            clearInput: false,          //当有搜索内容时, 点击选项是否清空搜索内容, 默认不清空
+        }, false);
+
+    })
+
+    function callbackData() {
+        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+        parent.layer.close(index); //再执行关闭
+        return formSelects.value('userSelect');
+    }
+</script>
+</body>
+</html>

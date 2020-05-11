@@ -1,9 +1,11 @@
 package com.kalvin.kvf.common.utils;
 
-import com.kalvin.kvf.modules.sys.entity.User;
 import com.kalvin.kvf.common.exception.KvfException;
+import com.kalvin.kvf.common.shiro.UserRealm;
+import com.kalvin.kvf.modules.sys.entity.User;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.mgt.RealmSecurityManager;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 
@@ -68,6 +70,15 @@ public class ShiroKit {
         }
         getSession().removeAttribute(key);
         return kaptcha.toString();
+    }
+
+    /**
+     * 刷新权限
+     */
+    public static void flushPrivileges() {
+        RealmSecurityManager rsm = (RealmSecurityManager) SecurityUtils.getSecurityManager();
+        UserRealm realm = (UserRealm) rsm.getRealms().iterator().next();
+        realm.clearCachedAuthorization();
     }
 
 }

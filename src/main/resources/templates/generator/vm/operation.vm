@@ -59,7 +59,12 @@
 
         #foreach($column in $config.allColumns)
         #set($name = $column.columnNameCamelCase)
-        #if($column.dataType == 'timestamp' || $column.dataType == 'date' || $column.dataType == 'datetime')
+        #if($column.dataType == 'timestamp' || $column.dataType == 'datetime')
+        laydate.render({
+            elem: '#$name' // 指定元素
+            ,type: 'datetime'
+        });
+        #elseif($column.dataType == 'date')
         laydate.render({
             elem: '#$name' // 指定元素
         });

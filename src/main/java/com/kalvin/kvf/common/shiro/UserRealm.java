@@ -8,6 +8,7 @@ import com.kalvin.kvf.modules.sys.entity.Menu;
 import com.kalvin.kvf.modules.sys.entity.User;
 import com.kalvin.kvf.modules.sys.service.IMenuService;
 import com.kalvin.kvf.modules.sys.service.IUserService;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
@@ -121,6 +122,13 @@ public class UserRealm extends AuthorizingRealm {
         shaCredentialsMatcher.setHashAlgorithmName(ShiroKit.HASH_ALGORITHM_NAME);
         shaCredentialsMatcher.setHashIterations(ShiroKit.HASH_ITERATIONS);
         super.setCredentialsMatcher(shaCredentialsMatcher);
+    }
+
+    /**
+     * 清理权限缓存
+     */
+    public void clearCachedAuthorization() {
+        super.clearCachedAuthorizationInfo(SecurityUtils.getSubject().getPrincipals());
     }
 
 }

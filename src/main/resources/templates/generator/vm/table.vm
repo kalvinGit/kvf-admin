@@ -17,32 +17,32 @@
                         <div class="layui-form layui-card-header kvf-card-header-auto">
                             <div class="layui-form-item">
                             #foreach($queryColumn in $config.queryColumns)
-                            #if($queryColumn.dataType == 'timestamp' || $queryColumn.dataType == 'date' || $queryColumn.dataType == 'datetime')
-                            <div class="layui-inline">
-                                <label class="layui-form-label">$queryColumn.comment</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="$queryColumn.nameCamelCase" id="$queryColumn.nameCamelCase" placeholder="请输入$queryColumn.comment" autocomplete="off" class="layui-input">
+                                #if($queryColumn.dataType == 'timestamp' || $queryColumn.dataType == 'date' || $queryColumn.dataType == 'datetime')
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">$queryColumn.comment</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="$queryColumn.nameCamelCase" id="$queryColumn.nameCamelCase" placeholder="请输入$queryColumn.comment" autocomplete="off" class="layui-input">
+                                    </div>
                                 </div>
-                            </div>
-                            #else
-                            <div class="layui-inline">
-                                <label class="layui-form-label">$queryColumn.comment</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="$queryColumn.nameCamelCase" placeholder="请输入$queryColumn.comment" autocomplete="off" class="layui-input">
+                                #else
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">$queryColumn.comment</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="$queryColumn.nameCamelCase" placeholder="请输入$queryColumn.comment" autocomplete="off" class="layui-input">
+                                    </div>
                                 </div>
-                            </div>
-                            #end
+                                #end
 
-                            #if($config.queryColumns.size() == $foreach.count)
-                            <div class="layui-inline">
-                                <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
-                                    <i class="layui-icon layui-icon-search"></i>
-                                </button>
-                                <button class="layui-btn " type="reset" data-event="refresh">
-                                    <i class="layui-icon layui-icon-refresh-1"></i>
-                                </button>
-                            </div>
-                            #end
+                                #if($config.queryColumns.size() == $foreach.count)
+                                <div class="layui-inline">
+                                    <button class="layui-btn " lay-submit="" lay-filter="kTableSearchFilter">
+                                        <i class="layui-icon layui-icon-search"></i>
+                                    </button>
+                                    <button class="layui-btn " type="reset" data-event="refresh">
+                                        <i class="layui-icon layui-icon-refresh-1"></i>
+                                    </button>
+                                </div>
+                                #end
                             #end
                             </div>
                         </div>
@@ -244,7 +244,12 @@
 
         #foreach($column in $config.queryColumns)
         #set($name = $column.nameCamelCase)
-        #if($column.dataType == 'timestamp' || $column.dataType == 'date' || $column.dataType == 'datetime')
+        #if($column.dataType == 'timestamp' || $column.dataType == 'datetime')
+        laydate.render({
+            elem: '#$name' // 指定元素
+            ,type: 'datetime'
+        });
+        #elseif($column.dataType == 'date')
         laydate.render({
             elem: '#$name' // 指定元素
         });

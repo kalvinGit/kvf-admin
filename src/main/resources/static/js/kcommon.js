@@ -244,26 +244,34 @@ var kvfKit = {
             }
         });
     },
-    layMsg: function (msg, iconCode) {
-        return layer.msg(msg, {icon: iconCode});
+    /**
+     * 提示信息
+     * @param msg 提示内容信息
+     * @param iconCode 图标代码
+     * @param isShake  是否抖动。默认false
+     * @returns {*}
+     */
+    layMsg: function (msg, iconCode, isShake) {
+        var options = isShake ? {icon: iconCode, anim: 6} : {icon: iconCode};
+        return layer.msg(msg, options);
     },
-    sucessMsg: function (msg) {
-        return this.layMsg(msg, 1);
+    sucessMsg: function (msg, isShake) {
+        return this.layMsg(msg, 1, isShake);
     },
-    errorMsg: function (msg) {
-        return this.layMsg(msg, 2);
+    errorMsg: function (msg, isShake) {
+        return this.layMsg(msg, 2, isShake);
     },
-    warningMsg: function (msg) {
-        return this.layMsg(msg, 0);
+    warningMsg: function (msg, isShake) {
+        return this.layMsg(msg, 0, isShake);
     },
-    doubtMsg: function (msg) {
-        return this.layMsg(msg, 3);
+    doubtMsg: function (msg, isShake) {
+        return this.layMsg(msg, 3, isShake);
     },
-    unhappyMsg: function (msg) {
-        return this.layMsg(msg, 5);
+    unhappyMsg: function (msg, isShake) {
+        return this.layMsg(msg, 5, isShake);
     },
-    happyMsg: function (msg) {
-        return this.layMsg(msg, 6);
+    happyMsg: function (msg, isShake) {
+        return this.layMsg(msg, 6, isShake);
     },
     renderTpl: function (tplId, data) {
         var html = '';
@@ -286,6 +294,9 @@ var kvfKit = {
             temp = temp.slice(1);
         }
         return temp;
+    },
+    replaceAll: function (str, preRepStr, afterRepStr) {
+        return str.replace(new RegExp(preRepStr, "gm"), afterRepStr)
     }
 
 };
@@ -380,6 +391,10 @@ var StringBuilder =  function() {
 
 StringBuilder.prototype.append = function(str) {
     this._stringArray.push(str);
+};
+
+StringBuilder.prototype.length = function() {
+    return this._stringArray.length;
 };
 
 StringBuilder.prototype.toString = function() {

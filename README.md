@@ -3,6 +3,26 @@ kvf-admin是一套快速开发框架、脚手架、后台管理系统、权限�
 * 后端采用spring boot、mybatis(已集成mybatis-plus增强插件，开发更迅速，可查看官方文档了解更多：[mybatis-plus](https://mp.baomidou.com/))、shiro框架
 * 前端采用layui作为UI框架，实现90%的移动端自适应，支持主题更换
 * 提供代码生成器([wiki使用文档](https://github.com/kalvinGit/kvf-admin/wiki/kvf%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E4%BD%BF%E7%94%A8%E6%96%87%E6%A1%A3))，只需编写20%左右的代码，剩下全部自动生成；支持一键及批量功能模块生成，并支持一定程度上的自定义配置并生成代码，相对比较灵活
+#### 基础框架功能模块
+* [x] 用户管理
+* [x] 部门管理
+* [x] 菜单管理
+* [x] 角色管理
+* [x] 字典管理
+* [x] 操作日志
+* [x] 代码生成
+* [x] 组件管理
+## kvf-admin-activiti（工作流OA版本）
+kvf-admin-activiti是基于kvf-admin脚手架集成了工作流引擎（activiti6），并封装了核心工作流程（OA）功能模块。如下：
+目前工作流（OA）模块还处于初始阶段，代码也比较粗糙，任然还有许多功能需要完善优化。
+* [x] 核心API（支持启动流程、提交任务、驳回、驳回任意环节、驳回首环节、撤回、挂起/激活流程等API）
+* [x] 流程管理（支持流程在线设计器、发布/部署、挂起、激活、导出/导入、配置表单、启动、删除）
+* [x] 表单管理（支持快速表单在线设计器、增/删/改/查、预览表单）
+* [x] 我的流程（发起流程申请）
+* [x] 我的待办（支持快速办理、查看任务表单办理、历史审批意见、流程实时流转图等）
+* [x] 我的已办（支持撤回功能）
+* [x] 我的申请（查看所有当前用户申请过的流程情况）
+* [ ] 下一步计划，期待大家的反馈意见！
 
 ### 项目结构树
 ````
@@ -75,10 +95,11 @@ kvf-admin
 * 使用ehcache + redis作为缓存，对需要加入缓存的方法上添加@Cacheable注解即可（你也可以使用redisTemplate添加获取缓存），提升系统运行速度
 * 支持日志记录，可在需要加入日志操作记录的controller方法上添加@Log("业务操作备注")即可完成日志记录
 * 系统全局统一异常处理，所有异常信息统一处理返回R对象，前端处理提示信息更方便
+* 支持工作流（OA）功能
 
 ### 本地部署
-* 通过git/gitee下载源码(推荐使用git，因为gitee不是实时更新的)
-* 创建数据库：执行sql/kvf_admin.sql脚本创建数据库及表并初始化系统基础数据
+* 通过git/gitee下载源码(推荐使用git，因为gitee不是实时更新的)，若是工作流OA版本，请clone activiti分支
+* 创建数据库：执行sql/kvf_admin.sql脚本创建数据库及表并初始化系统基础数据，若是工作流OA版本需要额外执行sql/kvf_admin_activiti.sql脚本
 * 修改开发环境配置文件application-dev.yml，配置数据库账号和密码
 * 开发工具idea或eclipse还需要安装lombok插件，否则会提示找不到实体类的的get/set方法
 * 运行KvfAdminApplication.java，启动项目【kvf-admin】
@@ -99,6 +120,12 @@ kvf-admin
 ![系统效果图](http://cloud.kalvinbg.cn/image/kvf-admin4.png)
 
 ### 更新日志
+#### 2020-05-10
+* 集成activiti6工作流引擎
+* 集成activiti6 modeler在线流程设计器
+* 基于activiti6 封装核心工作流引擎工具
+* 新增工作流程管理：流程管理、表单管理、我的流程、我的待办、我的已办、我的申请（目前处理初版）
+* 框架bug修复及优化
 #### 2020-04-02
 * 集成UEditor
 * 自定义日志注释重命名：【旧】@Action() -> 【新】@Log()
@@ -142,7 +169,6 @@ kvf-admin
 * 开发环境【dev】默认关闭登录验证码，若需要开启验证码登录可在application-dev.yml配置开启
 
 ### 敬请期待
-* 集成activity工作流引擎
 * vue-admin版本
 
 ### 常见问题
