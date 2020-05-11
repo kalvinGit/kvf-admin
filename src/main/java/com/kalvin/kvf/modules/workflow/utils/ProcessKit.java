@@ -73,6 +73,11 @@ public class ProcessKit {
         return repositoryService.createProcessDefinitionQuery().deploymentId(deploymentId).singleResult();
     }
 
+    /**
+     * 获取流程启动者
+     * @param processInstanceId 流程实例ID
+     * @return str
+     */
     public static String getStartUser(String processInstanceId) {
         HistoricProcessInstance historicProcessInstance = ProcessKit.getHistoricProcessInstance(processInstanceId);
         return historicProcessInstance.getStartUserId();
@@ -83,31 +88,61 @@ public class ProcessKit {
         return historicProcessInstance.getStartActivityId();
     }
 
+    /**
+     * 获取历史流程实例
+     * @param processInstanceId 流程实例ID
+     * @return HistoricProcessInstance
+     */
     public static HistoricProcessInstance getHistoricProcessInstance(String processInstanceId) {
         return historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
     }
 
+    /**
+     * 获取流程核心流转数据
+     * @param taskId 当前任务ID
+     * @return flowData
+     */
     public static FlowData getFlowData(String taskId) {
         Map<String, Object> variables = taskService.getVariables(taskId);
         return (FlowData) variables.get(ProcessKit.FLOW_DATA_KEY);
     }
 
+    /**
+     * 获取流程核心流转数据
+     * @param variables 当前任务流转数据，即taskService.getVariables(taskId)
+     * @return flowData
+     */
     public static FlowData getFlowData(Map<String, Object> variables) {
         return (FlowData) variables.get(ProcessKit.FLOW_DATA_KEY);
     }
 
+    /**
+     * 获取流程表单流转数据
+     * @param taskId 当前任务ID
+     * @return Map
+     */
     @SuppressWarnings("unchecked")
     public static Map<String, Object> getFlowVariables(String taskId) {
         Map<String, Object> variables = taskService.getVariables(taskId);
         return (Map<String, Object>) variables.get(ProcessKit.FLOW_VARIABLES_KEY);
     }
 
+    /**
+     * 获取流程历史核心流转数据
+     * @param processInstanceId 流程实例ID
+     * @return flowData
+     */
     public static FlowData getHisFlowData(String processInstanceId) {
         HistoricVariableInstance historicVariableInstance = historyService.createHistoricVariableInstanceQuery()
                 .processInstanceId(processInstanceId).variableName(ProcessKit.FLOW_DATA_KEY).singleResult();
         return (FlowData) historicVariableInstance.getValue();
     }
 
+    /**
+     * 获取流程历史表单流转数据
+     * @param processInstanceId 流程实例ID
+     * @return Map
+     */
     @SuppressWarnings("unchecked")
     public static Map<String, Object> getHisFlowVariables(String processInstanceId) {
         HistoricVariableInstance historicVariableInstance = historyService.createHistoricVariableInstanceQuery()
@@ -133,6 +168,11 @@ public class ProcessKit {
         return repositoryService.createModelQuery().deploymentId(deploymentId).singleResult();
     }
 
+    /**
+     * 获取当前用户任务
+     * @param taskId 当前任务ID
+     * @return task
+     */
     public static Task getCurrentUserTask(String taskId) {
         final String username = ShiroKit.getUser().getUsername();
         return taskService.createTaskQuery().taskId(taskId).taskCandidateOrAssigned(username).singleResult();
@@ -160,6 +200,12 @@ public class ProcessKit {
         return processNodes;
     }
 
+    /**
+     * 获取任务类型
+     * @param taskNodeId 任务节点ID
+     * @param processDefId 流程定义ID
+     * @return int
+     */
     public static int getTaskType(String taskNodeId, String processDefId) {
         Process process = ProcessKit.getProcess(processDefId);
         FlowElement flowElement = process.getFlowElement(taskNodeId);
@@ -177,6 +223,12 @@ public class ProcessKit {
         return ProcessKit.USER_TASK_TYPE_NORMAL;
     }
 
+    /**
+     * 获取所有可驳回的节点列表
+     * @param currentNodeId 当前节点ID
+     * @param processDefId 流程定义ID
+     * @return List<ProcessNode>
+     */
     public static List<ProcessNode> getCanBackNodes(String currentNodeId, String processDefId) {
         final List<ProcessNode> canBackNodes = new ArrayList<>();
         ProcessKit.getIncomeNodesRecur(currentNodeId, processDefId, canBackNodes, true);
@@ -190,6 +242,12 @@ public class ProcessKit {
         return canBackNodes;
     }
 
+    /**
+     * 获取上一环节节点信息
+     * @param currentNodeId 当前节点ID
+     * @param processDefId 流程定义ID
+     * @return ProcessNode
+     */
     public static ProcessNode getPreOneIncomeNode(String currentNodeId, String processDefId) {
         final List<ProcessNode> preNodes = new ArrayList<>();
         ProcessKit.getIncomeNodesRecur(currentNodeId, processDefId, preNodes, false);
@@ -260,7 +318,14 @@ public class ProcessKit {
         return ProcessKit.getProcess(processDefId).getFlowElement(nodeId);
     }
 
-    public static List<UserTask> getNextNode(String procDefId, String targetNodeId, Map<String, Object> variables) {
+    /**
+     * 获取下一环节用户任务列表
+     * @param procDefId 流程定义ID
+     * @param targetNodeId 目标节点ID
+     * @param flowVariables 流程表单流转数据
+     * @return List<UserTask>
+     */
+    public static List<UserTask> getNextNode(String procDefId, String targetNodeId, Map<String, Object> flowVariables) {
         List<UserTask> userTasks = new ArrayList<>();
         // 获取Process对象
         Process process = ProcessKit.getProcess(procDefId);
@@ -268,7 +333,7 @@ public class ProcessKit {
         Collection<FlowElement> flowElements = process.getFlowElements();
         // 获取当前节点信息
         FlowElement flowElement = ProcessKit.getFlowElementById(targetNodeId, flowElements);
-        ProcessKit.getNextNodeRecur(flowElements, flowElement, variables, userTasks);
+        ProcessKit.getNextNodeRecur(flowElements, flowElement, flowVariables, userTasks);
         return userTasks;
     }
 

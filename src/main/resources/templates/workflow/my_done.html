@@ -93,6 +93,14 @@
     <span class="layui-badge layui-bg-black">已结束</span>
     {{# } }}
 </script>
+
+<script type="text/html" id="appStatusTpl">
+    {{#  if(d.approveAction == '同意'){ }}
+    <span class="layui-badge layui-bg-green">同意</span>
+    {{# } else if(d.approveAction == '驳回') { }}
+    <span class="layui-badge layui-bg-red">驳回</span>
+    {{# } }}
+</script>
 <!--表格列格式化模板 end-->
 
 <script type="text/javascript" th:inline="javascript">
@@ -114,7 +122,7 @@
                 ,{field: 'name', title: '任务名称', width: 200}
                 ,{field: 'startUser', title: '流程发起人', width: 100}
                 ,{field: 'assignee', title: '委托人', width: 100, templet: '<span>{{d.owner==null?"":d.assignee}}</span>'}
-                ,{field: 'approveAction', title: '审批操作', width: 90}
+                ,{field: 'approveAction', title: '审批操作', width: 90, templet: '#appStatusTpl'}
                 ,{field: 'durationInMillis', title: '耗时', width: 180, templet: convertTo}
                 ,{field: 'processStatus', title: '流程状态', width: 90, templet: '#statusTpl'}
                 ,{field: 'endTime', title: '完成时间', width: 200, templet: formatEndTime}

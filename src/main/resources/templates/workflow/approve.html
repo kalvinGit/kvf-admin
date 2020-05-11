@@ -11,14 +11,14 @@
         <div class="layui-form-item" th:each="fields: ${formConfig.fields}">
             <label class="layui-form-label" th:text="${fields.fieldName}">输入框</label>
             <div th:class="${fields.control=='textarea'||fields.control=='checkbox'||fields.control=='radio'?'layui-input-block':'layui-input-inline'}" th:data-checkbox="${fields.control=='checkbox'}">
-                <input th:if="${fields.control=='input'}" th:disabled="${!flowData.isFirstNode()}" type="text" th:name="${fields.field}" th:value="${fields.value}" th:lay-verify="${fields.required==1?'required':''}" th:placeholder="${'请填写' + fields.fieldName}" autocomplete="off" class="layui-input">
+                <input th:if="${fields.control=='input'}" th:disabled="${!flowData.isFirstNode()}" type="text" th:name="${fields.field}" th:value="${fields.value}" th:placeholder="${'请填写' + fields.fieldName}" autocomplete="off" class="layui-input">
                 <select th:if="${fields.control=='select'}" th:disabled="${!flowData.isFirstNode()}" th:name="${fields.field}" th:lay-verify="${fields.required==1?'required':''}">
                     <option th:each="option: ${fields.options}" th:value="${option.value}" th:text="${option.text}" th:selected="${option.value==fields.value}"></option>
                 </select>
-                <textarea th:if="${fields.control=='textarea'}" th:disabled="${!flowData.isFirstNode()}" th:name="${fields.field}" th:text="${fields.value}" th:placeholder="${'请填写' + fields.fieldName}" th:lay-verify="${fields.required==1?'required':''}" class="layui-textarea"></textarea>
-                <input th:if="${fields.control=='checkbox'}" th:disabled="${!flowData.isFirstNode()}" th:each="option: ${fields.options}" type="checkbox" th:name="${fields.field}" th:title="${option.text}" th:checked="${#strings.contains(fields.value, option.value)}" th:value="${option.value}" th:lay-verify="${fields.required==1?'required':''}" lay-skin="primary">
+                <textarea th:if="${fields.control=='textarea'}" th:disabled="${!flowData.isFirstNode()}" th:name="${fields.field}" th:text="${fields.value}" th:placeholder="${'请填写' + fields.fieldName}" class="layui-textarea"></textarea>
+                <input th:if="${fields.control=='checkbox'}" th:disabled="${!flowData.isFirstNode()}" th:each="option: ${fields.options}" type="checkbox" th:name="${fields.field}" th:title="${option.text}" th:checked="${#strings.contains(fields.value, option.value)}" th:value="${option.value}" lay-skin="primary">
                 <input th:if="${fields.control=='radio'}" th:disabled="${!flowData.isFirstNode()}" th:each="option: ${fields.options}" type="radio" th:name="${fields.field}" th:value="${option.value}" th:checked="${option.value==fields.value}" th:title="${option.text}" th:lay-verify="${fields.required==1?'required':''}">
-                <input th:if="${fields.control=='date'||fields.control=='datetime'||fields.control=='time'}" th:disabled="${!flowData.isFirstNode()}" th:id="${fields.field}" type="text" th:name="${fields.field}" th:value="${fields.value}" th:lay-verify="${fields.required==1?'required':''}" th:placeholder="${'请选择' + fields.fieldName}" th:data-date-type="${fields.control}" autocomplete="off" class="layui-input">
+                <input th:if="${fields.control=='date'||fields.control=='datetime'||fields.control=='time'}" th:disabled="${!flowData.isFirstNode()}" th:id="${fields.field}" type="text" th:name="${fields.field}" th:value="${fields.value}" th:placeholder="${'请选择' + fields.fieldName}" th:data-date-type="${fields.control}" autocomplete="off" class="layui-input">
             </div>
         </div>
     </div>
@@ -119,6 +119,13 @@
             var index = parent.layer.getFrameIndex(window.name); // 先得到当前iframe层的索引
             var field = data.field; //获取提交的字段
             var nextNodeNum = $('input[name="nextNodeNum"]').val();
+            var firstSubmit = $('input[name="firstSubmit"]').val();
+            var firstNode = $('input[name="firstNode"]').val();
+
+            if (firstSubmit === 'true' && firstNode === 'true') {
+                return kvfKit.unhappyMsg('首环节不允许快速办理任务', true);
+            }
+
             if (Number(nextNodeNum) !==0 && !field.nextUser) {
                 return kvfKit.unhappyMsg('下一审批用户不允许为空', true);
             }

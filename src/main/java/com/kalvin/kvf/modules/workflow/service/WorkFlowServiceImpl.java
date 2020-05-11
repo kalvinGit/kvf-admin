@@ -342,7 +342,13 @@ public class WorkFlowServiceImpl implements IWorkFlowService {
             myDoneVO.setProcessName(historicProcessInstance.getName());
             myDoneVO.setStartUser(historicProcessInstance.getStartUserId());
             // TODO: 2020/4/25 审批操作
-            myDoneVO.setApproveAction("同意");
+            String deleteReason = historicTaskInstance.getDeleteReason();
+            if (deleteReason != null && (deleteReason.contains("驳回") || deleteReason.contains("回退"))) {
+                myDoneVO.setApproveAction("驳回");
+            } else {
+                myDoneVO.setApproveAction("同意");
+            }
+
             if (historicProcessInstance.getEndTime() == null) {
                 myDoneVO.setProcessStatus(ProcessKit.FLOW_STATUS_RUNNING);
             } else {
