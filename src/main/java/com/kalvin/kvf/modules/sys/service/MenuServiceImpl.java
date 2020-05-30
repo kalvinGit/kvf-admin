@@ -9,7 +9,10 @@ import com.kalvin.kvf.common.dto.ZTreeDTO;
 import com.kalvin.kvf.modules.sys.entity.Menu;
 import com.kalvin.kvf.modules.sys.mapper.MenuMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.xpath.res.XPATHErrorResources_it;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,6 +27,9 @@ import java.util.List;
 @Slf4j
 @Service
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IMenuService {
+
+    @Autowired
+    private IRoleMenuService roleMenuService;
 
     @Override
     public List<String> getPermission(Long userId) {
@@ -82,6 +88,30 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     @Override
     public List<Menu> listUserPermissionNavMenuByUserId(Long userId) {
         return baseMapper.selectUserPermissionNavMenuList(userId);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteWithChildren(Long id) {
+        super.removeById(id);
+        roleMenuService.deleteByMenuId(id);
+        this.deleteRecur(id);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteWithRoleMenu(List<Long> ids) {
+        super.removeByIds(ids);
+        roleMenuService.deleteByMenuIds(ids);
+    }
+
+    private void deleteRecur(Long parentId) {
+        List<Menu> menus = this.listMenuByParentId(parentId);
+        menus.forEach(menu -> {
+            deleteRecur(menu.getId());
+            super.removeById(menu.getId());
+            roleMenuService.deleteByMenuId(menu.getId());
+        });
     }
 
 }

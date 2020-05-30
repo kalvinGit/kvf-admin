@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kalvin.kvf.common.utils.ShiroKit;
+import com.kalvin.kvf.modules.sys.entity.Menu;
 import com.kalvin.kvf.modules.sys.entity.Role;
 import com.kalvin.kvf.modules.sys.entity.RoleMenu;
 import com.kalvin.kvf.modules.sys.mapper.RoleMapper;
@@ -76,5 +77,29 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Override
     public List<Role> listRoleByParentId(Long parentId) {
         return super.list(new LambdaQueryWrapper<Role>().eq(Role::getParentId, parentId));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteWithChildren(Long id) {
+        super.removeById(id);
+        roleMenuService.deleteByRoleId(id);
+        this.deleteRecur(id);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteWithRoleMenu(List<Long> ids) {
+        super.removeByIds(ids);
+        roleMenuService.deleteByRoleIds(ids);
+    }
+
+    private void deleteRecur(Long parentId) {
+        List<Role> roles = this.listRoleByParentId(parentId);
+        roles.forEach(role -> {
+            deleteRecur(role.getId());
+            super.removeById(role.getId());
+            roleMenuService.deleteByRoleId(role.getId());
+        });
     }
 }

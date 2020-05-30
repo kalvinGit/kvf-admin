@@ -37,5 +37,6 @@ public interface IDeptService extends IService<Dept> {
      */
     Page<Dept> listDeptPage(Dept dept);
 
+    void deleteWithChildren(Long id);
 
 }

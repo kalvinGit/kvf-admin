@@ -32,4 +32,8 @@ public interface IRoleService extends IService<Role> {
 
     List<Role> listRoleByParentId(Long parentId);
 
+    void deleteWithChildren(Long id);
+
+    void deleteWithRoleMenu(List<Long> ids);
+
 }

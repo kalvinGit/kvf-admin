@@ -9,7 +9,7 @@ var config = {
             cellMinWidth: 60
             ,request: {pageName : 'current', limitName : 'size'}
             ,response : {statusName : 'code', statusCode : 200, msgName : 'msg', dataName : 'data', countName: 'total'}
-            ,height: 540
+            ,height: 542
             ,defaultToolbar: ['filter', 'exports', 'print']  // 表格头部右侧按钮，若不需要，直接配置空数组
             ,page: {    //开启分页
                 curr : 1,
@@ -47,7 +47,9 @@ var req = {
     },
     type: {
         get: 'GET',
-        post: 'POST'
+        post: 'POST',
+        put: 'PUT',
+        delete: 'DELETE'
     }
 };
 

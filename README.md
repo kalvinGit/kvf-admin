@@ -1,3 +1,28 @@
+
+<p align="center">
+  <a href="https://github.com/kalvinGit/kvf-admin/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/mashape/apistatus.svg" alt="license">
+  </a>
+  <a href="https://spring.io/projects/spring-boot">
+    <img src="https://img.shields.io/badge/springboot-v2.2.4-green" alt="springboot">
+  </a>
+  <a href="https://mp.baomidou.com">
+    <img src="https://img.shields.io/badge/mybatis--plus-v3.3.0-blue" alt="mybatis-plus">
+  </a>
+  <a href="https://github.com/kalvinGit/kvf-admin/wiki/kvf%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E4%BD%BF%E7%94%A8%E6%96%87%E6%A1%A3" rel="nofollow">
+    <img src="https://img.shields.io/badge/code--generator-wiki-orange" alt="code-generator">
+  </a>
+  <a href="https://www.layui.com/doc/">
+    <img src="https://img.shields.io/badge/layui-v2.5.6-brightgreen" alt="layui">
+  </a>
+  <a href="https://www.hutool.cn/">
+    <img src="https://img.shields.io/badge/hutool--all-v4.5.1%20-yellow" alt="hutool">
+  </a>
+  <a href="https://www.activiti.org/">
+    <img src="https://img.shields.io/badge/activiti-v6.0.0-lightgrey" alt="activiti6">
+  </a>
+</p>
+
 # kvf-admin
 kvf-admin是一套快速开发框架、脚手架、后台管理系统、权限系统，上手简单，拿来即用。为广大开发者去除大部分重复繁锁的代码工作，让开发者拥有更多的时间陪恋人、家人和朋友。<br>**技术交流群：214768328**
 * 后端采用spring boot、mybatis(已集成mybatis-plus增强插件，开发更迅速，可查看官方文档了解更多：[mybatis-plus](https://mp.baomidou.com/))、shiro框架
@@ -14,7 +39,7 @@ kvf-admin是一套快速开发框架、脚手架、后台管理系统、权限�
 * [x] 组件管理
 ## kvf-admin-activiti（工作流OA版本）
 kvf-admin-activiti是基于kvf-admin脚手架集成了工作流引擎（activiti6），并封装了核心工作流程（OA）功能模块。如下：
-目前工作流（OA）模块还处于初始阶段，代码也比较粗糙，任然还有许多功能需要完善优化。
+目前工作流（OA）模块还处于初始阶段，代码也比较粗糙，后续再不断完善优化。
 * [x] 核心API（支持启动流程、提交任务、驳回、驳回任意环节、驳回首环节、撤回、挂起/激活流程等API）
 * [x] 流程管理（支持流程在线设计器、发布/部署、挂起、激活、导出/导入、配置表单、启动、删除）
 * [x] 表单管理（支持快速表单在线设计器、增/删/改/查、预览表单）
@@ -120,6 +145,13 @@ kvf-admin
 ![系统效果图](http://cloud.kalvinbg.cn/image/kvf-admin4.png)
 
 ### 更新日志
+#### 2020-05-30
+* 隐藏左侧菜单滚动条
+* 增加XssFilter过滤url白名单配置
+* 优化登录过期在iframe页面重新登录后主页嵌套在iframe页内问题
+* 树形表格数据删除，连带删除所有子级数据
+* 【activiti分支】工作流bug修复及功能优化
+
 #### 2020-05-10
 * 集成activiti6工作流引擎
 * 集成activiti6 modeler在线流程设计器

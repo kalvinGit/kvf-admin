@@ -88,14 +88,14 @@ public class RoleController extends BaseController {
     @RequiresPermissions("sys:role:del")
     @PostMapping(value = "remove/{id}")
     public R remove(@PathVariable Long id) {
-        roleService.removeById(id);
+        roleService.deleteWithChildren(id);
         return R.ok();
     }
 
     @RequiresPermissions("sys:role:del")
     @PostMapping(value = "removeBatch")
     public R removeBatch(@RequestParam("ids") List<Long> ids) {
-        roleService.removeByIds(ids);
+        roleService.deleteWithRoleMenu(ids);
         return R.ok();
     }
 

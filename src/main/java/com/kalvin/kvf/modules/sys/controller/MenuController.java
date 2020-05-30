@@ -87,14 +87,14 @@ public class MenuController extends BaseController {
     @RequiresPermissions("sys:menu:del")
     @PostMapping(value = "remove/{id}")
     public R remove(@PathVariable Long id) {
-        menuService.removeById(id);
+        menuService.deleteWithChildren(id);
         return R.ok();
     }
 
     @RequiresPermissions("sys:menu:del")
     @PostMapping(value = "removeBatch")
     public R removeBatch(@RequestParam("ids") List<Long> ids) {
-        menuService.removeByIds(ids);
+        menuService.deleteWithRoleMenu(ids);
         return R.ok();
     }
 

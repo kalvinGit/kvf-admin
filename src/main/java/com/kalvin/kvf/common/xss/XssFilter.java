@@ -1,5 +1,6 @@
 package com.kalvin.kvf.common.xss;
 
+import com.kalvin.kvf.common.constant.Constants;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.*;
@@ -13,19 +14,41 @@ import java.io.IOException;
 @Slf4j
 public class XssFilter implements Filter {
 
+    private String[] excludedUris;
+
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
         log.info("init XssFilter...");
+        excludedUris = filterConfig.getInitParameter(Constants.XSS_NOTICE_KEY).split(",");
     }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         XssHttpRequestWrapper xssRequest = new XssHttpRequestWrapper((HttpServletRequest) request);
-        chain.doFilter(xssRequest, response);
+        String url = xssRequest.getServletPath();
+        if (isExcludedUri(url)) {
+            chain.doFilter(request, response);
+        } else {
+            chain.doFilter(xssRequest, response);
+        }
     }
 
     @Override
     public void destroy() {
     }
+
+    private boolean isExcludedUri(String uri) {
+        if (excludedUris == null || excludedUris.length <= 0) {
+            return false;
+        }
+        for (String ex : excludedUris) {
+            uri = uri.trim();
+            ex = ex.trim();
+            if (uri.toLowerCase().matches(ex.toLowerCase().replace("*", ".*")))
+                return true;
+        }
+        return false;
+    }
+
 }

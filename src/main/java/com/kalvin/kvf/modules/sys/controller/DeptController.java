@@ -75,7 +75,7 @@ public class DeptController extends BaseController {
     @RequiresPermissions("sys:dept:del")
     @PostMapping(value = "remove/{id}")
     public R remove(@PathVariable Long id) {
-        deptService.removeById(id);
+        deptService.deleteWithChildren(id);
         return R.ok();
     }
 
