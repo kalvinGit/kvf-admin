@@ -153,13 +153,13 @@
             ,cols: [[ //表头
                 {type:'checkbox', fixed: 'left'}
                 // ,{field: 'id', title: '模型ID', width: 130}
-                ,{field: 'name', title: '流程模型名称'}
-                ,{field: 'processName', title: '发布流程名称', width: 200}
-                ,{field: 'deploymentId', title: '发布状态', width: 90, templet: '#pushStatusTpl'}
-                ,{field: 'processSuspended', title: '状态', width: 90, templet: '#statusTpl'}
-                ,{field: 'version', title: '版本', width: 100}
-                ,{field: 'createTime', title: '创建时间', width: 200, templet: formatCreateTime}
-                ,{field: 'lastUpdateTime', title: '最后更新', width: 200, templet: formatLastUpdateTime}
+                ,{field: 'name', title: '流程模型名称', width: 200}
+                ,{field: 'processName', title: '发布流程名称'}
+                ,{field: 'deploymentId', title: '发布状态', width: 90, align: 'center', templet: '#pushStatusTpl'}
+                ,{field: 'processSuspended', title: '状态', width: 70, align: 'center', templet: '#statusTpl'}
+                ,{field: 'version', title: '版本', width: 60, align: 'center', templet: '<div><span class="layui-badge layui-bg-gray">{{d.version}}</span></div>'}
+                ,{field: 'createTime', title: '创建时间', width: 180, templet: formatCreateTime}
+                ,{field: 'lastUpdateTime', title: '最后更新', width: 180, templet: formatLastUpdateTime}
                 ,{field: '', title: '操作', width: 300, fixed: 'right', templet: '#rowToolbarTpl'}
             ]]
         }));
@@ -467,6 +467,27 @@
                 } else {
                     kvfKit.errorMsg('导入失败：' + r.msg)
                 }
+            }
+        });
+
+        // 奇葩.bug
+        // 本地启动访问是没有问题的，但是使用域名访问那个地址就会出奇葩~~
+        // TODO: 为了解决第一次请求【http://kvfadmin.kalvinbg.cn/static/workflow/editor-app/editor.html】会强制添加前缀【http://tieba.baidu.com/_PXRD_5eb7340e109d398635084】的奇葩BUG
+        var freakUrl = BASE_WEB + 'static/workflow/editor-app/editor.html';
+        $.ajax( {
+            url: freakUrl,
+            type: req.type.get,
+            success: function(r) {
+                error('1.为了解决第一次请求【http://kvfadmin.kalvinbg.cn/static/workflow/editor-app/editor.html】会强制添加前缀【http://tieba.baidu.com/_PXRD_5eb7340e109d398635084】的奇葩BUG');
+            },
+            error: function (xhr, status, err) {
+                $.ajax( {
+                    url: freakUrl,
+                    type: req.type.get,
+                    success: function(r) {
+                        error('2.为了解决第一次请求【http://kvfadmin.kalvinbg.cn/static/workflow/editor-app/editor.html】会强制添加前缀【http://tieba.baidu.com/_PXRD_5eb7340e109d398635084】的奇葩BUG');
+                    },
+                });
             }
         });
 

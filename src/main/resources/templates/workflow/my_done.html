@@ -122,10 +122,10 @@
                 ,{field: 'name', title: '任务名称', width: 200}
                 ,{field: 'startUser', title: '流程发起人', width: 100}
                 ,{field: 'assignee', title: '委托人', width: 100, templet: '<span>{{d.owner==null?"":d.assignee}}</span>'}
-                ,{field: 'approveAction', title: '审批操作', width: 90, templet: '#appStatusTpl'}
+                ,{field: 'approveAction', title: '审批操作', width: 90, align: 'center', templet: '#appStatusTpl'}
                 ,{field: 'durationInMillis', title: '耗时', width: 180, templet: convertTo}
-                ,{field: 'processStatus', title: '流程状态', width: 90, templet: '#statusTpl'}
-                ,{field: 'endTime', title: '完成时间', width: 200, templet: formatEndTime}
+                ,{field: 'processStatus', title: '流程状态', width: 90, align: 'center', templet: '#statusTpl'}
+                ,{field: 'endTime', title: '完成时间', width: 180, templet: formatEndTime}
                 ,{field: '', title: '操作', width: 250, fixed: 'right', templet: '#rowToolbarTpl'}
             ]]
         }));

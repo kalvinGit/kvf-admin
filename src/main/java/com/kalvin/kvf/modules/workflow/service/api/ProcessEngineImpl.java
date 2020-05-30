@@ -150,9 +150,7 @@ public class ProcessEngineImpl implements IProcessEngine {
         final String comment = StrUtil.isBlank(flowData.getComment()) ? ProcessKit.DEFAULT_AGREE_COMMENT : flowData.getComment();
         final String taskId = flowData.getTaskId();
         final String processInstanceId = flowData.getProcessInstanceId();
-        final String processDefinitionId = flowData.getProcessDefinitionId();
         final int nextNodeNum = flowData.getNextNodeNum();
-        final String targetNodeId = flowData.getTargetNodeId();
         final Task currentTask = ProcessKit.getCurrentTask(taskId);
         final String currentNodeId = currentTask.getTaskDefinitionKey();
 
@@ -203,9 +201,7 @@ public class ProcessEngineImpl implements IProcessEngine {
             // 正式提交任务
             taskService.complete(taskId, variables);
         } else if (nextNodeNum > 1) {
-            // TODO: 自定义跳转任务
-            log.debug("TODO: 自定义跳转任务");
-            ProcessKit.nodeJumpTo(taskId, flowData.getTargetNodeId(), variables, comment);
+            ProcessKit.nodeJumpTo(taskId, flowData.getTargetNodeId(), currentUser, variables, comment);
         } else {
             throw new KvfException("提交任务异常");
         }
@@ -272,7 +268,7 @@ public class ProcessEngineImpl implements IProcessEngine {
             UserTask userTask = nextNodes.get(0);
             String expectNodeId = userTask.getId();
             if (currentNodeId.equals(expectNodeId)) {
-                // 撤回 // TODO: 2020/5/1 设置撤回后的任务审批人
+                // 撤回
                 ProcessKit.setNextUser(currentUser, variables);
                 ProcessKit.nodeJumpTo(currentTaskId, targetNodeId, variables, "撤回");
                 // 删除
@@ -388,15 +384,17 @@ public class ProcessEngineImpl implements IProcessEngine {
 
     @Override
     public void backToFirstNode(String taskId) {
+        final String currentUser = ShiroKit.getUser().getUsername();
         Map<String, Object> variables = taskService.getVariables(taskId);
         FlowData flowData = ProcessKit.getFlowData(variables);
         flowData.setFirstNode(true);
         flowData.setNextUser(flowData.getStartUser());
-        ProcessKit.nodeJumpTo(taskId, flowData.getFirstNodeId(), variables, "回退首环节");
+        ProcessKit.nodeJumpTo(taskId, flowData.getFirstNodeId(), currentUser, variables, "回退首环节");
     }
 
     @Override
     public void backToPreNode(String taskId) {
+        final String currentUser = ShiroKit.getUser().getUsername();
         Map<String, Object> variables = taskService.getVariables(taskId);
         FlowData flowData = ProcessKit.getFlowData(variables);
         Task currentTask = ProcessKit.getCurrentTask(taskId);
@@ -421,11 +419,12 @@ public class ProcessEngineImpl implements IProcessEngine {
                 throw new KvfException("目前不支持多任务实例驳回");
             }
         }
-        ProcessKit.nodeJumpTo(taskId, preNodeId, variables, "驳回上环节");
+        ProcessKit.nodeJumpTo(taskId, preNodeId, currentUser, variables, "驳回上环节");
     }
 
     @Override
     public void back2Node(String taskId, String targetNodeId) {
+        final String currentUser = ShiroKit.getUser().getUsername();
         Map<String, Object> variables = taskService.getVariables(taskId);
         FlowData flowData = ProcessKit.getFlowData(variables);
         // 如果是首环节
@@ -445,6 +444,6 @@ public class ProcessEngineImpl implements IProcessEngine {
             }
         }
         FlowElement flowElement = ProcessKit.getFlowElement(targetNodeId, flowData.getProcessDefinitionId());
-        ProcessKit.nodeJumpTo(taskId, targetNodeId, variables, "驳回【" + flowElement.getName() + "】环节");
+        ProcessKit.nodeJumpTo(taskId, targetNodeId, currentUser, variables, "驳回【" + flowElement.getName() + "】环节");
     }
 }

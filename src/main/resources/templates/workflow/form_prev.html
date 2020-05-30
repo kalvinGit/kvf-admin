@@ -25,6 +25,7 @@
                 <div th:class="${fields.control=='textarea'||fields.control=='checkbox'||fields.control=='radio'?'layui-input-block':'layui-input-inline'}">
                     <input th:if="${fields.control=='input'}" type="text" th:name="${fields.field}" th:lay-verify="${fields.required==1?'required':''}" th:placeholder="${'请填写' + fields.fieldName}" autocomplete="off" class="layui-input">
                     <select th:if="${fields.control=='select'}" th:name="${fields.field}" th:lay-verify="${fields.required==1?'required':''}">
+                        <option value="">请选择</option>
                         <option th:each="option: ${fields.options}" th:value="${option.value}" th:text="${option.text}"></option>
                     </select>
                     <textarea th:if="${fields.control=='textarea'}" th:name="${fields.field}" th:placeholder="${'请填写' + fields.fieldName}" th:lay-verify="${fields.required==1?'required':''}" class="layui-textarea"></textarea>

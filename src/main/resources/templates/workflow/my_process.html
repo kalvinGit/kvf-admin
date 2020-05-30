@@ -99,11 +99,11 @@
                 {type:'checkbox', fixed: 'left'}
                 // ,{field: 'id', title: '流程ID', width: 130}
                 ,{field: 'processName', title: '流程名称'}
-                ,{field: 'deploymentId', title: '发布状态', width: 90, templet: '#pushStatusTpl'}
-                ,{field: 'processSuspended', title: '状态', width: 90, templet: '#statusTpl'}
-                ,{field: 'version', title: '版本', width: 100}
-                ,{field: 'createTime', title: '创建时间', width: 200, templet: formatCreateTime}
-                ,{field: 'lastUpdateTime', title: '最后更新', width: 200, templet: formatLastUpdateTime}
+                ,{field: 'deploymentId', title: '发布状态', align: 'center', width: 90, templet: '#pushStatusTpl'}
+                ,{field: 'processSuspended', title: '状态', align: 'center', width: 90, templet: '#statusTpl'}
+                ,{field: 'version', title: '版本', width: 60, align: 'center', templet: '<div><span class="layui-badge layui-bg-gray">{{d.version}}</span></div>'}
+                ,{field: 'createTime', title: '创建时间', width: 180, templet: formatCreateTime}
+                ,{field: 'lastUpdateTime', title: '最后更新', width: 180, templet: formatLastUpdateTime}
                 ,{field: '', title: '操作', width: 110, fixed: 'right', templet: '#rowToolbarTpl'}
             ]]
         }));

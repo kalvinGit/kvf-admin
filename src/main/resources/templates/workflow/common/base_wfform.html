@@ -25,6 +25,7 @@
                 <div th:class="${fields.control=='textarea'||fields.control=='checkbox'||fields.control=='radio'?'layui-input-block':'layui-input-inline'}" th:data-checkbox="${fields.control=='checkbox'}">
                     <input th:if="${fields.control=='input'}" th:disabled="${!flowData.isFirstNode()}" type="text" th:name="${fields.field}" th:value="${fields.value}" th:lay-verify="${fields.required==1?'required':''}" th:placeholder="${'请填写' + fields.fieldName}" autocomplete="off" class="layui-input">
                     <select th:if="${fields.control=='select'}" th:disabled="${!flowData.isFirstNode()}" th:name="${fields.field}" th:lay-verify="${fields.required==1?'required':''}">
+                        <option value="">请选择</option>
                         <option th:each="option: ${fields.options}" th:value="${option.value}" th:text="${option.text}" th:selected="${option.value==fields.value}"></option>
                     </select>
                     <textarea th:if="${fields.control=='textarea'}" th:disabled="${!flowData.isFirstNode()}" th:name="${fields.field}" th:text="${fields.value}" th:placeholder="${'请填写' + fields.fieldName}" th:lay-verify="${fields.required==1?'required':''}" class="layui-textarea"></textarea>
@@ -250,8 +251,12 @@
         form.on('submit(kFormSubmit)', function(data) {
             var field = data.field; //获取提交的字段
             var nextNodeNum = $('input[name="nextNodeNum"]').val();
+            var checkedNode = $('input[name="targetNodeId"]:checked').val();
+            if (!checkedNode) {
+                return kvfKit.unhappyMsg('请选择下一流转环节', true);
+            }
             if (Number(nextNodeNum) !==0 && !field.nextUser) {
-                return kvfKit.unhappyMsg('下一审批用户不允许为空', true);
+                return kvfKit.unhappyMsg('请选择下一审批用户', true);
             }
 
             fillCheckboxData(field);

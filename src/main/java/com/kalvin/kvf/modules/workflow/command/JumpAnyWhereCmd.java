@@ -25,6 +25,8 @@ public class JumpAnyWhereCmd implements Command<Void> {
 
     private final String targetNodeId;
 
+    private String assignee;
+
     private final Map<String, Object> variables;
 
     private final String comment;
@@ -40,6 +42,20 @@ public class JumpAnyWhereCmd implements Command<Void> {
         this.variables = variables;
         this.comment = comment;
     }
+    /**
+     * @param taskId 当前任务ID
+     * @param targetNodeId 目标节点定义ID
+     * @param assignee 审批用户
+     * @param variables 流转数据
+     */
+    public JumpAnyWhereCmd(String taskId, String targetNodeId, String assignee, Map<String, Object> variables, String comment) {
+        this.taskId = taskId;
+        this.targetNodeId = targetNodeId;
+        this.assignee = assignee;
+        this.variables = variables;
+        this.comment = comment;
+    }
+
 
     @Override
     public Void execute(CommandContext commandContext) {
@@ -77,6 +93,10 @@ public class JumpAnyWhereCmd implements Command<Void> {
 
         // 设置流转数据
         execution.setVariables(this.variables);
+
+        if (null != assignee) {
+            historyManager.recordTaskAssigneeChange(this.taskId, this.assignee);
+        }
 
         // 通知当前活动结束(更新act_hi_actinst)
         historyManager.recordActivityEnd(execution, this.comment);

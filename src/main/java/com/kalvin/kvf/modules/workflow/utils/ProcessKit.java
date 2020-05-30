@@ -251,13 +251,13 @@ public class ProcessKit {
     public static ProcessNode getPreOneIncomeNode(String currentNodeId, String processDefId) {
         final List<ProcessNode> preNodes = new ArrayList<>();
         ProcessKit.getIncomeNodesRecur(currentNodeId, processDefId, preNodes, false);
-        preNodes.forEach(node -> {
+        for (ProcessNode node : preNodes) {
             List<HistoricActivityInstance> historicActivityInstances = historyService.createHistoricActivityInstanceQuery()
                     .processDefinitionId(processDefId).activityId(node.getNodeId()).finished().list();
             if (CollectionUtil.isEmpty(historicActivityInstances)) {
                 preNodes.remove(node);
             }
-        });
+        }
         if (CollectionUtil.isEmpty(preNodes)) {
             return null;
         }
@@ -312,6 +312,19 @@ public class ProcessKit {
     public static void nodeJumpTo(String taskId, String targetNodeId, Map<String, Object> variables, String comment) {
         CommandExecutor commandExecutor = ((TaskServiceImpl) taskService).getCommandExecutor();
         commandExecutor.execute(new JumpAnyWhereCmd(taskId, targetNodeId, variables, comment));
+    }
+
+    /**
+     * 节点跳转
+     * @param taskId 当前任务ID
+     * @param targetNodeId 目标节点定义ID
+     * @param assignee 审批用户
+     * @param variables 流转数据
+     * @param comment 备注/意见
+     */
+    public static void nodeJumpTo(String taskId, String targetNodeId, String assignee, Map<String, Object> variables, String comment) {
+        CommandExecutor commandExecutor = ((TaskServiceImpl) taskService).getCommandExecutor();
+        commandExecutor.execute(new JumpAnyWhereCmd(taskId, targetNodeId, assignee, variables, comment));
     }
 
     public static FlowElement getFlowElement(String nodeId, String processDefId) {

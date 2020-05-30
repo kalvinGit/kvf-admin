@@ -96,11 +96,11 @@
             ,cols: [[ //表头
                 {type:'checkbox', fixed: 'left'}
                 // ,{field: 'id', title: '流程ID', width: 130}
-                ,{field: 'name', title: '任务名称'}
-                ,{field: 'processName', title: '所属流程', width: 200}
+                ,{field: 'name', title: '任务名称', width: 250}
+                ,{field: 'processName', title: '所属流程'}
                 ,{field: 'startUser', title: '流程发起人', width: 100}
-                ,{field: 'suspensionState', title: '状态', width: 90, templet: '#statusTpl'}
-                ,{field: 'createTime', title: '创建时间', width: 200, templet: formatCreateTime}
+                ,{field: 'suspensionState', title: '状态', width: 90, align: 'center', templet: '#statusTpl'}
+                ,{field: 'createTime', title: '创建时间', width: 180, templet: formatCreateTime}
                 ,{field: '', title: '操作', width: 250, fixed: 'right', templet: '#rowToolbarTpl'}
             ]]
         }));

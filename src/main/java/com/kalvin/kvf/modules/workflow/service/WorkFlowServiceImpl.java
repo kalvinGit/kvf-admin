@@ -276,7 +276,7 @@ public class WorkFlowServiceImpl implements IWorkFlowService {
             queryWrapper.like("rp.NAME_", processQueryVO.getProcessName());
         }
         queryWrapper.isNotNull("rm.DEPLOYMENT_ID_");
-        queryWrapper.orderByAsc("rm.KEY_");
+        queryWrapper.orderBy(true, false, "rm.CREATE_TIME_", "rm.KEY_");
         page = activityMapper.listProcessModels(queryWrapper, page);
         return page;
     }
