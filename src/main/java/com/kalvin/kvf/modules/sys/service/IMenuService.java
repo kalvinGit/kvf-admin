@@ -68,4 +68,8 @@ public interface IMenuService extends IService<Menu> {
      */
     List<Menu> listUserPermissionNavMenuByUserId(Long userId);
 
+    void deleteWithChildren(Long id);
+
+    void deleteWithRoleMenu(List<Long> ids);
+
 }

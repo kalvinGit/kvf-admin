@@ -15,4 +15,6 @@ public class Constants {
 
     public final static String CACHE_NAME = "KACache";
 
+    public final static String XSS_NOTICE_KEY = "notice";
+
 }

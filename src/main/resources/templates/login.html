@@ -94,8 +94,13 @@
                         offset: '15px'
                         ,icon: 1
                         ,time: 500
-                    }, function(){
-                        location.href = api.homeView; // kvf-admin首页
+                    }, function() {
+                        // 解决session过期在iframe页面登录后，主页嵌套在iframe里面的问题
+                        if (window !== top) {
+                            top.location.href = api.homeView;
+                        } else {
+                            location.href = api.homeView; // kvf-admin首页
+                        }
                     });
 
                 } else {

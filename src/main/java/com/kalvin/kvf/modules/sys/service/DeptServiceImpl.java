@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kalvin.kvf.modules.sys.entity.Dept;
+import com.kalvin.kvf.modules.sys.entity.Menu;
 import com.kalvin.kvf.modules.sys.mapper.DeptMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,5 +60,20 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
         }
         List<Dept> depts = baseMapper.selectDeptList(dept, page);
         return page.setRecords(depts);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteWithChildren(Long id) {
+        super.removeById(id);
+        this.deleteRecur(id);
+    }
+
+    private void deleteRecur(Long parentId) {
+        List<Dept> depts = this.listDeptByParentId(parentId);
+        depts.forEach(dept -> {
+            deleteRecur(dept.getId());
+            super.removeById(dept.getId());
+        });
     }
 }

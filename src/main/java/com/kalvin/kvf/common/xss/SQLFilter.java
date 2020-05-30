@@ -33,6 +33,10 @@ public final class SQLFilter {
 
         String[] values = str.split(" ");
 
+        if (values.length < 2) {
+            return str;
+        }
+
         // 非法字符
         String[] keywords = {"master", "truncate", "insert", "select", "delete", "update", "declare", "alert", "drop", "show"};
         String badKeyStr = "'|and|exec|execute|insert|select|delete|update|count|drop|%|chr|mid|master|truncate|" +
