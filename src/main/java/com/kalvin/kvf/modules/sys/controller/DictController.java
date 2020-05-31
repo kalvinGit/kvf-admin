@@ -1,14 +1,14 @@
 package com.kalvin.kvf.modules.sys.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import com.kalvin.kvf.common.controller.BaseController;
 import com.kalvin.kvf.common.dto.R;
 import com.kalvin.kvf.modules.sys.entity.Dict;
 import com.kalvin.kvf.modules.sys.service.DictService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -83,7 +83,7 @@ public class DictController extends BaseController {
     @RequiresPermissions("sys:dict:del")
     @PostMapping(value = "del/{id}")
     public R del(@PathVariable Long id) {
-        dictService.removeById(id);
+        dictService.deleteWithChildren(id);
         return R.ok();
     }
 

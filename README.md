@@ -1,4 +1,6 @@
-
+<p align="center">
+    <img src="http://cloud.kalvinbg.cn/image/kvf-admin-logo.png" alt="kvf-admin-logo">
+</p>
 <p align="center">
   <a href="https://github.com/kalvinGit/kvf-admin/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/mashape/apistatus.svg" alt="license">
@@ -25,6 +27,9 @@
 
 # kvf-admin
 kvf-admin是一套快速开发框架、脚手架、后台管理系统、权限系统，上手简单，拿来即用。为广大开发者去除大部分重复繁锁的代码工作，让开发者拥有更多的时间陪恋人、家人和朋友。<br>**技术交流群：214768328**
+<a href="http://cloud.kalvinbg.cn/image/kvf_code.png" target="_blank">
+   <img src="https://img.shields.io/badge/%E6%8A%80%E6%9C%AF%E4%BA%A4%E6%B5%81%E7%BE%A4-%E4%BA%8C%E7%BB%B4%E7%A0%81-blue" alt="二维码">
+</a>
 * 后端采用spring boot、mybatis(已集成mybatis-plus增强插件，开发更迅速，可查看官方文档了解更多：[mybatis-plus](https://mp.baomidou.com/))、shiro框架
 * 前端采用layui作为UI框架，实现90%的移动端自适应，支持主题更换
 * 提供代码生成器([wiki使用文档](https://github.com/kalvinGit/kvf-admin/wiki/kvf%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E4%BD%BF%E7%94%A8%E6%96%87%E6%A1%A3))，只需编写20%左右的代码，剩下全部自动生成；支持一键及批量功能模块生成，并支持一定程度上的自定义配置并生成代码，相对比较灵活
@@ -39,7 +44,8 @@ kvf-admin是一套快速开发框架、脚手架、后台管理系统、权限�
 * [x] 组件管理
 ## kvf-admin-activiti（工作流OA版本）
 kvf-admin-activiti是基于kvf-admin脚手架集成了工作流引擎（activiti6），并封装了核心工作流程（OA）功能模块。如下：
-目前工作流（OA）模块还处于初始阶段，代码也比较粗糙，后续再不断完善优化。
+目前工作流（OA）模块还处于初始阶段，代码也比较粗糙，后续再不断完善优化。<br>
+备注：工作流版本在【activiti】分支
 * [x] 核心API（支持启动流程、提交任务、驳回、驳回任意环节、驳回首环节、撤回、挂起/激活流程等API）
 * [x] 流程管理（支持流程在线设计器、发布/部署、挂起、激活、导出/导入、配置表单、启动、删除）
 * [x] 表单管理（支持快速表单在线设计器、增/删/改/查、预览表单）
@@ -241,7 +247,9 @@ private String myColumn;
 ### 交流反馈
 * github仓库：https://github.com/kalvinGit/kvf-admin
 * gitee仓库：https://gitee.com/kalvinmy/kvf-admin
-* 作者QQ：1481397688
-* 交流群：214768328
 * 如需关注项目最新动态，请Watch、Star项目，同时也是对项目最好的支持
+* 交流群：214768328
+<p>
+    <img width="150" src="http://cloud.kalvinbg.cn/image/kvf_code.png" alt="技术交流群">
+</p>
 
