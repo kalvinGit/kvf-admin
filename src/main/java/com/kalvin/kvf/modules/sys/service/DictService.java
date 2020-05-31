@@ -30,4 +30,8 @@ public interface DictService extends IService<Dict> {
      */
     List<Dict> listAllDictItemByCode(String code);
 
+    List<Dict> listByParentId(Long parentId);
+
+    void deleteWithChildren(Long id);
+
 }

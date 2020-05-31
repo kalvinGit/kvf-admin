@@ -4,9 +4,10 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.stereotype.Service;
 import com.kalvin.kvf.modules.sys.entity.Dict;
 import com.kalvin.kvf.modules.sys.mapper.DictMapper;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -37,6 +38,26 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     @Override
     public List<Dict> listAllDictItemByCode(String code) {
         return baseMapper.selectAllDictItemByCode(code);
+    }
+
+    @Override
+    public List<Dict> listByParentId(Long parentId) {
+        return super.list(new LambdaQueryWrapper<Dict>().eq(Dict::getParentId, parentId));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteWithChildren(Long id) {
+        super.removeById(id);
+        this.deleteRecur(id);
+    }
+
+    private void deleteRecur(Long parentId) {
+        List<Dict> dicts = this.listByParentId(parentId);
+        dicts.forEach(dict -> {
+            deleteRecur(dict.getId());
+            super.removeById(dict.getId());
+        });
     }
 
 
