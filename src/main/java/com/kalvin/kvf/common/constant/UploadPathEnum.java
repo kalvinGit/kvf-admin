@@ -5,29 +5,29 @@ package com.kalvin.kvf.common.constant;
  * @author Kalvin
  */
 public enum UploadPathEnum {
-    FILE_PATH(0, "static/upload/file/"),
-    IMAGE_PATH(1, "static/upload/image/"),
-    DOC_PATH(2, "static/upload/doc/"),
-    HEAD_PATH(3, "static/image/avatar/");  // 用户头像
+    FILE_PATH("file", "file"),   // 默认其它文件路径
+    IMAGE_PATH("image", "image"), // 默认图片路径
+    DOC_PATH("doc", "doc"),     // 默认文档路径
+    HEAD_PATH("avatar", "avatar");  // 默认用户头像路径
 
-    private int type;
+    private String type;
     private String path;
 
-    UploadPathEnum(int type, String path) {
+    UploadPathEnum(String type, String path) {
         this.type = type;
         this.path = path;
     }
 
-    public static UploadPathEnum get(int type) {
+    public static UploadPathEnum get(String type) {
         for (UploadPathEnum pathEnum : values()) {
-            if (pathEnum.getType() == type) {
+            if (pathEnum.getType().equals(type)) {
                 return pathEnum;
             }
         }
         return null;
     }
 
-    public int getType() {
+    public String getType() {
         return type;
     }
 

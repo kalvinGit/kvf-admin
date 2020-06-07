@@ -138,6 +138,47 @@ kvf-admin
 * eclipse启动访问：http://localhost/kvf-admin【这里使用80端口】
 * 账号密码：admin/123456
 
+### linux部署
+注意：以下三种方式部署前，记得初始化数据库哦
+#### jar包方式部署
+项目已解决以jar包运行的情况下，无法读取文件问题，所以放心使用
+```
+# 打包
+mvn package -Dmaven.test.skip=true
+# 运行
+nohup java -jar kvf-admin.jar &
+
+```
+#### tomcat部署
+```
+# 修改pom.xml打包方式为war
+<packaging>jar</packaging>
+# 打包
+mvn package -Dmaven.test.skip=true
+# 运行
+# 把war包拷贝到tomcat的webapps目录下，进行bin目录执行：
+./startup.sh
+```
+### docker部署
+前提：安装docker及docker-compose<br>
+
+```
+# 进入kvf-admin目录
+# 打包构建
+mvn package -Dmaven.test.skip=true
+mvn docker:build
+# 进入./docker-compose目录
+cd ./docker-compose
+# 修改相应docker-compose配置（可选）
+vim docker-compose.yml
+vim .env
+# 运行（启动所有镜像）
+docker-compose up -d
+# 或者启动指定镜像
+docker-compose up -d kvf-admin
+```
+
+
 ### 项目演示
 * 演示地址：http://kvfadmin.kalvinbg.cn
 * 账号密码：test/123456
@@ -151,6 +192,10 @@ kvf-admin
 ![系统效果图](http://cloud.kalvinbg.cn/image/kvf-admin4.png)
 
 ### 更新日志
+#### 2020-06-7
+* 更换登录图片验证码工具类（现在支持动态验证图片啦）
+* 重构通用文件上传接口，并解决使用java -jar kvf-admin.jar运行时文件无法读取问题
+* 新增docker部署运行项目方式
 #### 2020-05-30
 * 隐藏左侧菜单滚动条
 * 增加XssFilter过滤url白名单配置
@@ -205,6 +250,7 @@ kvf-admin
 * 自定义异常处理类【KvfException.java】，可用于业务层【service】抛出业务异常，如：`throw new KvfException("不存在的任务ID");` ，前端可接收到这个提示信息
 * 统一接口返回数据封装类【R.java】，可用于控制层【controller】返回成功或失败等数据。如`R.ok(data); 或 R.fail("验证码不正确");`
 * 开发环境【dev】默认关闭登录验证码，若需要开启验证码登录可在application-dev.yml配置开启
+* 通用文件上传接口：CommonController->fileUpload
 
 ### 敬请期待
 * vue-admin版本

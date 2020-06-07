@@ -109,10 +109,12 @@ mybatis-plus:
 
 # kvf自定义配置
 kvf:
-  # 登录验证码是否开启，开发环境配置false方便测试
   login:
     authcode:
+      # 登录验证码是否开启，开发环境配置false方便测试
       enable: false
+      # 是否动态
+      dynamic: true
   # quartz开关
   quartz:
     enable: true

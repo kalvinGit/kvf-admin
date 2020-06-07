@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.kalvin.kvf.common.utils.FileKit;
 import com.kalvin.kvf.modules.generator.dto.ColumnConfigDTO;
 import com.kalvin.kvf.modules.generator.utils.AuxiliaryKit;
 import com.kalvin.kvf.modules.generator.constant.ConfigConstant;
@@ -68,8 +69,9 @@ public class GenServiceImpl implements IGenService {
         genConfig.setColumns(columnConfigDTOS);
 
         // 读取半设置按钮配置信息并处理
-        String buttonInfo = FileUtil.readString(
-                new File(ClassUtil.getClassPath() + ConfigConstant.BUTTON_JSON_REL_PATH), "UTF-8");
+//        String buttonInfo = FileUtil.readString(
+//                new File(ClassUtil.getClassPath() + ConfigConstant.BUTTON_JSON_REL_PATH), "UTF-8");
+        String buttonInfo = FileKit.readString(ConfigConstant.BUTTON_JSON_REL_PATH);
         JSONObject jsonObject = JSONUtil.parseObj(buttonInfo);
         JSONArray headButtons = JSONUtil.parseArray(jsonObject.get(ConfigConstant.HEAD_BUTTON_KEY));
         JSONArray rowButtons = JSONUtil.parseArray(jsonObject.get(ConfigConstant.ROW_BUTTON_KEY));

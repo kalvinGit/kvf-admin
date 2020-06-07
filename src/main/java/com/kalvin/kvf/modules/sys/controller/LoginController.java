@@ -1,15 +1,14 @@
 package com.kalvin.kvf.modules.sys.controller;
 
-import com.google.code.kaptcha.Constants;
-import com.google.code.kaptcha.Producer;
 import com.kalvin.kvf.common.annotation.Log;
 import com.kalvin.kvf.common.controller.BaseController;
 import com.kalvin.kvf.common.dto.R;
 import com.kalvin.kvf.common.utils.HttpServletContextKit;
 import com.kalvin.kvf.common.utils.ShiroKit;
+import com.wf.captcha.GifCaptcha;
+import com.wf.captcha.utils.CaptchaUtil;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,10 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.imageio.ImageIO;
-import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 /**
@@ -33,11 +30,11 @@ import java.io.IOException;
 @RestController
 public class LoginController extends BaseController {
 
-    @Autowired
-    private Producer producer;
-
     @Value(value = "${kvf.login.authcode.enable}")
     private boolean needAuthCode;
+
+    @Value(value = "${kvf.login.authcode.dynamic}")
+    private boolean isDynamic;
 
     @GetMapping(value = "login")
     public ModelAndView login() {
@@ -55,8 +52,9 @@ public class LoginController extends BaseController {
         // 只有开启了验证码功能才需要验证。可在yml配置kvf.login.authcode.enable来开启或关闭
         if (needAuthCode) {
             // 验证码校验
-            String kaptcha = ShiroKit.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
-            if (!kaptcha.equalsIgnoreCase(vercode)) {
+            HttpServletRequest request = HttpServletContextKit.getHttpServletRequest();
+            if (!CaptchaUtil.ver(vercode, request)) {
+                CaptchaUtil.clear(request);  // 清除session中的验证码
                 return R.fail("验证码不正确");
             }
         }
@@ -85,24 +83,17 @@ public class LoginController extends BaseController {
     }
 
     /**
-     * 获取图片验证码
+     * 图片验证码
      */
-    @GetMapping("captcha.jpg")
-    public void captcha() throws IOException {
-        HttpServletResponse response = HttpServletContextKit.getHttpServletResponse();
-        response.setHeader("Cache-Control", "no-store, no-cache");
-        response.setContentType("image/jpeg");
-
-        // 生成文字验证码
-        String text = producer.createText();
-        // 生成图片验证码
-        BufferedImage image = producer.createImage(text);
-        // 保存到shiro session
-        ShiroKit.setSessionAttribute(Constants.KAPTCHA_SESSION_KEY, text);
-
-        ServletOutputStream out = response.getOutputStream();
-        ImageIO.write(image, "jpg", out);
+    @GetMapping(value = "captcha")
+    public void captcha(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // 可在yml配置kvf.login.authcode.dynamic切换动静态图片验证码，默认静态
+        // 其它验证码样式可前往查看：https://gitee.com/whvse/EasyCaptcha
+        if (isDynamic) {
+            CaptchaUtil.out(new GifCaptcha(), request, response);
+        } else {
+            CaptchaUtil.out(request, response);
+        }
     }
-
 
 }

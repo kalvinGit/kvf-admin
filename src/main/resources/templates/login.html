@@ -44,7 +44,7 @@
                     </div>
                     <div class="layui-col-xs5">
                         <div style="margin-left: 10px;">
-                            <img th:src="@{/captcha.jpg}" class="kvf-user-login-codeimg" id="kUserGetVerCode" title="点击刷新验证码">
+                            <img th:src="@{/captcha}" class="kvf-user-login-codeimg" id="kUserGetVerCode" title="点击刷新验证码">
                         </div>
                     </div>
                 </div>
@@ -105,10 +105,10 @@
 
                 } else {
                     if (r.msg.indexOf('验证码') !== -1) {
-                        kvfKit.errorMsg(r.msg + '，请重试。');
+                        kvfKit.unhappyMsg(r.msg + '，请重试。', true);
                         refreshVerCode();
                     } else {
-                        kvfKit.errorMsg(r.msg);
+                        kvfKit.unhappyMsg(r.msg, true);
                         refreshVerCode();
                     }
                 }
@@ -125,7 +125,7 @@
 
         // 刷新图片验证码
         function refreshVerCode() {
-            $('#kUserGetVerCode').attr('src', api.captchaUrl);
+            $('#kUserGetVerCode').attr('src', api.captchaUrl + '?t=' + Math.random());
             $('#kUserLoginVercode').val('');
         }
 

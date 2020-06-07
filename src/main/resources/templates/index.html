@@ -329,7 +329,7 @@
                     </a>
                 </li>
                 <li class="layui-nav-item" lay-unselect="">
-                    <img th:src="@{/} + ${#strings.isEmpty(authUserInfo.avatar)?'static/image/avatar/default.png':authUserInfo.avatar}" class="kvf-user-head">
+                    <img th:src="@{/} + ${#strings.isEmpty(authUserInfo.avatar)?'static/image/avatar/default.png':'common/static/'+authUserInfo.avatar}" class="kvf-user-head">
                 </li>
                 <li class="layui-nav-item" lay-unselect="">
                     <a href="javascript:;">
