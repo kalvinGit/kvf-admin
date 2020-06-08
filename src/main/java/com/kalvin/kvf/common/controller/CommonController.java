@@ -61,11 +61,11 @@ public class CommonController {
     }
 
     /**
-     * 访问静态图片
+     * 访问项目外部静态图片
      */
     @GetMapping(value = "static/{fileType}/{yyyyMMdd}/{filename}")
     public void staticImage(@PathVariable String fileType, @PathVariable String yyyyMMdd, @PathVariable String filename) {
-        String basePath = System.getProperty("user.dir") + File.separator + Constants.BASE_PATH;
+        String basePath = System.getProperty("user.dir") + File.separator + Constants.BASE_USER_FILE_PATH;
         String fileUrl = basePath + "/" + fileType + "/" + yyyyMMdd + "/" + filename;
         String suffix = filename.substring(filename.lastIndexOf(".") + 1);
         try {
@@ -75,6 +75,17 @@ public class CommonController {
             log.error(e.getMessage(), e);
             throw new KvfException("访问静态图片【" + fileUrl + "】出错：" + e.getMessage());
         }
+    }
+
+    /**
+     * 使用流访问项目外部的静态文件
+     */
+    @GetMapping(value = "static/{uploadType}/{fileType}/{yyyyMMdd}/{filename}")
+    public void staticFile(@PathVariable String uploadType, @PathVariable String fileType, @PathVariable String yyyyMMdd, @PathVariable String filename) {
+        String basePath = System.getProperty("user.dir") + File.separator + Constants.BASE_USER_FILE_PATH;
+        String fileUrl = basePath + "/" + uploadType + "/" + fileType + "/" + yyyyMMdd + "/" + filename;
+        HttpServletResponse response = HttpServletContextKit.getHttpServletResponse();
+        ServletUtil.write(response, new File(fileUrl));
     }
 
     @GetMapping(value = "search/user")

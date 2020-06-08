@@ -1,6 +1,7 @@
 package com.kalvin.kvf.common.utils;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.kalvin.kvf.common.constant.Constants;
 import com.kalvin.kvf.common.constant.UploadPathEnum;
 import com.kalvin.kvf.common.dto.UploadFileInfo;
@@ -21,7 +22,7 @@ public class FileUploadKit {
     private final static Logger LOGGER = LoggerFactory.getLogger(FileUploadKit.class);
 
     public static UploadFileInfo upload(MultipartFile multipartFile, UploadPathEnum pathEnum) {
-        String basePath = System.getProperty("user.dir") + File.separator + Constants.BASE_PATH;
+        String basePath = System.getProperty("user.dir") + File.separator + Constants.BASE_USER_FILE_PATH;
         String filename = multipartFile.getOriginalFilename();
         String path = pathEnum.getPath() + "/" + DateUtil.format(DateUtil.date(), "yyyyMMdd");
         String filePath = basePath + "/" + path + "/" + filename;
@@ -31,10 +32,15 @@ public class FileUploadKit {
         try {
             File parentFile = file.getParentFile();
             if (parentFile != null && !parentFile.exists()) {
-                parentFile.mkdirs();
+                if (parentFile.mkdirs()) {
+                    LOGGER.debug("created path:{}", parentFile.getAbsolutePath());
+                }
             }
             if (file.exists()) {
-                file.delete();
+                assert filename != null;
+                int index = filename.lastIndexOf(".");
+                String newFilename = filename.substring(0, index) + "_" + RandomUtil.randomNumbers(5) + filename.substring(index);
+                file = new File(basePath + "/" + path + "/" + newFilename);
             }
             if (file.createNewFile()) {
                 multipartFile.transferTo(file);

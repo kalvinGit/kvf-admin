@@ -8080,7 +8080,8 @@ UE.Editor.defaultOptions = function(editor){
             try{
                 me.options.imageUrl && me.setOpt('serverUrl', me.options.imageUrl.replace(/^(.*[\/]).+([\.].+)$/, '$1controller$2'));
 
-                var configUrl = me.getActionUrl('ueditor.config'),
+                // edit by Kalvin
+                var configUrl = me.getActionUrl('config'),
                     isJsonp = utils.isCrossDomainUrl(configUrl);
 
                 /* 发出ajax请求 */

@@ -213,10 +213,26 @@
         </dependency>
 
         <!-- ueditor-->
-        <dependency>
+        <!--<dependency>
             <groupId>com.gitee.qdbp.thirdparty</groupId>
             <artifactId>ueditor</artifactId>
             <version>1.4.3.3</version>
+        </dependency>-->
+        <!-- 由于本项目修改了ueditor工具包的源码，项目中直接使用，所以加入下面的ueditor依赖的库 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.47</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.9</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.3.1</version>
         </dependency>
 
         <!-- activiti相关依赖 -->

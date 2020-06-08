@@ -7,32 +7,32 @@
     "imageCompressEnable": true,
     "imageCompressBorder": 1600,
     "imageInsertAlign": "none",
-    "imageUrlPrefix": "",
-    "imagePathFormat": "/static/upload/ueditor/image/{yyyy}{mm}{dd}/{time}{rand:6}_{filename}",
+    "imageUrlPrefix": "/common/static",
+    "imagePathFormat": "/ueditor/image/{yyyy}{mm}{dd}/{time}{rand:6}_{filename}",
 
     "scrawlActionName": "uploadscrawl",
     "scrawlFieldName": "upfile",
-    "scrawlPathFormat": "/static/upload/ueditor/image/{yyyy}{mm}{dd}/{time}{rand:6}",
+    "scrawlPathFormat": "/ueditor/image/{yyyy}{mm}{dd}/{time}{rand:6}",
     "scrawlMaxSize": 2048000,
-    "scrawlUrlPrefix": "",
+    "scrawlUrlPrefix": "/common/static",
     "scrawlInsertAlign": "none",
 
     "snapscreenActionName": "uploadimage",
-    "snapscreenPathFormat": "/static/upload/ueditor/image/{yyyy}{mm}{dd}/{time}{rand:6}_{filename}",
-    "snapscreenUrlPrefix": "",
+    "snapscreenPathFormat": "/ueditor/image/{yyyy}{mm}{dd}/{time}{rand:6}_{filename}",
+    "snapscreenUrlPrefix": "/common/static",
     "snapscreenInsertAlign": "none",
 
     "catcherLocalDomain": ["127.0.0.1", "localhost", "img.baidu.com"],
     "catcherActionName": "catchimage",
     "catcherFieldName": "source",
-    "catcherPathFormat": "/static/upload/ueditor/image/{yyyy}{mm}{dd}/{time}{rand:6}_{filename}",
+    "catcherPathFormat": "/ueditor/image/{yyyy}{mm}{dd}/{time}{rand:6}_{filename}",
     "catcherUrlPrefix": "",
     "catcherMaxSize": 2048000,
     "catcherAllowFiles": [".png", ".jpg", ".jpeg", ".gif", ".bmp"],
 
     "videoActionName": "uploadvideo",
     "videoFieldName": "upfile",
-    "videoPathFormat": "/static/upload/ueditor/video/{yyyy}{mm}{dd}/{time}{rand:6}_{filename}",
+    "videoPathFormat": "/ueditor/video/{yyyy}{mm}{dd}/{time}{rand:6}_{filename}",
     "videoUrlPrefix": "",
     "videoMaxSize": 102400000,
     "videoAllowFiles": [
@@ -41,7 +41,7 @@
 
     "fileActionName": "uploadfile",
     "fileFieldName": "upfile",
-    "filePathFormat": "/static/upload/ueditor/file/{yyyy}{mm}{dd}/{time}{rand:6}_{filename}",
+    "filePathFormat": "/ueditor/file/{yyyy}{mm}{dd}/{time}{rand:6}_{filename}",
     "fileUrlPrefix": "",
     "fileMaxSize": 51200000,
     "fileAllowFiles": [
@@ -53,14 +53,14 @@
     ],
 
     "imageManagerActionName": "listimage",
-    "imageManagerListPath": "/static/upload/ueditor/image/",
+    "imageManagerListPath": "/ueditor/image/",
     "imageManagerListSize": 20,
     "imageManagerUrlPrefix": "",
     "imageManagerInsertAlign": "none",
     "imageManagerAllowFiles": [".png", ".jpg", ".jpeg", ".gif", ".bmp"],
 
     "fileManagerActionName": "listfile",
-    "fileManagerListPath": "/static/upload/ueditor/file/",
+    "fileManagerListPath": "/ueditor/file/",
     "fileManagerUrlPrefix": "",
     "fileManagerListSize": 20,
     "fileManagerAllowFiles": [

@@ -20,5 +20,5 @@ public class Constants {
     /**
      * 用户文件上传基础路径
      */
-    public final static String BASE_PATH = "userFile";
+    public final static String BASE_USER_FILE_PATH = "userFile";
 }
