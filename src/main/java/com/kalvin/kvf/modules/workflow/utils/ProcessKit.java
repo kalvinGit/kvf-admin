@@ -231,12 +231,13 @@ public class ProcessKit {
      */
     public static List<ProcessNode> getCanBackNodes(String currentNodeId, String processDefId) {
         final List<ProcessNode> canBackNodes = new ArrayList<>();
-        ProcessKit.getIncomeNodesRecur(currentNodeId, processDefId, canBackNodes, true);
-        for (ProcessNode node : canBackNodes) {
+        ProcessKit.getIncomeNodesRecur(currentNodeId, processDefId, canBackNodes, true, currentNodeId);
+        for (int i = 0; i < canBackNodes.size(); i++) {
             List<HistoricActivityInstance> historicActivityInstances = historyService.createHistoricActivityInstanceQuery()
-                    .processDefinitionId(processDefId).activityId(node.getNodeId()).finished().list();
+                    .processDefinitionId(processDefId).activityId(canBackNodes.get(i).getNodeId()).finished().list();
             if (CollectionUtil.isEmpty(historicActivityInstances)) {
-                canBackNodes.remove(node);
+                canBackNodes.remove(i);
+                i--;
             }
         }
         return canBackNodes;
@@ -251,11 +252,12 @@ public class ProcessKit {
     public static ProcessNode getPreOneIncomeNode(String currentNodeId, String processDefId) {
         final List<ProcessNode> preNodes = new ArrayList<>();
         ProcessKit.getIncomeNodesRecur(currentNodeId, processDefId, preNodes, false);
-        for (ProcessNode node : preNodes) {
+        for (int i = 0; i < preNodes.size(); i++) {
             List<HistoricActivityInstance> historicActivityInstances = historyService.createHistoricActivityInstanceQuery()
-                    .processDefinitionId(processDefId).activityId(node.getNodeId()).finished().list();
+                    .processDefinitionId(processDefId).activityId(preNodes.get(i).getNodeId()).finished().list();
             if (CollectionUtil.isEmpty(historicActivityInstances)) {
-                preNodes.remove(node);
+                preNodes.remove(i);
+                i--;
             }
         }
         if (CollectionUtil.isEmpty(preNodes)) {
@@ -265,7 +267,20 @@ public class ProcessKit {
     }
 
     public static void getIncomeNodesRecur(String currentNodeId, String processDefId, List<ProcessNode> incomeNodes, boolean isAll) {
+        ProcessKit.getIncomeNodesRecur(currentNodeId, processDefId, incomeNodes, isAll, true, null);
+    }
+
+    public static void getIncomeNodesRecur(String currentNodeId, String processDefId, List<ProcessNode> incomeNodes, boolean isAll, String originalCurrentNodeId) {
+        ProcessKit.getIncomeNodesRecur(currentNodeId, processDefId, incomeNodes, isAll, true, originalCurrentNodeId);
+    }
+
+    public static void getIncomeNodesRecur(String currentNodeId, String processDefId, List<ProcessNode> incomeNodes, boolean isAll, boolean isFirstExec, String originalCurrentNodeId) {
         Process process = ProcessKit.getProcess(processDefId);
+        if (!isFirstExec) {
+            if (currentNodeId.equals(originalCurrentNodeId)) {
+                return;
+            }
+        }
         FlowElement currentFlowElement = process.getFlowElement(currentNodeId);
         List<SequenceFlow> incomingFlows = null;
         if (currentFlowElement instanceof UserTask) {
@@ -287,16 +302,16 @@ public class ProcessKit {
                 if (preFlowElement instanceof UserTask) {
                     incomeNodes.add(new ProcessNode(preFlowElement.getId(), preFlowElement.getName()));
                     if (isAll) {
-                        getIncomeNodesRecur(preFlowElement.getId(), processDefId, incomeNodes, true);
+                        getIncomeNodesRecur(preFlowElement.getId(), processDefId, incomeNodes, true, false, originalCurrentNodeId);
                     }
                 }
                 //排他网关
                 else if (preFlowElement instanceof ExclusiveGateway) {
-                    getIncomeNodesRecur(preFlowElement.getId(), processDefId, incomeNodes, isAll);
+                    getIncomeNodesRecur(preFlowElement.getId(), processDefId, incomeNodes, isAll, false, originalCurrentNodeId);
                 }
                 //并行网关
                 else if (preFlowElement instanceof ParallelGateway) {
-                    getIncomeNodesRecur(preFlowElement.getId(), processDefId, incomeNodes, isAll);
+                    getIncomeNodesRecur(preFlowElement.getId(), processDefId, incomeNodes, isAll, false, originalCurrentNodeId);
                 }
             });
         }
