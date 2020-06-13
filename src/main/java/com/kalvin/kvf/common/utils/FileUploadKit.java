@@ -1,7 +1,8 @@
 package com.kalvin.kvf.common.utils;
 
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.RandomUtil;
+import com.kalvin.kvf.common.constant.Constants;
 import com.kalvin.kvf.common.constant.UploadPathEnum;
 import com.kalvin.kvf.common.dto.UploadFileInfo;
 import com.kalvin.kvf.common.exception.KvfException;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * 文件上传工具
@@ -19,47 +21,37 @@ public class FileUploadKit {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(FileUploadKit.class);
 
-    public static UploadFileInfo upload(MultipartFile multipartFile, UploadPathEnum pathEnum, String toPath) {
-        String path;
-        String uploadPath;
-        String filename;
+    public static UploadFileInfo upload(MultipartFile multipartFile, UploadPathEnum pathEnum) {
+        String basePath = System.getProperty("user.dir") + File.separator + Constants.BASE_USER_FILE_PATH;
+        String filename = multipartFile.getOriginalFilename();
+        String path = pathEnum.getPath() + "/" + DateUtil.format(DateUtil.date(), "yyyyMMdd");
+        String filePath = basePath + "/" + path + "/" + filename;
+        LOGGER.debug("upload filename:{}", filename);
+        LOGGER.debug("upload filePath:{}", filePath);
+        File file = new File(filePath);
         try {
-            if (multipartFile == null) {
-                throw new KvfException("没有可上传的文件");
+            File parentFile = file.getParentFile();
+            if (parentFile != null && !parentFile.exists()) {
+                if (parentFile.mkdirs()) {
+                    LOGGER.debug("created path:{}", parentFile.getAbsolutePath());
+                }
             }
-
-            filename = multipartFile.getOriginalFilename();
-
-            if (pathEnum == null && StrUtil.isBlank(toPath)) {
-                throw new KvfException("上传路径不存在");
-            } else if (pathEnum != null) {
-                path = pathEnum.getPath() + filename;
-                uploadPath = ClassUtil.getClassPath() +  path;
+            if (file.exists()) {
+                assert filename != null;
+                int index = filename.lastIndexOf(".");
+                String newFilename = filename.substring(0, index) + "_" + RandomUtil.randomNumbers(5) + filename.substring(index);
+                file = new File(basePath + "/" + path + "/" + newFilename);
+            }
+            if (file.createNewFile()) {
+                multipartFile.transferTo(file);
             } else {
-                path = toPath + filename;
-                uploadPath = path;
+                throw new KvfException("文件上传失败");
             }
-            LOGGER.info("uploadPath={}", uploadPath);
-
-            File file = new File(uploadPath);
-            // 判断父目录是否存在，如果不存在，则创建
-            if (file.getParentFile() != null && !file.getParentFile().exists()) {
-                file.getParentFile().mkdirs();
-            }
-            file.createNewFile();
-            multipartFile.transferTo(file);
-            return new UploadFileInfo(filename, path, uploadPath);
-        } catch (Exception e) {
-            throw new KvfException("上传文件失败：" + e.getMessage());
+        } catch (IOException e) {
+            throw new KvfException("文件上传失败：" + e.getMessage() + filePath);
         }
 
+        return new UploadFileInfo(filename, path + "/" + filename, filePath.replaceAll("\\\\", "\\/"));
     }
 
-    public static UploadFileInfo uploadRelative(MultipartFile multipartFile, UploadPathEnum pathEnum) {
-        return FileUploadKit.upload(multipartFile, pathEnum, null);
-    }
-
-    public static UploadFileInfo uploadAbsolute(MultipartFile multipartFile, String toPath) {
-        return FileUploadKit.upload(multipartFile, null, toPath);
-    }
 }

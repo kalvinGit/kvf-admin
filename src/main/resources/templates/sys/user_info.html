@@ -78,7 +78,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">用户头像</label>
                             <div class="layui-input-inline" style="text-align: center">
-                                <img id="avatarImg" th:src="@{/} + ${user.avatar==null?'static/image/avatar/default.png':user.avatar}" style="height: 100px; width: 100px; border-radius: 100px">
+                                <img id="avatarImg" th:src="@{/} + ${#strings.isEmpty(user.avatar)?'static/image/avatar/default.png':'common/static/'+user.avatar}" style="height: 100px; width: 100px; border-radius: 100px">
                                 <input name="avatar" placeholder="图片地址" th:value="${user.avatar}" class="layui-input layui-hide">
                             </div>
                             <div class="layui-input-inline layui-btn-container" style="width: auto;">
@@ -115,13 +115,13 @@
         var uploadInst = upload.render({
             elem: '#kAvatarUpload' //绑定元素
             ,url: api.comm.fileUpload //上传接口
-            ,data: {type: 3}
+            ,data: {type: 'avatar'}
             ,accept: 'images'
             ,done: function(r) {
                 //上传完毕回调
                 if (r.code === req.status.ok) {
                     $('input[name="avatar"]').val(r.data.path);
-                    $('#avatarImg').attr('src', BASE_WEB + r.data.path);
+                    $('#avatarImg').attr('src', BASE_WEB + "common/static/" + r.data.path);
                     kvfKit.sucessMsg('上传成功');
                 } else {
                     kvfKit.errorMsg('上传失败：' + r.msg);

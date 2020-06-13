@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title th:replace="common/base::pagetitle"></title>
+    <link rel="shortcut icon" th:href="@{/static/image/logo/favicon.ico}" type="image/x-icon"/>
     <link th:replace="common/base::static"/>
     <link rel="stylesheet" th:href="@{/static/css/kvf-theme.css}">
     <style>
@@ -288,8 +289,8 @@
                         <i id="kAppLeftNavFlexible" class="layui-icon layui-icon-shrink-right" aria-hidden="true"></i>
                     </a>
                 </li>
-<!--                <li class="layui-nav-item"><a href="javascript:;" data-menu-id="0">控制台</a></li>-->
-<!--                <li class="layui-nav-item"><a href="javascript:;" data-menu-id="10">商品管理</a></li>-->
+                <!--                <li class="layui-nav-item"><a href="javascript:;" data-menu-id="0">控制台</a></li>-->
+                <!--                <li class="layui-nav-item"><a href="javascript:;" data-menu-id="10">商品管理</a></li>-->
                 <!--<li class="layui-nav-item layui-hide-xs" lay-unselect="">
                     <a href="javascript:;" data-event="workbench" target="_blank" title="工作台">
                         <i class="fa fa-cube"></i>
@@ -329,7 +330,7 @@
                     </a>
                 </li>
                 <li class="layui-nav-item" lay-unselect="">
-                    <img th:src="@{/} + ${#strings.isEmpty(authUserInfo.avatar)?'static/image/avatar/default.png':authUserInfo.avatar}" class="kvf-user-head">
+                    <img th:src="@{/} + ${#strings.isEmpty(authUserInfo.avatar)?'static/image/avatar/default.png':'common/static/'+authUserInfo.avatar}" class="kvf-user-head">
                 </li>
                 <li class="layui-nav-item" lay-unselect="">
                     <a href="javascript:;">
@@ -369,7 +370,7 @@
         <div class="layadmin-pagetabs">
             <div class="layui-icon layadmin-tabs-control layui-icon-prev" data-event="prev"></div>
             <div class="layui-icon layadmin-tabs-control layui-icon-next" data-event="next"></div>
-<!--            <div class="layui-icon layadmin-tabs-control layui-icon-down"></div>-->
+            <!--            <div class="layui-icon layadmin-tabs-control layui-icon-down"></div>-->
             <div class="layui-tab" lay-unauto="" lay-allowclose="true" lay-filter="kAppLayoutTabFilter">
                 <ul class="layui-tab-title" id="kAppTabTitle">
                     <li lay-id="0" data-iframe-id="kAppIframe_0" class="layui-this layui-elip"><i class="layui-icon layui-icon-home"></i><i class="layui-icon layui-unselect layui-tab-close">ဆ</i></li>
@@ -512,7 +513,7 @@
         });
 
         // 事件监听
-        var active = {
+        kvfKit.activeInit({
             serach : function () {
             },
             message : function () {
@@ -563,9 +564,7 @@
             },
             more: function () {
             }
-        };
-
-        kvfKit.activeInit(active);
+        });
 
         // 滑出层
         new popup('#kAppThemePopup', 'a[data-event="theme"]', {

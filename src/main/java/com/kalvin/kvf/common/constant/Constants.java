@@ -17,4 +17,8 @@ public class Constants {
 
     public final static String XSS_NOTICE_KEY = "notice";
 
+    /**
+     * 用户文件上传基础路径
+     */
+    public final static String BASE_USER_FILE_PATH = "userFile";
 }

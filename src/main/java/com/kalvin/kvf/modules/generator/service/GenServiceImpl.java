@@ -1,23 +1,21 @@
 package com.kalvin.kvf.modules.generator.service;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.kalvin.kvf.modules.generator.dto.ColumnConfigDTO;
-import com.kalvin.kvf.modules.generator.utils.AuxiliaryKit;
+import com.kalvin.kvf.common.utils.FileKit;
 import com.kalvin.kvf.modules.generator.constant.ConfigConstant;
 import com.kalvin.kvf.modules.generator.dto.ButtonConfigDTO;
+import com.kalvin.kvf.modules.generator.dto.ColumnConfigDTO;
 import com.kalvin.kvf.modules.generator.dto.TableColumnDTO;
+import com.kalvin.kvf.modules.generator.utils.AuxiliaryKit;
 import com.kalvin.kvf.modules.generator.vo.GenConfigVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -68,8 +66,9 @@ public class GenServiceImpl implements IGenService {
         genConfig.setColumns(columnConfigDTOS);
 
         // 读取半设置按钮配置信息并处理
-        String buttonInfo = FileUtil.readString(
-                new File(ClassUtil.getClassPath() + ConfigConstant.BUTTON_JSON_REL_PATH), "UTF-8");
+//        String buttonInfo = FileUtil.readString(
+//                new File(ClassUtil.getClassPath() + ConfigConstant.BUTTON_JSON_REL_PATH), "UTF-8");
+        String buttonInfo = FileKit.readString(ConfigConstant.BUTTON_JSON_REL_PATH);
         JSONObject jsonObject = JSONUtil.parseObj(buttonInfo);
         JSONArray headButtons = JSONUtil.parseArray(jsonObject.get(ConfigConstant.HEAD_BUTTON_KEY));
         JSONArray rowButtons = JSONUtil.parseArray(jsonObject.get(ConfigConstant.ROW_BUTTON_KEY));

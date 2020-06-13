@@ -1,0 +1,62 @@
+version: '3'
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    networks:
+      - my-net
+#        ipv4_address: 172.19.0.1
+    ports:
+      - 3306:3306
+    volumes:
+      - ../docker-data/mysql:/var/lib/mysql
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: 123456
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: always
+    volumes:
+      - ../docker-data/redis:/data
+    environment:
+      - REDIS_PASSWORD=123456
+    networks:
+      - my-net
+#        ipv4_address: 172.19.0.2
+    ports:
+      - 6379:6379
+    env_file: .env
+
+  kvf-admin:
+    image: kvf/kvf:latest
+    container_name: kvf-admin
+    restart: on-failure
+    networks:
+      - my-net
+#        ipv4_address: 172.19.0.3
+    ports:
+      - 8080:8081
+    volumes:
+    - ../docker-data/home/userFile:/userFile
+    env_file: .env
+    environment:
+      TZ: Asia/Shanghai
+    depends_on:
+      - mysql
+      - redis
+
+## 自定义网络
+networks:
+  # 自定义的网络名称
+  my-net:
+    external: false
+#    ipam:
+#      config:
+        # 网络号段
+#        - subnet: 172.19.0.0/16
+        # 网关地址
+#          gateway: 172.19.0.1

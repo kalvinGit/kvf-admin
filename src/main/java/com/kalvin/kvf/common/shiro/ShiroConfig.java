@@ -115,7 +115,7 @@ public class ShiroConfig {
         filterMap.put("/login/**", "anon");
 //        filterMap.put("/logout", "logout");   // 暂不使用Shiro自带的登出
         filterMap.put("/druid/**", "anon");
-        filterMap.put("/captcha.jpg", "anon");
+        filterMap.put("/captcha", "anon");
 //        filterMap.put("/", "user");
 
         filterMap.put("/**", "myFilter,authc");
