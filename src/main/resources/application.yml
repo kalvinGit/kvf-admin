@@ -1,8 +1,12 @@
 
 spring:
-  # 使用环境
+  # 使用环境。默认dev。一般不用修改。若要修改可在pom.xml搜索activeByDefault配置
+  # maven打包不同环境：
+  # 开发环境(dev)：mvn package -P dev
+  # 测试环境(test)：mvn package -P test -Dmaven.test.skip=true
+  # 生产环境(prod)：mvn package -P prod -Dmaven.test.skip=true
   profiles:
-    active: dev
+    active: '@activeProfile@'
 
 
 

@@ -29,6 +29,32 @@
         <docker.image.prefix>kvf</docker.image.prefix>
     </properties>
 
+    <!--多环境参数配置-->
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <activeProfile>dev</activeProfile>
+            </properties>
+            <!-- 设置该环境默认激活 -->
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <activeProfile>test</activeProfile>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <activeProfile>prod</activeProfile>
+            </properties>
+        </profile>
+    </profiles>
+
     <repositories>
         <repository>
             <id>aliyun</id>

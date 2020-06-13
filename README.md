@@ -55,6 +55,9 @@ kvf-admin-activiti是基于kvf-admin脚手架集成了工作流引擎（activiti
 * [x] 我的申请（查看所有当前用户申请过的流程情况）
 * [ ] 下一步计划，期待大家的反馈意见！
 
+### 更新日志
+[👳👉‍点我点我点我](https://github.com/kalvinGit/kvf-admin/wiki/%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97)
+
 ### 项目结构树
 ````
 kvf-admin
@@ -127,6 +130,7 @@ kvf-admin
 * 支持日志记录，可在需要加入日志操作记录的controller方法上添加@Log("业务操作备注")即可完成日志记录
 * 系统全局统一异常处理，所有异常信息统一处理返回R对象，前端处理提示信息更方便
 * 支持工作流（OA）功能
+* 完美支持多种部署方式（jar、tomcat、docker等）
 
 ### 本地部署
 * 通过git/gitee下载源码(推荐使用git，因为gitee不是实时更新的)，若是工作流OA版本，请clone activiti分支
@@ -138,43 +142,59 @@ kvf-admin
 * eclipse启动访问：http://localhost/kvf-admin【这里使用80端口】
 * 账号密码：admin/123456
 
+
 ### linux部署
 注意：以下三种方式部署前，记得初始化数据库哦
-#### jar包方式部署
-项目已解决以jar包运行的情况下，无法读取文件问题，所以放心使用
+#### 打包
+###### 开发环境(dev)：
 ```
-# 打包
-mvn package -Dmaven.test.skip=true
-# 运行
-nohup java -jar kvf-admin.jar &
+mvn package -P dev
+```
+###### 测试环境(test)：
+```
+mvn package -P test -Dmaven.test.skip=true
+```
+###### 生产环境(prod)：
+```
+mvn package -P prod -Dmaven.test.skip=true
+```
+#### jar包方式部署
+项目已解决以jar包运行的情况下，无法读取文件等各种问题，所以放心使用
 
+###### 运行
+```
+nohup java -jar kvf-admin.jar &
 ```
 #### tomcat部署
+打包前先修改pom.xml的打包方式为war
 ```
-# 修改pom.xml打包方式为war
-<packaging>jar</packaging>
-# 打包
-mvn package -Dmaven.test.skip=true
-# 运行
-# 把war包拷贝到tomcat的webapps目录下，进行bin目录执行：
+<packaging>war</packaging>
+```
+##### 运行
+##### 把war包拷贝到tomcat的webapps目录下，然后进入bin目录执行：
+```
 ./startup.sh
 ```
+
 ### docker部署
 前提：安装docker及docker-compose<br>
 
+##### 进入kvf-admin目录，在已打包(上面打包步骤)的情况下，构建docker镜像
 ```
-# 进入kvf-admin目录
-# 打包构建
-mvn package -Dmaven.test.skip=true
 mvn docker:build
-# 进入./docker-compose目录
-cd ./docker-compose
-# 修改相应docker-compose配置（可选）
+```
+##### 进入./docker-compose目录
+修改相应docker-compose配置（可选）
+```
 vim docker-compose.yml
 vim .env
-# 运行（启动所有镜像）
+```
+##### 运行（启动所有镜像）
+```
 docker-compose up -d
-# 或者启动指定镜像
+```
+##### 或者启动指定镜像
+```
 docker-compose up -d kvf-admin
 ```
 
@@ -190,9 +210,6 @@ docker-compose up -d kvf-admin
 ![系统效果图](http://cloud.kalvinbg.cn/image/kvf-admin2.png)
 ![系统效果图](http://cloud.kalvinbg.cn/image/kvf-admin3.png)
 ![系统效果图](http://cloud.kalvinbg.cn/image/kvf-admin4.png)
-
-### 更新日志
-[👳‍log wiki](https://github.com/kalvinGit/kvf-admin/wiki/%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97)
 
 ### 开发指南
 * 前端通用配置js【kconfig.js】
