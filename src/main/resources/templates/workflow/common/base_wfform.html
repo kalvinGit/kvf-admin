@@ -252,7 +252,7 @@
             var field = data.field; //获取提交的字段
             var nextNodeNum = $('input[name="nextNodeNum"]').val();
             var checkedNode = $('input[name="targetNodeId"]:checked').val();
-            if (!checkedNode) {
+            if (nextNodeNum !== '0' && !checkedNode) {
                 return kvfKit.unhappyMsg('请选择下一流转环节', true);
             }
             if (Number(nextNodeNum) !==0 && !field.nextUser) {

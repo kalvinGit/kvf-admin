@@ -133,7 +133,7 @@
                 return kvfKit.unhappyMsg('首环节不允许快速办理任务', true);
             }
 
-            if (!checkedNode) {
+            if (nextNodeNum !== '0' && !checkedNode) {
                 return kvfKit.unhappyMsg('请选择下一流转环节', true);
             }
 
