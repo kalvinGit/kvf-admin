@@ -22,7 +22,7 @@
         <druid.version>1.1.21</druid.version>
         <redis.version>2.2.5.RELEASE</redis.version>
         <shiro.version>1.4.0</shiro.version>
-        <quartz.version>2.3.0</quartz.version>
+        <quartz.version>2.3.2</quartz.version>
         <hutool.version>4.5.1</hutool.version>
         <docker.image.prefix>kvf</docker.image.prefix>
     </properties>
