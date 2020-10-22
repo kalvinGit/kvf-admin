@@ -20,15 +20,15 @@
         </div>
     </div>-->
     <div class="layui-form-item">
-        <label class="layui-form-label">参数</label>
-        <div class="layui-input-inline">
-            <input type="text" name="params" th:value="${editInfo.params}" placeholder="请输入参数" autocomplete="off" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
         <label class="layui-form-label">cron表达式</label>
         <div class="layui-input-inline">
             <input type="text" name="cron" th:value="${editInfo.cron}" lay-verify="required" placeholder="请输入crom表达式" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">参数</label>
+        <div class="layui-input-inline">
+            <input type="text" name="params" th:value="${editInfo.params}" placeholder="请输入参数" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">

@@ -4,6 +4,8 @@ import com.kalvin.kvf.common.exception.KvfException;
 import com.kalvin.kvf.common.shiro.UserRealm;
 import com.kalvin.kvf.modules.sys.entity.User;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.cache.Cache;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.mgt.RealmSecurityManager;
 import org.apache.shiro.session.Session;
@@ -78,7 +80,15 @@ public class ShiroKit {
     public static void flushPrivileges() {
         RealmSecurityManager rsm = (RealmSecurityManager) SecurityUtils.getSecurityManager();
         UserRealm realm = (UserRealm) rsm.getRealms().iterator().next();
-        realm.clearCachedAuthorization();
+        // 只刷新当前用户权限
+//        realm.clearCachedAuthorization();
+        // 刷新所有在线用户权限
+        Cache<Object, AuthorizationInfo> cache = realm.getAuthorizationCache();
+        if (cache != null) {
+            for (Object key : cache.keys()) {
+                cache.remove(key);
+            }
+        }
     }
 
 }

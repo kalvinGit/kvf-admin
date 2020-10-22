@@ -57,6 +57,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
     @Transactional
     @Override
     public void updateJob(Job job) {
+        job.setStatus(JobConstant.JOB_STATUS_RUNNING);
         super.updateById(job);
         ScheduleKit.update(job.getId(), job);
     }

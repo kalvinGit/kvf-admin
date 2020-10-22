@@ -21,8 +21,8 @@
         <mybatis-plus.version>3.3.0</mybatis-plus.version>
         <druid.version>1.1.21</druid.version>
         <redis.version>2.2.5.RELEASE</redis.version>
-        <shiro.version>1.4.0</shiro.version>
-        <quartz.version>2.3.0</quartz.version>
+        <shiro.version>1.6.0</shiro.version>
+        <quartz.version>2.3.2</quartz.version>
         <hutool.version>4.5.1</hutool.version>
         <docker.image.prefix>kvf</docker.image.prefix>
     </properties>
@@ -214,7 +214,7 @@
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-ehcache</artifactId>
-            <version>1.3.2</version>
+            <version>${shiro.version}</version>
         </dependency>
 
         <!-- quartz定时任务 -->
@@ -256,7 +256,7 @@
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
-            <version>1.3.1</version>
+            <version>1.3.3</version>
         </dependency>
     </dependencies>
 

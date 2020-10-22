@@ -63,6 +63,8 @@ public class ScheduleKit {
             CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
             // 按新的cronExpression表达式重新构建trigger
             trigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
+            // 更新参数
+            trigger.getJobDataMap().put(JobConstant.JOB_MAP_KEY, job.getParams());
             // 按新的trigger重新设置job执行
             scheduler.rescheduleJob(triggerKey, trigger);
         } catch (SchedulerException e) {
