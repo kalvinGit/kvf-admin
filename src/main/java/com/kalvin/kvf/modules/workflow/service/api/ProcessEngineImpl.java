@@ -192,7 +192,7 @@ public class ProcessEngineImpl implements IProcessEngine {
                 }
             }*/
 
-            // Authentication.setAuthenticatedUserId(nextUser);
+             Authentication.setAuthenticatedUserId(nextUser);
 
             // 先置空，再设置。否则提交完任务后，历史任务表不会保存审批人。可能是activiti6的bug的吧？
             taskService.setAssignee(taskId, "");

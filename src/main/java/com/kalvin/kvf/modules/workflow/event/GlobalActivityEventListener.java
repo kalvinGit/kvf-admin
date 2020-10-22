@@ -13,7 +13,6 @@ import org.activiti.engine.task.IdentityLink;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -48,17 +47,20 @@ public class GlobalActivityEventListener implements ActivitiEventListener {
                 }
 
                 // 设置审批人
-                if (nextUser.split(",").length > 1) {   // 多用户任务分配
-                    task.addCandidateUsers(Arrays.asList(nextUser.split(",")));
-                } else {
-                    task.setAssignee(nextUser);
+                if (StrUtil.isNotBlank(nextUser)) {
+                    if (nextUser.split(",").length > 1) {   // 多用户任务分配
+                        task.setAssignee(null);
+                        task.addCandidateUsers(Arrays.asList(nextUser.split(",")));
+                    } else {
+                        task.setAssignee(nextUser);
+                    }
                 }
 
                 // 添加候选组用户
-                candidates.forEach(candidate -> {
+                /*candidates.forEach(candidate -> {
                     task.addCandidateUser(candidate.getUserId());
                     log.debug("节点候选组审批人：{}", candidate.getUserId());
-                });
+                });*/
             }
         }
     }
