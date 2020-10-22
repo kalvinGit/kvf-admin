@@ -313,7 +313,7 @@ var treeGridKit = {
         delete param.page;
         delete param.rows;
         if (param.id) {
-            param.size = 999;
+            param.size = -1;
         }
     },
     setPager: function (tg, options) {
