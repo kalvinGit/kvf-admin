@@ -43,6 +43,9 @@ public class AuxiliaryKit {
             return list;
         }
         String[] split = columnComment.split("。");
+        if (split.length < 2) {
+            return list;
+        }
         String vr = split[1].trim();
         for (String item : vr.split("；")) {
             if (item.contains("：")) {

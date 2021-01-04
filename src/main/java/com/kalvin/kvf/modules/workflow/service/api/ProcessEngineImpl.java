@@ -140,7 +140,7 @@ public class ProcessEngineImpl implements IProcessEngine {
 
     @Override
     public void submitTask(Map<String, Object> flowVariables) {
-        final Map<String, Object> variables = new HashMap<>();
+        final Map<String, Object> variables = new HashMap<>(flowVariables);
         final String currentUser = ShiroKit.getUser().getUsername();
         final FlowData flowData = new FlowData();
         BeanUtil.copyProperties(flowVariables, flowData);
@@ -412,7 +412,8 @@ public class ProcessEngineImpl implements IProcessEngine {
             // 获取目标节点审批人
             int taskType = ProcessKit.getTaskType(preNodeId, flowData.getProcessDefinitionId());
             if (taskType == ProcessKit.USER_TASK_TYPE_NORMAL) {
-                HistoricActivityInstance historicActivityInstance = historyService.createHistoricActivityInstanceQuery().processInstanceId(flowData.getProcessInstanceId()).activityId(preNodeId).finished().singleResult();
+                HistoricActivityInstance historicActivityInstance = historyService.createHistoricActivityInstanceQuery()
+                        .processInstanceId(flowData.getProcessInstanceId()).activityId(preNodeId).finished().singleResult();
                 String assignee = historicActivityInstance.getAssignee();
                 flowData.setNextUser(assignee);
             } else {
