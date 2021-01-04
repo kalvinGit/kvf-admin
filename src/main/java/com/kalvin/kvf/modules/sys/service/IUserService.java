@@ -35,4 +35,11 @@ public interface IUserService extends IService<User> {
      */
     List<User> search(String query);
 
+    void addUser(User user, List<Long> roleIds);
+
+    void updateUser(User user, List<Long> roleIds);
+
+    void deleteByIds(List<Long> ids);
+
+
 }
