@@ -4,6 +4,8 @@ package com.kalvin.kvf.modules.sys.controller;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.kalvin.kvf.common.constant.Constants;
+import com.kalvin.kvf.common.constant.SysConstant;
 import com.kalvin.kvf.common.controller.BaseController;
 import com.kalvin.kvf.common.dto.R;
 import com.kalvin.kvf.common.utils.CryptionKit;
@@ -91,11 +93,7 @@ public class UserController extends BaseController {
     @Transactional
     @PostMapping(value = "add")
     public R add(User user, @RequestParam("roleIds") List<Long> roleIds) {
-        user.setDeptId(user.getDeptId() == null ? 0 : user.getDeptId());
-        // 生成用户初始密码并加密
-        user.setPassword(CryptionKit.genUserPwd());
-        userService.saveOrUpdate(user);
-        userRoleService.saveOrUpdateBatchUserRole(roleIds, user.getId());
+        userService.addUser(user, roleIds);
         return R.ok();
     }
 
@@ -103,9 +101,7 @@ public class UserController extends BaseController {
     @Transactional
     @PostMapping(value = "edit")
     public R edit(User user, @RequestParam("roleIds") List<Long> roleIds) {
-        user.setDeptId(user.getDeptId() == null ? 0 : user.getDeptId());
-        userService.updateById(user);
-        userRoleService.saveOrUpdateBatchUserRole(roleIds, user.getId());
+        userService.updateUser(user, roleIds);
         return R.ok();
     }
 
@@ -118,6 +114,10 @@ public class UserController extends BaseController {
     @RequiresPermissions("sys:user:del")
     @PostMapping(value = "remove/{id}")
     public R remove(@PathVariable Long id) {
+        User user = userService.getById(id);
+        if (user.getUsername().equals(SysConstant.ADMIN)) {
+            return R.fail("不允许删除超级管理员【" + SysConstant.ADMIN + "】用户");
+        }
         userService.removeById(id);
         return R.ok();
     }
@@ -125,7 +125,7 @@ public class UserController extends BaseController {
     @RequiresPermissions("sys:user:del")
     @PostMapping(value = "removeBatch")
     public R removeBatch(@RequestParam("ids") List<Long> ids) {
-        userService.removeByIds(ids);
+        userService.deleteByIds(ids);
         return R.ok();
     }
 

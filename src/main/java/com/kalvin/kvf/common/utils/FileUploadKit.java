@@ -39,8 +39,8 @@ public class FileUploadKit {
             if (file.exists()) {
                 assert filename != null;
                 int index = filename.lastIndexOf(".");
-                String newFilename = filename.substring(0, index) + "_" + RandomUtil.randomNumbers(5) + filename.substring(index);
-                file = new File(basePath + "/" + path + "/" + newFilename);
+                filename = filename.substring(0, index) + "_" + RandomUtil.randomNumbers(5) + filename.substring(index);
+                file = new File(basePath + "/" + path + "/" + filename);
             }
             if (file.createNewFile()) {
                 multipartFile.transferTo(file);
