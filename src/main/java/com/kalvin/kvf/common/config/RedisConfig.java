@@ -3,6 +3,8 @@ package com.kalvin.kvf.common.config;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -43,10 +45,10 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Primary
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory factory) {
-        //对象的序列化
-        RedisSerializationContext.SerializationPair valueSerializationPair
+        // 对象的序列化
+        RedisSerializationContext.SerializationPair<Object> valueSerializationPair
                 = RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer());
-        //全局redis缓存过期时间
+        // 全局redis缓存过期时间。默认1天
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofDays(1))
 //                .serializeKeysWith()
@@ -86,6 +88,10 @@ public class RedisConfig extends CachingConfigurerSupport {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+
+        // 解决jackson2无法反序列化LocalDateTime的问题
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.registerModule(new JavaTimeModule());
         return objectMapper;
     }
 
