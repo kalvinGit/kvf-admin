@@ -3,6 +3,7 @@ package com.kalvin.kvf.modules.sys.mapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.kalvin.kvf.modules.sys.entity.Role;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -16,6 +17,6 @@ import java.util.List;
  */
 public interface RoleMapper extends BaseMapper<Role> {
 
-    List<Role> selectRoleList(Role role, Page page);
+    List<Role> selectRoleList(@Param("role") Role role, Page page);
 
 }

@@ -297,6 +297,31 @@ var kvfKit = {
     },
     replaceAll: function (str, preRepStr, afterRepStr) {
         return str.replace(new RegExp(preRepStr, "gm"), afterRepStr)
+    },
+    /**
+     * 预览图片
+     * @param containerId div容器ID。需要设置宽度
+     * @param imgUrl 图片url
+     */
+    previewImg: function (containerId, imgUrl) {
+        var $winImg = $('#' + containerId);
+        $winImg.empty();
+        var img = "<img class='window-img' src='" + imgUrl + "'  style='width: 100%;' />";
+        $winImg.append(img);
+        layer.open({
+            type: 1,
+            title: false,
+            scrollbar: false,
+            shadeClose: true, //点击遮罩关闭
+            content: $winImg,
+            area: $winImg.width() ? $winImg.width() + 'px' : '400px',  // 固定宽度，高度自适应
+            cancel: function() {
+                $winImg.css('display', 'none');
+            },
+            end: function() {
+                $winImg.css('display', 'none');
+            }
+        });
     }
 
 };
