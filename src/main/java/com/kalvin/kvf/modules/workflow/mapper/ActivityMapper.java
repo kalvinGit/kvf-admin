@@ -17,13 +17,13 @@ import java.util.List;
  */
 public interface ActivityMapper {
 
-    @Update("update act_re_procdef set NAME_=#{name} where ID_=#{processDefinitionId}")
+    @Update("update ACT_RE_PROCDEF set NAME_=#{name} where ID_=#{processDefinitionId}")
     void updateProcessDefinitionName(@Param("name") String name, @Param("processDefinitionId") String processDefinitionId);
 
-    @Delete("delete act_hi_actinst where TASK_ID_ = #{taskId}")
+    @Delete("delete ACT_HI_ACTINST where TASK_ID_ = #{taskId}")
     void deleteHisActivityInstanceByTaskId(@Param("taskId") String taskId);
 
-    @Delete("delete act_hi_taskinst where ID_ = #{taskId}")
+    @Delete("delete ACT_HI_TASKINST where ID_ = #{taskId}")
     void deleteHisTaskInstanceByTaskId(@Param("taskId") String taskId);
 
     @Select("SELECT " +
@@ -38,7 +38,7 @@ public interface ActivityMapper {
             "rp.ID_ as processDefinitionId," +
             "IF(rp.SUSPENSION_STATE_=1, false, IF(rp.SUSPENSION_STATE_ is null, null, true)) as processSuspended " +
             "FROM " +
-            "act_re_model rm " +
-            "LEFT JOIN act_re_procdef rp ON rm.DEPLOYMENT_ID_ = rp.DEPLOYMENT_ID_ ${ew.customSqlSegment}")
+            "ACT_RE_MODEL rm " +
+            "LEFT JOIN ACT_RE_PROCDEF rp ON rm.DEPLOYMENT_ID_ = rp.DEPLOYMENT_ID_ ${ew.customSqlSegment}")
     IPage<ProcessModelVO> listProcessModels(@Param(Constants.WRAPPER) Wrapper wrapper, IPage page);
 }

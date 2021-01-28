@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kalvin.kvf.modules.workflow.mapper.ProcessFormMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kalvin.kvf.modules.workflow.entity.ProcessForm">
+        <id column="id" property="id" />
+        <result column="model_id" property="modelId" />
+        <result column="form_code" property="formCode" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+       id, model_id, form_code
+    </sql>
+
+    <select id="selectProcessFormList" resultType="com.kalvin.kvf.modules.workflow.entity.ProcessForm">
+        select <include refid="Base_Column_List" /> from wf_process_form
+        <trim prefix="where" prefixOverrides="and">
+            <if test="processForm.modelId != null and processForm.modelId != ''">
+                and model_id like concat(#{processForm.modelId}, "%")
+            </if>
+            <if test="processForm.formCode != null and processForm.formCode != ''">
+                and form_code like concat(#{processForm.formCode}, "%")
+            </if>
+        </trim>
+    </select>
+
+</mapper>

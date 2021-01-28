@@ -3,6 +3,7 @@ package com.kalvin.kvf.modules.workflow.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.kalvin.kvf.modules.workflow.entity.Form;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -20,6 +21,6 @@ public interface FormMapper extends BaseMapper<Form> {
      * @param page 分页参数
      * @return list
      */
-    List<Form> selectFormList(Form form, IPage page);
+    List<Form> selectFormList(@Param("form") Form form, IPage page);
 
 }

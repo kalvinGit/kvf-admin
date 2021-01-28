@@ -3,6 +3,7 @@ package com.kalvin.kvf.modules.workflow.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.kalvin.kvf.modules.workflow.entity.ProcessForm;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -20,6 +21,6 @@ public interface ProcessFormMapper extends BaseMapper<ProcessForm> {
      * @param page 分页参数
      * @return list
      */
-    List<ProcessForm> selectProcessFormList(ProcessForm processForm, IPage page);
+    List<ProcessForm> selectProcessFormList(@Param("processForm") ProcessForm processForm, IPage page);
 
 }

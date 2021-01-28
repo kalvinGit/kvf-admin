@@ -26,6 +26,7 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -68,6 +69,7 @@ public class ProcessEngineImpl implements IProcessEngine {
         return this.start(deploymentId, businessId, null);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public String start(String deploymentId, String businessId, String startUser) {
         // 流程流转任务变量集合

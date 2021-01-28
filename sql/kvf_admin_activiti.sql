@@ -53,3 +53,34 @@ INSERT INTO `sys_menu` VALUES (57, 45, '添加', NULL, 'workflow:form:add', 2, N
 INSERT INTO `sys_menu` VALUES (58, 45, '编辑', NULL, 'workflow:form:edit', 2, NULL, 0, 1, NULL, '2020-05-10 23:47:20');
 INSERT INTO `sys_menu` VALUES (59, 45, '删除', NULL, 'workflow:form:delete', 2, NULL, 0, 2, NULL, '2020-05-10 23:47:47');
 INSERT INTO `sys_menu` VALUES (60, 45, '预览', NULL, 'workflow:form:prev', 2, NULL, 0, 3, NULL, '2020-05-10 23:48:17');
+
+-- 为管理员角色添加工作流相关权限
+INSERT INTO `sys_role_menu` VALUES (49, 3, 40);
+INSERT INTO `sys_role_menu` VALUES (50, 3, 41);
+INSERT INTO `sys_role_menu` VALUES (51, 3, 45);
+INSERT INTO `sys_role_menu` VALUES (52, 3, 46);
+INSERT INTO `sys_role_menu` VALUES (53, 3, 42);
+INSERT INTO `sys_role_menu` VALUES (54, 3, 43);
+INSERT INTO `sys_role_menu` VALUES (55, 3, 44);
+INSERT INTO `sys_role_menu` VALUES (57, 4, 40);
+INSERT INTO `sys_role_menu` VALUES (58, 4, 41);
+INSERT INTO `sys_role_menu` VALUES (59, 4, 45);
+INSERT INTO `sys_role_menu` VALUES (60, 4, 46);
+INSERT INTO `sys_role_menu` VALUES (61, 4, 42);
+INSERT INTO `sys_role_menu` VALUES (62, 4, 43);
+INSERT INTO `sys_role_menu` VALUES (63, 4, 44);
+INSERT INTO `sys_role_menu` VALUES (64, 3, 47);
+INSERT INTO `sys_role_menu` VALUES (65, 3, 48);
+INSERT INTO `sys_role_menu` VALUES (66, 3, 49);
+INSERT INTO `sys_role_menu` VALUES (67, 3, 50);
+INSERT INTO `sys_role_menu` VALUES (68, 3, 51);
+INSERT INTO `sys_role_menu` VALUES (69, 3, 52);
+INSERT INTO `sys_role_menu` VALUES (70, 3, 53);
+INSERT INTO `sys_role_menu` VALUES (71, 3, 54);
+INSERT INTO `sys_role_menu` VALUES (72, 3, 55);
+INSERT INTO `sys_role_menu` VALUES (73, 3, 56);
+INSERT INTO `sys_role_menu` VALUES (74, 3, 57);
+INSERT INTO `sys_role_menu` VALUES (75, 3, 58);
+INSERT INTO `sys_role_menu` VALUES (76, 3, 59);
+INSERT INTO `sys_role_menu` VALUES (77, 3, 60);
+INSERT INTO `sys_role_menu` VALUES (83, 3, 12);
