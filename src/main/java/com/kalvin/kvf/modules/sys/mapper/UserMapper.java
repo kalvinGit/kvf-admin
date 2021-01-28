@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.kalvin.kvf.modules.sys.entity.User;
 import com.kalvin.kvf.modules.sys.vo.UserQueryVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -22,6 +23,6 @@ public interface UserMapper extends BaseMapper<User> {
      * @param queryVO 查询参数
      * @return
      */
-    List<User> selectUserList(UserQueryVO queryVO, Page page);
+    List<User> selectUserList(@Param("queryVO") UserQueryVO queryVO, Page page);
 
 }

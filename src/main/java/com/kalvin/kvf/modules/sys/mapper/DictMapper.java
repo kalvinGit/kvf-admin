@@ -3,6 +3,7 @@ package com.kalvin.kvf.modules.sys.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.kalvin.kvf.modules.sys.entity.Dict;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface DictMapper extends BaseMapper<Dict> {
      * @param page 分页参数
      * @return list
      */
-    List<Dict> selectDictList(Dict dict, IPage page);
+    List<Dict> selectDictList(@Param("dict") Dict dict, IPage page);
 
     /**
      * 根据字典码查询下面所有的字典项条目
