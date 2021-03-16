@@ -102,6 +102,10 @@ public class JumpAnyWhereCmd implements Command<Void> {
         historyManager.recordActivityEnd(execution, this.comment);
         // 通知任务节点结束(更新act_hi_taskinst)
         historyManager.recordTaskEnd(this.taskId, this.comment);
+
+        // 先删除任务表外键关联表数据，否则会导致删除任务失败
+        IdentityLinkEntityManager identityLinkEntityManager = commandContext.getIdentityLinkEntityManager();
+        identityLinkEntityManager.deleteIdentityLinksByTaskId(this.taskId);
         // 删除正在执行的当前任务
         taskEntityManager.delete(taskId);
 
