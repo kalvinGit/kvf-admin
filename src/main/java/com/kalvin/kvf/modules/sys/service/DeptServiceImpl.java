@@ -5,6 +5,8 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kalvin.kvf.common.constant.Constants;
+import com.kalvin.kvf.common.constant.SysConstant;
 import com.kalvin.kvf.modules.sys.entity.Dept;
 import com.kalvin.kvf.modules.sys.entity.Menu;
 import com.kalvin.kvf.modules.sys.mapper.DeptMapper;
@@ -30,7 +32,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
         if (parentId == null) {
             parentId = 0L;
         }
-        return list(new LambdaQueryWrapper<Dept>().eq(Dept::getParentId, parentId));
+        return list(new LambdaQueryWrapper<Dept>().eq(Dept::getParentId, parentId).eq(Dept::getStatus, Constants.STATUS_0));
     }
 
     @Override
