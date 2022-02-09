@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.kalvin.kvf.modules.sys.dto.UserRoleGroupDTO;
 import com.kalvin.kvf.modules.sys.entity.UserRole;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,8 +18,8 @@ import java.util.List;
  */
 public interface UserRoleMapper extends BaseMapper<UserRole> {
 
-    List<UserRole> selectUserRoleList(UserRole userRole, Page page);
+    List<UserRole> selectUserRoleList(@Param("userRole") UserRole userRole, Page page);
 
-    UserRoleGroupDTO selectUserRoleGroupByUserId(Long userId);
+    UserRoleGroupDTO selectUserRoleGroupByUserId(@Param("userId") Long userId);
 
 }

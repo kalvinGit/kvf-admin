@@ -19,6 +19,7 @@
         <java.version>1.8</java.version>
         <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
         <mybatis-plus.version>3.3.0</mybatis-plus.version>
+        <dynamic-datasource.version>3.3.1</dynamic-datasource.version>
         <druid.version>1.1.21</druid.version>
         <redis.version>2.2.5.RELEASE</redis.version>
         <shiro.version>1.6.0</shiro.version>
@@ -141,6 +142,12 @@
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity-engine-core</artifactId>
             <version>2.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+            <version>${dynamic-datasource.version}</version>
         </dependency>
 
         <!--<dependency>

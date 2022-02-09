@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title th:replace="common/base::pagetitle"></title>
     <link th:replace="common/base::static"/>
+    <style>
+        #avatarImg {
+            height: 100px;
+            width: 100px;
+            border-radius: 100px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body style="background-color: #f2f2f2;">
 
@@ -78,7 +86,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">用户头像</label>
                             <div class="layui-input-inline" style="text-align: center">
-                                <img id="avatarImg" th:src="@{/} + ${#strings.isEmpty(user.avatar)?'static/image/avatar/default.png':'common/static/'+user.avatar}" style="height: 100px; width: 100px; border-radius: 100px">
+                                <img id="avatarImg" th:src="@{/} + ${#strings.isEmpty(user.avatar)?'static/image/avatar/default.png':'common/static/'+user.avatar}">
                                 <input name="avatar" placeholder="图片地址" th:value="${user.avatar}" class="layui-input layui-hide">
                             </div>
                             <div class="layui-input-inline layui-btn-container" style="width: auto;">
@@ -102,6 +110,8 @@
         </div>
     </div>
 </div>
+
+<div id="window-img" style="display: none;width: 400px"></div>
 
 
 <script th:replace="common/base::context"></script>
@@ -152,6 +162,11 @@
                 }
             });
         });
+
+        $('#avatarImg').on('click', function () {
+            kvfKit.previewImg('window-img', $(this).attr('src'))
+        });
+
     });
 </script>
 

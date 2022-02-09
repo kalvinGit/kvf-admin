@@ -20,7 +20,7 @@ public interface MenuMapper extends BaseMapper<Menu> {
 
     List<String> selectPermission(@Param("userId") Long userId);
 
-    List<Menu> selectMenuList(Menu menu, Page page);
+    List<Menu> selectMenuList(@Param("menu") Menu menu, Page page);
 
     List<Menu> selectMenuList(@Param("menu") Menu menu);
 
@@ -44,6 +44,6 @@ public interface MenuMapper extends BaseMapper<Menu> {
      * @param userId
      * @return
      */
-    List<Menu> selectUserPermissionNavMenuList(Long userId);
+    List<Menu> selectUserPermissionNavMenuList(@Param("userId") Long userId);
 
 }
