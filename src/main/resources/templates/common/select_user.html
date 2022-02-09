@@ -89,7 +89,7 @@
                 return result;  //必须return一个结果, 这个结果要符合对应的数据结构
             },
             beforeSearch: function(id, url, searchVal){         //搜索前调用此方法, return true将触发搜索, 否则不触发
-                return searchVal;
+                return true;
 
             },
             clearInput: false,          //当有搜索内容时, 点击选项是否清空搜索内容, 默认不清空
