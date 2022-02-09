@@ -1,8 +1,14 @@
 package com.kalvin.kvf.modules.workflow.controller;
 
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.kalvin.kvf.common.controller.BaseController;
 import com.kalvin.kvf.common.dto.R;
+import com.kalvin.kvf.modules.generator.dto.TableColumnDTO;
+import com.kalvin.kvf.modules.generator.dto.TableDTO;
+import com.kalvin.kvf.modules.generator.service.ITableService;
+import com.kalvin.kvf.modules.generator.utils.AuxiliaryKit;
 import com.kalvin.kvf.modules.workflow.entity.Form;
 import com.kalvin.kvf.modules.workflow.service.FormService;
 import com.kalvin.kvf.modules.workflow.vo.FormConfigVO;
@@ -11,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -27,6 +34,9 @@ public class FormController extends BaseController {
     @Autowired
     private FormService formService;
 
+    @Autowired
+    private ITableService tableService;
+
     @RequiresPermissions("workflow:form:index")
     @GetMapping("index")
     public ModelAndView index() {
@@ -42,7 +52,14 @@ public class FormController extends BaseController {
         } else {
             form = formService.getById(id);
         }
+        IPage<TableDTO> page = tableService.listTablePage(null, 1, -1);
         mv.addObject("editInfo", form);
+        mv.addObject("tables", page.getRecords());
+        List<TableColumnDTO> tableColumnDTOS = new ArrayList<>();
+        if (StrUtil.isNotBlank(form.getBindTable())) {
+            tableColumnDTOS = AuxiliaryKit.handleTableColumns(tableService.listTableColumn(form.getBindTable()));
+        }
+        mv.addObject("tableColumns", tableColumnDTOS);
         return mv;
     }
 

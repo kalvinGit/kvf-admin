@@ -2,10 +2,12 @@ package com.kalvin.kvf.modules.workflow.controller;
 
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONObject;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.kalvin.kvf.common.dto.R;
 import com.kalvin.kvf.common.exception.KvfException;
 import com.kalvin.kvf.common.utils.HttpServletContextKit;
 import com.kalvin.kvf.common.utils.ShiroKit;
+import com.kalvin.kvf.common.utils.SpringContextKit;
 import com.kalvin.kvf.modules.workflow.dto.ProcessQuery;
 import com.kalvin.kvf.modules.workflow.entity.ProcessForm;
 import com.kalvin.kvf.modules.workflow.service.FormService;
@@ -30,6 +32,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -459,6 +462,16 @@ public class WorkflowController {
     public R withdrawTask(@PathVariable String taskId) {
         processEngine.withdrawApproval(taskId);
         return R.ok();
+    }
+
+    @GetMapping(value = "form/{serviceBean}/listData")
+    public R getFormDetailListData(@PathVariable String serviceBean, @RequestParam String procInstId) {
+        // 查询表单明细表数据
+        IService<Object> service = SpringContextKit.getBean(serviceBean);
+        Map<String, Object> map = new HashMap<>();
+        map.put("proc_inst_id", procInstId);
+        List<Object> list = service.listByMap(map);
+        return R.ok(list);
     }
 
 }

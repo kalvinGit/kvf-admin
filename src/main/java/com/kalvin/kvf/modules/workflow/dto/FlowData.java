@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 流程实例流转数据
@@ -49,5 +50,20 @@ public class FlowData implements Serializable {
     private Date firstSubmitTime;   // 申请时间
     private List<ProcessNode> canBackNodes; // 当前节点所有可驳回的节点列表
     private boolean readOnly = false;   // 只读
+
+    /**
+     * 服务BEAN
+     */
+    private String serviceBean;
+
+    /**
+     * 实体类clazz
+     */
+    private String entityClazz;
+
+    /**
+     * 明细表数据JSON str
+     */
+    private String tableData;
 
 }

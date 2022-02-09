@@ -61,6 +61,26 @@ public class Form extends BaseEntity {
     private String jsCode;
 
     /**
+     * 绑定数据表
+     */
+    private String bindTable;
+
+    /**
+     * 服务BEAN
+     */
+    private String serviceBean;
+
+    /**
+     * 实体类clazz.如：com.kalvin.kvf.modules.t.entity.Test
+     */
+    private String entityClazz;
+
+    /**
+     * 明细表展示字段
+     */
+    private String showColumns;
+
+    /**
      * 创建时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

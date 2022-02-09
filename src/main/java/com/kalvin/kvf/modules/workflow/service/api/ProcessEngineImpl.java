@@ -1,12 +1,20 @@
 package com.kalvin.kvf.modules.workflow.service.api;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSON;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.kalvin.kvf.common.exception.KvfException;
 import com.kalvin.kvf.common.utils.ShiroKit;
+import com.kalvin.kvf.common.utils.SpringContextKit;
 import com.kalvin.kvf.modules.workflow.dto.FlowData;
 import com.kalvin.kvf.modules.workflow.dto.NodeAssignee;
 import com.kalvin.kvf.modules.workflow.dto.ProcessNode;
+import com.kalvin.kvf.modules.workflow.entity.Form;
 import com.kalvin.kvf.modules.workflow.entity.ProcessForm;
 import com.kalvin.kvf.modules.workflow.service.FormService;
 import com.kalvin.kvf.modules.workflow.service.ProcessFormService;
@@ -25,14 +33,13 @@ import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.apache.velocity.runtime.directive.contrib.For;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Create by Kalvin on 2020/4/20.
@@ -106,6 +113,13 @@ public class ProcessEngineImpl implements IProcessEngine {
         }
         String processDefinitionId = processDefinition.getId();
 
+        // 表单设计
+        Form form = formService.getByCode(flowData.getMainFormKey());
+        if (Objects.isNull(form)) {
+            throw new KvfException("获取表单出错，启动流程失败");
+        }
+        taskVariables.put(ProcessKit.FORM_KEY, form);
+
         ProcessInstance processInstance;
         if (StrUtil.isBlank(businessId)) {
             processInstance =  runtimeService.startProcessInstanceById(processDefinitionId, taskVariables);
@@ -165,6 +179,19 @@ public class ProcessEngineImpl implements IProcessEngine {
 
         if (flowData.isFirstSubmit()) {
             flowData.setFirstSubmitTime(new Date());
+            String tableData = flowData.getTableData();
+            if (StrUtil.isNotBlank(tableData)) {
+                JSONArray objects = JSONUtil.parseArray(tableData);
+                IService service = SpringContextKit.getBean(flowData.getServiceBean());
+                List collect = objects.stream().map(m -> {
+                    JSONObject mObj = (JSONObject) m;
+                    mObj.put(ProcessKit.FLOW_INST_ID, processInstanceId);
+                    Object o = ReflectUtil.newInstance(flowData.getEntityClazz());
+                    BeanUtil.copyProperties(mObj, o);
+                    return o;
+                }).collect(Collectors.toList());
+                service.saveOrUpdateBatch(collect);
+            }
         }
         flowData.setFirstNode(false);
         flowData.setFirstSubmit(false);
@@ -300,8 +327,10 @@ public class ProcessEngineImpl implements IProcessEngine {
         }
 
         // 获取当前节点表单数据
-        final Map<String, Object> flowVariables = ProcessKit.getFlowVariables(taskId);
-        final FlowData flowData = ProcessKit.getFlowData(taskId);
+        final Map<String, Object> variables = taskService.getVariables(taskId);
+        final Map<String, Object> flowVariables = (Map<String, Object>) variables.get(ProcessKit.FLOW_VARIABLES_KEY);
+        final FlowData flowData = (FlowData) variables.get(ProcessKit.FLOW_DATA_KEY);
+        final Form form = (Form) variables.get(ProcessKit.FORM_KEY);
 
         /*
          * 当前流程绑定的表单代号。
@@ -313,15 +342,7 @@ public class ProcessEngineImpl implements IProcessEngine {
         final String currentExecutionId = currentTask.getExecutionId();
         final String currentNodeName = currentTask.getName();
 
-        // 获取当前流程表单的配置数据
-        FormConfigVO formConfig;
-        try {
-            formConfig = formService.getFormConfig(formKey, flowVariables);
-        } catch (Exception e) {
-            // TODO: 获取表单出错，表单配置数据被删除等
-            return null;
-        }
-
+        FormConfigVO formConfig = formService.getFormConfig(form, flowVariables);
         /*
          * 更新任务流转核心数据变量【FlowData】
          */
@@ -359,23 +380,12 @@ public class ProcessEngineImpl implements IProcessEngine {
         // 获取当前节点表单数据
         final Map<String, Object> flowVariables = ProcessKit.getHisFlowVariables(processInstanceId);
         final FlowData flowData = ProcessKit.getHisFlowData(processInstanceId);
+        final Form form = ProcessKit.getHisFromConfigData(processInstanceId);
         // 设置只读
         flowData.setReadOnly(true);
 
-        /*
-         * 当前流程绑定的表单代号。
-         * 如果在流转过程中把流程绑定的表单移除掉或者更换了表单，它不会使当前流程实例生效。依旧使用的是启动时绑定的表单
-         */
-        final String formKey = flowData.getMainFormKey();
-
         // 获取当前流程表单的配置数据
-        FormConfigVO formConfig;
-        try {
-            formConfig = formService.getFormConfig(formKey, flowVariables);
-        } catch (Exception e) {
-            // TODO: 获取表单出错，表单配置数据被删除等
-            return null;
-        }
+        FormConfigVO formConfig = formService.getFormConfig(form, flowVariables);
 
         hashMap.put(ProcessKit.FLOW_DATA_KEY, flowData);
         hashMap.put(ProcessKit.FORM_CONFIG_KEY, formConfig);

@@ -19,57 +19,22 @@
         <div class="theme" th:text="${formConfig.theme}">
             我是表单主题
         </div>
-        <fieldset class="layui-elem-field layui-field-title" th:each="item,userStat: ${formConfig.fieldsGroups}">
-            <legend th:text="${userStat.current.key}">字段集区块 - 横线风格</legend>
-            <div class="layui-field-box">
-                <!-- 一行多列排版风格 -->
-                <!--<div id="fileBox">
-                    <th:block th:each="i:${#numbers.sequence(0, userStat.current.value.size() / 4)}">
-                        <div class="layui-form-item">
-                            <th:block th:each="j:${#numbers.sequence(i * 4, i * 4 + 3)}" th:if="${j < userStat.current.value.size()}" th:with="fields=${userStat.current.value.get(j)}">
-                                <label class="layui-form-label" th:text="${fields.fieldName}">输入框</label>
-                                <div th:class="${fields.control=='textarea'||fields.control=='checkbox'||fields.control=='radio'?'layui-input-inline':'layui-input-inline'}" th:data-checkbox="${fields.control=='checkbox'}">
-                                    <input th:if="${fields.control=='input'}" th:disabled="${!flowData.isFirstNode()}" type="text" th:name="${fields.field}" th:value="${fields.value}" th:lay-verify="${fields.required==1?'required':''}" th:placeholder="${'请填写' + fields.fieldName}" autocomplete="off" class="layui-input">
-                                    <select th:if="${fields.control=='select'}" th:disabled="${!flowData.isFirstNode()}" th:name="${fields.field}" th:lay-verify="${fields.required==1?'required':''}">
-                                        <option value="">请选择</option>
-                                        <option th:each="option: ${fields.options}" th:value="${option.value}" th:text="${option.text}" th:selected="${option.value==fields.value}"></option>
-                                    </select>
-                                    <textarea th:if="${fields.control=='textarea'}" th:disabled="${!flowData.isFirstNode()}" th:name="${fields.field}" th:text="${fields.value}" th:placeholder="${'请填写' + fields.fieldName}" th:lay-verify="${fields.required==1?'required':''}" class="layui-textarea"></textarea>
-                                    <input th:if="${fields.control=='checkbox'}" th:disabled="${!flowData.isFirstNode()}" th:each="option: ${fields.options}" type="checkbox" th:name="${fields.field}" th:title="${option.text}" th:checked="${#strings.contains(fields.value, option.value)}" th:value="${option.value}" th:lay-verify="${fields.required==1?'required':''}" lay-skin="primary">
-                                    <input th:if="${fields.control=='radio'}" th:disabled="${!flowData.isFirstNode()}" th:each="option: ${fields.options}" type="radio" th:name="${fields.field}" th:value="${option.value}" th:checked="${option.value==fields.value}" th:title="${option.text}" th:lay-verify="${fields.required==1?'required':''}">
-                                    <input th:if="${fields.control=='date'||fields.control=='datetime'||fields.control=='time'}" th:disabled="${!flowData.isFirstNode()}" th:id="${fields.field}" type="text" th:name="${fields.field}" th:value="${fields.value}" th:lay-verify="${fields.required==1?'required':''}" th:placeholder="${'请选择' + fields.fieldName}" th:data-date-type="${fields.control}" autocomplete="off" class="layui-input">
-                                </div>
-                            </th:block>
-                        </div>
-                    </th:block>
-                </div>-->
-                <!-- 一行一列排版风格 -->
-                <div id="fileBox">
-                    <div class="layui-form-item" th:each="fields: ${formConfig.fields}">
-                        <label class="layui-form-label" th:text="${fields.fieldName}">输入框</label>
-                        <div th:class="${fields.control=='textarea'||fields.control=='checkbox'||fields.control=='radio'?'layui-input-block':'layui-input-inline'}" th:data-checkbox="${fields.control=='checkbox'}">
-                            <input th:if="${fields.control=='input'}" th:disabled="${!flowData.isFirstNode()}" type="text" th:name="${fields.field}" th:value="${fields.value}" th:lay-verify="${fields.required==1?'required':''}" th:placeholder="${'请填写' + fields.fieldName}" autocomplete="off" class="layui-input">
-                            <select th:if="${fields.control=='select'}" th:disabled="${!flowData.isFirstNode()}" th:name="${fields.field}" th:lay-verify="${fields.required==1?'required':''}">
-                                <option value="">请选择</option>
-                                <option th:each="option: ${fields.options}" th:value="${option.value}" th:text="${option.text}" th:selected="${option.value==fields.value}"></option>
-                            </select>
-                            <textarea th:if="${fields.control=='textarea'}" th:disabled="${!flowData.isFirstNode()}" th:name="${fields.field}" th:text="${fields.value}" th:placeholder="${'请填写' + fields.fieldName}" th:lay-verify="${fields.required==1?'required':''}" class="layui-textarea"></textarea>
-                            <input th:if="${fields.control=='checkbox'}" th:disabled="${!flowData.isFirstNode()}" th:each="option: ${fields.options}" type="checkbox" th:name="${fields.field}" th:title="${option.text}" th:checked="${#strings.contains(fields.value, option.value)}" th:value="${option.value}" th:lay-verify="${fields.required==1?'required':''}" lay-skin="primary">
-                            <input th:if="${fields.control=='radio'}" th:disabled="${!flowData.isFirstNode()}" th:each="option: ${fields.options}" type="radio" th:name="${fields.field}" th:value="${option.value}" th:checked="${option.value==fields.value}" th:title="${option.text}" th:lay-verify="${fields.required==1?'required':''}">
-                            <input th:if="${fields.control=='date'||fields.control=='datetime'||fields.control=='time'}" th:disabled="${!flowData.isFirstNode()}" th:id="${fields.field}" type="text" th:name="${fields.field}" th:value="${fields.value}" th:lay-verify="${fields.required==1?'required':''}" th:placeholder="${'请选择' + fields.fieldName}" th:data-date-type="${fields.control}" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
+        <div id="fileBox">
+            <div class="layui-form-item" th:each="fields: ${formConfig.fields}">
+                <label class="layui-form-label" th:text="${fields.fieldName}">输入框</label>
+                <div th:class="${fields.control=='textarea'||fields.control=='checkbox'||fields.control=='radio'?'layui-input-block':'layui-input-inline'}" th:data-checkbox="${fields.control=='checkbox'}">
+                    <input th:if="${fields.control=='input'}" th:disabled="${!flowData.isFirstNode()}" type="text" th:name="${fields.field}" th:value="${fields.value}" th:lay-verify="${fields.required==1?'required':''}" th:placeholder="${'请填写' + fields.fieldName}" autocomplete="off" class="layui-input">
+                    <select th:if="${fields.control=='select'}" th:disabled="${!flowData.isFirstNode()}" th:name="${fields.field}" th:lay-verify="${fields.required==1?'required':''}">
+                        <option value="">请选择</option>
+                        <option th:each="option: ${fields.options}" th:value="${option.value}" th:text="${option.text}" th:selected="${option.value==fields.value}"></option>
+                    </select>
+                    <textarea th:if="${fields.control=='textarea'}" th:disabled="${!flowData.isFirstNode()}" th:name="${fields.field}" th:text="${fields.value}" th:placeholder="${'请填写' + fields.fieldName}" th:lay-verify="${fields.required==1?'required':''}" class="layui-textarea"></textarea>
+                    <input th:if="${fields.control=='checkbox'}" th:disabled="${!flowData.isFirstNode()}" th:each="option: ${fields.options}" type="checkbox" th:name="${fields.field}" th:title="${option.text}" th:checked="${#strings.contains(fields.value, option.value)}" th:value="${option.value}" th:lay-verify="${fields.required==1?'required':''}" lay-skin="primary">
+                    <input th:if="${fields.control=='radio'}" th:disabled="${!flowData.isFirstNode()}" th:each="option: ${fields.options}" type="radio" th:name="${fields.field}" th:value="${option.value}" th:checked="${option.value==fields.value}" th:title="${option.text}" th:lay-verify="${fields.required==1?'required':''}">
+                    <input th:if="${fields.control=='date'||fields.control=='datetime'||fields.control=='time'}" th:disabled="${!flowData.isFirstNode()}" th:id="${fields.field}" type="text" th:name="${fields.field}" th:value="${fields.value}" th:lay-verify="${fields.required==1?'required':''}" th:placeholder="${'请选择' + fields.fieldName}" th:data-date-type="${fields.control}" autocomplete="off" class="layui-input">
                 </div>
             </div>
-        </fieldset>
-        <fieldset class="layui-elem-field layui-field-title" th:if="${formConfig.hasDetailTable}">
-            <legend>明细表</legend>
-            <div class="layui-field-box">
-                <div class="layui-card-body">
-                    <table id="kContentTable" lay-filter="kContentTable"></table>
-                </div>
-            </div>
-        </fieldset>
+        </div>
 
 
         <hr th:if="${!flowData.readOnly}">
@@ -104,9 +69,6 @@
         <!-- 流程流转核心字段值 -->
         <div class="layui-form-item">
             <input type="hidden" name="theme" th:value="${formConfig.theme}">
-            <input type="hidden" name="serviceBean" th:value="${formConfig.serviceBean}">
-            <input type="hidden" name="entityClazz" th:value="${formConfig.entityClazz}">
-            <input type="hidden" name="hasDetailTable" th:value="${formConfig.hasDetailTable}">
             <input type="hidden" name="processName" th:value="${flowData.processName}">
             <input type="hidden" name="processDefinitionId" th:value="${flowData.processDefinitionId}">
             <input type="hidden" name="processInstanceId" th:value="${flowData.processInstanceId}">
@@ -117,13 +79,11 @@
             <input type="hidden" name="mainFormKey" th:value="${flowData.mainFormKey}">
             <input type="hidden" name="formKey" th:value="${flowData.formKey}">
             <input type="hidden" name="firstNodeId" th:value="${flowData.firstNodeId}">
-            <input type="hidden" name="isFirstNode" th:value="${flowData.isFirstNode()}">
             <input type="hidden" name="currentNodeId" th:value="${flowData.currentNodeId}">
             <input type="hidden" name="currentNodeName" th:value="${flowData.currentNodeName}">
             <input type="hidden" name="firstNode" th:value="${flowData.firstNode}">
             <input type="hidden" name="firstSubmit" th:value="${flowData.firstSubmit}">
             <input type="hidden" name="nextNodeNum" th:value="${flowData.nextNodeNum}">
-            <input type="hidden" name="detailTableColumnsStr" th:value="${formConfig.getDetailTableColumnsStr()}">
         </div>
 
         <!-- 按钮模块  -->
@@ -149,31 +109,13 @@
 
     </div>
 </form>
-<!--编辑页模板-->
-<script type="text/html" id="editPageTpl">
-    <div class="layui-form" style="padding: 20px 30px 0 0;" id="editForm">
-        <div class="layui-form-item" th:each="item,userStat: ${formConfig.getDetailTableColumns()}">
-            <label class="layui-form-label" th:text="${userStat.current.value}">用户名</label>
-            <div class="layui-input-inline">
-                <input type="text" th:name="${userStat.current.key}" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-    </div>
-</script>
-<!--头部工具栏模板-->
-<script type="text/html" id="headToolbarTpl">
-    <button type="button" class="layui-btn layui-btn-sm" lay-event="add">添加</button>
-</script>
-<!--表格行工具栏模板-->
-<script type="text/html" id="rowToolbarTpl">
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
-</script>
+
+
 <script th:replace="common/base::context"></script>
 <script th:replace="common/base::mainjs"></script>
-<script th:src="@{/static/js/form/} + ${flowData.mainFormKey + '.js'}"></script>
 <script>
-    layui.use(['form', 'laydate', 'util', 'table'], function () {
-        var $ = layui.$, form = layui.form, laydate = layui.laydate, util = layui.util, table = layui.table;
+    layui.use(['form', 'laydate', 'util'], function () {
+        var $ = layui.$, form = layui.form, laydate = layui.laydate, util = layui.util;
 
         var tipsIdx;
         $('#selectUser').on('mouseenter', function () {
@@ -183,96 +125,6 @@
         });
 
         var index = parent.layer.getFrameIndex(window.name); // 先得到当前iframe层的索引
-
-        var tableId = 'kContentTable';
-
-        let hasDetailTable = $('input[name="hasDetailTable"]').val();
-        let serviceBean = $('input[name="serviceBean"]').val();
-        if (hasDetailTable === 'true') {
-            let isFistNode = $('input[name="isFirstNode"]').val();
-            let showCols = $('input[name="detailTableColumnsStr"]').val();
-            log('isFistNode=', isFistNode)
-            showCols = showCols ? showCols : '{}';
-            showCols = JSON.parse(showCols);
-            let cols = [{type:'checkbox', fixed: 'left'}];
-            let colKeys = Object.keys(showCols);
-            colKeys.forEach(function (key, i) {
-                if (i === colKeys.length - 1) {
-                    cols.push({field: key, title: showCols[key]});
-                } else {
-                    cols.push({field: key, title: showCols[key], width: 100});
-                }
-            });
-            if (isFistNode === 'true') {
-                cols.push({field: '', title: '操作', width: 80, fixed: 'right', templet: '#rowToolbarTpl'});
-            }
-            log('cols=', cols);
-            let toolbarId = '';
-            if (isFistNode === 'true') {
-                toolbarId = '#headToolbarTpl';
-            }
-            var tableIns = table.render($.extend(config.layui.table, {
-                elem: '#' + tableId
-                ,url: BASE_WEB + 'workflow/form/{serviceBean}/listData?procInstId={0}'.replace('{serviceBean}', serviceBean).replace('{0}', $('input[name="processInstanceId"]').val())
-                ,toolbar: toolbarId
-                ,cols: [cols]
-                ,page: false
-                ,height: 300
-            }));
-
-            var area = ['449px', '95%'];
-
-            /*let delIndex;
-            table.on('row(' + tableId + ')', function (obj) {
-                delIndex =  $(obj.tr).attr("data-index");
-
-            });*/
-
-            table.on('toolbar(' + tableId + ')', function(obj){
-                var checkStatus = table.checkStatus(obj.config.id);
-                var checkData = checkStatus.data;
-                switch(obj.event) {
-                    case 'add':
-                        let lidex = layer.open({
-                            type: 1
-                            ,title: '添加明细'
-                            ,content: $('#editPageTpl').html()
-                            ,maxmin: true
-                            ,area: area   // 宽高
-                            ,btn: ['确定', '取消']
-                            ,yes: function(index, layero){
-                                var oldData = table.cache[tableId];
-                                var data = {};
-                                let editDataObj = $('#editForm').find('input');
-                                $.each(editDataObj, function (i, edo) {
-                                    data[$(edo).attr('name')] = $(edo).val();
-                                });
-                                oldData.push(data);
-                                console.log(oldData);
-                                table.reload(tableId, {
-                                    url: '',
-                                    data: oldData
-                                });
-                                layer.close(lidex);
-                            }
-                        });
-                }
-            });
-
-            // 表格行按钮 监听事件
-            table.on('tool(' + tableId + ')', function (obj) {
-                var data = obj.data; //获得当前行数据
-                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
-                var tr = obj.tr; //获得当前行 tr 的DOM对象
-                var oldData = table.cache[tableId];
-                let delIndex =  $(tr).attr("data-index")
-                delete oldData[delIndex];
-                table.reload(tableId, {
-                    url: '',
-                    data: oldData
-                });
-            });
-        }
 
         util.event('lay-event', {
             putBack: function (obj) {
@@ -407,10 +259,6 @@
             if (Number(nextNodeNum) !==0 && !field.nextUser) {
                 return kvfKit.unhappyMsg('请选择下一审批用户', true);
             }
-
-            var tableData = table.cache[tableId];
-            log('tableData=', tableData);
-            field.tableData = JSON.stringify(tableData);
 
             fillCheckboxData(field);
 

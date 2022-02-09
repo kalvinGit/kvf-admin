@@ -7,6 +7,7 @@ import com.kalvin.kvf.common.utils.SpringContextKit;
 import com.kalvin.kvf.modules.workflow.command.JumpAnyWhereCmd;
 import com.kalvin.kvf.modules.workflow.dto.FlowData;
 import com.kalvin.kvf.modules.workflow.dto.ProcessNode;
+import com.kalvin.kvf.modules.workflow.entity.Form;
 import com.kalvin.kvf.modules.workflow.ext.FelSupport;
 import com.kalvin.kvf.modules.workflow.vo.FormConfigVO;
 import org.activiti.bpmn.model.Process;
@@ -47,7 +48,9 @@ public class ProcessKit {
 
     public final static String FLOW_DATA_KEY = "FLOW_DATA_KEY";
     public final static String FORM_CONFIG_KEY = "FORM_CONFIG_KEY";
+    public final static String FORM_KEY = "FORM_KEY";
     public final static String FLOW_VARIABLES_KEY = "FLOW_VARIABLES_KEY";
+    public final static String FLOW_INST_ID = "procInstId";
     public final static Integer FLOW_STATUS_NOT_SUBMIT = 0;
     public final static Integer FLOW_STATUS_RUNNING = 1;
     public final static Integer FLOW_STATUS_END = 2;
@@ -136,6 +139,17 @@ public class ProcessKit {
         HistoricVariableInstance historicVariableInstance = historyService.createHistoricVariableInstanceQuery()
                 .processInstanceId(processInstanceId).variableName(ProcessKit.FLOW_DATA_KEY).singleResult();
         return (FlowData) historicVariableInstance.getValue();
+    }
+
+    /**
+     * 获取流程表单设计数据
+     * @param processInstanceId 流程实例ID
+     * @return flowData
+     */
+    public static Form getHisFromConfigData(String processInstanceId) {
+        HistoricVariableInstance historicVariableInstance = historyService.createHistoricVariableInstanceQuery()
+                .processInstanceId(processInstanceId).variableName(ProcessKit.FORM_KEY).singleResult();
+        return (Form) historicVariableInstance.getValue();
     }
 
     /**

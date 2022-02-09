@@ -1,5 +1,7 @@
 package com.kalvin.kvf.modules.workflow.service;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
@@ -16,10 +18,8 @@ import com.kalvin.kvf.modules.workflow.vo.FormConfigVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -85,8 +85,22 @@ public class FormServiceImpl extends ServiceImpl<FormMapper, Form> implements Fo
         final FormConfigVO formConfigVO = new FormConfigVO();
         formConfigVO.setName(form.getName());
         formConfigVO.setTheme(form.getTheme());
+        Map<String, String> detailTableColumns = new HashMap<>();
+        if (StrUtil.isNotBlank(form.getServiceBean()) && StrUtil.isNotBlank(form.getShowColumns()) && StrUtil.isNotBlank(form.getEntityClazz())) {
+            formConfigVO.setHasDetailTable(true);
+            formConfigVO.setServiceBean(form.getServiceBean());
+            formConfigVO.setEntityClazz(form.getEntityClazz());
+            String showColumns = form.getShowColumns();
+            showColumns = showColumns.replaceAll("&quot", "\"");
+            JSONArray objects = JSONUtil.parseArray(showColumns);
+            detailTableColumns = objects.stream().collect(Collectors.toMap(o -> ((JSONObject) o).getStr("field"), o -> ((JSONObject) o).getStr("title")));
+        }
+        formConfigVO.setDetailTableColumns(detailTableColumns);
+        formConfigVO.setDetailTableColumnsStr(JSONUtil.toJsonStr(detailTableColumns));
+
         final List<FormConfigVO.Field> fields = new ArrayList<>();
 
+        Map<String, List<FormConfigVO.Field>> fieldGroups = new HashMap<>();
         jsonObject.keySet().forEach(key -> {
             final FormConfigVO.Field field = new FormConfigVO.Field();
             final JSONObject fieldObj = (JSONObject) jsonObject.get(key);
@@ -95,7 +109,6 @@ public class FormServiceImpl extends ServiceImpl<FormMapper, Form> implements Fo
             final String fieldKey = fieldObj.get("field").toString();
             final String control = fieldObj.get("control").toString();
             final List<FormConfigVO.Option> options = new ArrayList<>();
-            // TODO: 2020/5/5 option的排序问题
             obj.keySet().forEach(oKey -> {
                 final FormConfigVO.Option option = new FormConfigVO.Option();
                 final JSONObject optionObj = (JSONObject) obj.get(oKey);
@@ -116,12 +129,20 @@ public class FormServiceImpl extends ServiceImpl<FormMapper, Form> implements Fo
             }
             field.setFieldName(fieldObj.get("fieldName").toString());
             field.setControl(control);
+            field.setGroupName(StrUtil.isBlank(fieldObj.getStr("groupName")) ? "表单信息" : fieldObj.getStr("groupName"));
             field.setRequired(Integer.valueOf(fieldObj.get("required").toString()));
             field.setOptions(options);
+
+            // 分组
+            List<FormConfigVO.Field> temFields = Optional.ofNullable(fieldGroups.get(field.getGroupName())).orElse(new ArrayList<>());
+            temFields.add(field);
+            fieldGroups.put(field.getGroupName(), temFields);
+
             fields.add(field);
         });
 
         formConfigVO.setFields(fields);
+        formConfigVO.setFieldsGroups(fieldGroups);
         log.debug("formConfigVO={}", formConfigVO);
         return formConfigVO;
     }

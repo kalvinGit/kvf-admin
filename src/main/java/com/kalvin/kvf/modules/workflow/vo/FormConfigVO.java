@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Create by Kalvin on 2020/4/22.
@@ -20,7 +21,13 @@ public class FormConfigVO implements Serializable {
 
     private String name;
     private String theme;
+    private String serviceBean;
+    private String entityClazz;
+    private boolean hasDetailTable;
     private List<Field> fields;
+    private Map<String, String> detailTableColumns;
+    private String detailTableColumnsStr;
+    private Map<String, List<Field>> fieldsGroups;
 
     @Data
     @ToString
@@ -29,6 +36,7 @@ public class FormConfigVO implements Serializable {
         private String id;
         private String fieldName;
         private String field;
+        private String groupName;
         private Object value;
         private String control;
         private Integer required;
