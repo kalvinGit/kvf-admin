@@ -45,11 +45,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public List<User> search(String query) {
-        if (StrUtil.isBlank(query)) {
+        /*if (StrUtil.isBlank(query)) {
             return new ArrayList<>();
-        }
+        }*/
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(User::getUsername, query).or().like(User::getRealname, query);
+        queryWrapper.like(StrUtil.isNotBlank(query), User::getUsername, query)
+                .or().like(StrUtil.isNotBlank(query), User::getRealname, query);
         return super.list(queryWrapper);
     }
 }
