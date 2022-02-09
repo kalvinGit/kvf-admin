@@ -2,6 +2,7 @@ package com.kalvin.kvf.modules.workflow.controller;
 
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONObject;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.kalvin.kvf.common.dto.R;
 import com.kalvin.kvf.common.exception.KvfException;
@@ -9,6 +10,7 @@ import com.kalvin.kvf.common.utils.HttpServletContextKit;
 import com.kalvin.kvf.common.utils.ShiroKit;
 import com.kalvin.kvf.common.utils.SpringContextKit;
 import com.kalvin.kvf.modules.workflow.dto.ProcessQuery;
+import com.kalvin.kvf.modules.workflow.entity.Form;
 import com.kalvin.kvf.modules.workflow.entity.ProcessForm;
 import com.kalvin.kvf.modules.workflow.service.FormService;
 import com.kalvin.kvf.modules.workflow.service.IWorkFlowService;
@@ -167,7 +169,7 @@ public class WorkflowController {
             processForm = new ProcessForm();
         }
         mv.addObject("processForm", processForm);
-        mv.addObject("forms", formService.list());
+        mv.addObject("forms", formService.list(Wrappers.<Form>lambdaQuery().orderByDesc(Form::getCreateTime)));
         return mv;
     }
 
