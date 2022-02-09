@@ -51,14 +51,14 @@ public class CommonController {
         return R.ok(FileUploadKit.upload(file, uploadPathEnum));
     }
 
-    @GetMapping(value = "download")
+    /*@GetMapping(value = "download")
     public void download(String filePath) {
         if (StrUtil.isBlank(filePath)) {
             throw new KvfException("不存在的文件：" + filePath);
         }
         HttpServletResponse response = HttpServletContextKit.getHttpServletResponse();
         ServletUtil.write(response, new File(filePath));
-    }
+    }*/
 
     /**
      * 访问项目外部静态图片
