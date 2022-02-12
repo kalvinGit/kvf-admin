@@ -25,6 +25,7 @@
         <shiro.version>1.6.0</shiro.version>
         <quartz.version>2.3.2</quartz.version>
         <hutool.version>4.5.1</hutool.version>
+        <mysql.version>8.0.28</mysql.version>
         <docker.image.prefix>kvf</docker.image.prefix>
     </properties>
 
@@ -141,7 +142,7 @@
         <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity-engine-core</artifactId>
-            <version>2.1</version>
+            <version>2.3</version>
         </dependency>
 
         <dependency>
@@ -165,6 +166,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
